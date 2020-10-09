@@ -14,7 +14,7 @@ navbar = html.Div(
     [
         dbc.Row(
             dbc.Col(
-                html.Img(src=cwd + "/" + "ddg.png")
+                html.Img(src=cwd + "/resources/" + "ddg.png")
             )
         ),
         dbc.Row(
