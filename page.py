@@ -8,13 +8,12 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-cwd = os.getcwd()
 
 navbar = html.Div(
     [
         dbc.Row(
             dbc.Col(
-                html.Img(src=cwd + "/resources/" + "ddg.png")
+                html.Img(src="/resources/ddg.png")
             )
         ),
         dbc.Row(
@@ -93,5 +92,4 @@ content = html.Div([
 app.layout = html.Div([navbar, content])
 
 if __name__ == "__main__":
-    print(cwd)
     app.run_server(debug=True)
