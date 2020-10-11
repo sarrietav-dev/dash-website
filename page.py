@@ -13,7 +13,7 @@ navbar = html.Div(
     [
         dbc.Row(
             dbc.Col(
-                html.Img(src="/resources/ddg.png")
+                html.Img(src=app.get_asset_url("ddg.png"))
             )
         ),
         dbc.Row(
@@ -71,16 +71,18 @@ graphs = html.Div([
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                dbc.CardBody()
+                dbc.CardBody([
+                    map_graph
+                ])
             ])
         ])
     ]),
     dbc.Row([
         dbc.Col([
-
+            # One bar graph
         ]),
         dbc.Col([
-
+            # One line raph
         ])
     ])
 ])
