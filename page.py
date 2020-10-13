@@ -156,7 +156,7 @@ navbar = html.Div(
         "top": 0,
         "left": 0,
         "bottom": 0,
-        "witdh": "16rem",
+        "witdh": "3rem",
         "padding": "2rem 3rem",
         "color": "white",
         "background-color": "black"
@@ -164,11 +164,10 @@ navbar = html.Div(
 )
 
 CONTENT_STYLE = {
-    "margin-left": "11rem",
+    "margin-left": "auto",
     "margin-right": "auto",
-    "padding-top": "10rem",
+    "padding-top": "auto",
     "background-color": "#FBD600",
-    "position": "absolute"
 }
 
 df = pd.DataFrame({
@@ -191,35 +190,27 @@ map_graph = dcc.Graph(
 
 graphs = html.Div([
     dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardBody([
-                ])
-            ])
-        ])
+        dbc.Col(dcc.Graph(id="graf1", figure=graf1),),
+        dbc.Col(dcc.Graph(id="graf3", figure=graf3),)
     ]),
     dbc.Row([
-        dbc.Col([
-            # One bar graph
-        ]),
-        dbc.Col([
-            # One line raph
-        ])
+        dbc.Col(dcc.Graph(id="graf5", figure=graf5)),
+        dbc.Col(dcc.Graph(id="graf0", figure=graf0))
     ]),
-
-    dcc.Graph(id="graf1", figure=graf1),
-    dcc.Graph(id="graf3", figure=graf3),
-    dcc.Graph(id="graf5", figure=graf5),
-    dcc.Graph(id="graf0", figure=graf0),
-    map_graph
+    dbc.Row(dbc.Col(map_graph))
 ])
 
 content = html.Div([
-    html.Img(src=app.get_asset_url("banner.webp"), style={"width": "1000px", "text-align": "right"}),
+    html.Img(src=app.get_asset_url("banner.webp"), style={"width": "1000px"}),
     html.Div(style=CONTENT_STYLE), graphs
 ], style={})
 
-app.layout = html.Div([navbar, content])
+app.layout = html.Div([
+    dbc.Row([
+        dbc.Col(navbar, width={"size": 2}),
+        dbc.Col(content)
+    ])
+])
 
 if __name__ == "__main__":
     app.run_server(debug=True)
