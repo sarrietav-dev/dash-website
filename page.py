@@ -193,6 +193,7 @@ graphs = html.Div([
         dbc.Col(dcc.Graph(id="graf1", figure=graf1),),
         dbc.Col(dcc.Graph(id="graf3", figure=graf3),)
     ]),
+    dbc.Row([dbc.Col(dcc.RangeSlider())]),
     dbc.Row([
         dbc.Col(dcc.Graph(id="graf5", figure=graf5)),
         dbc.Col(dcc.Graph(id="graf0", figure=graf0))
