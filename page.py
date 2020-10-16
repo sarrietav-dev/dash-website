@@ -1,7 +1,6 @@
 import os
 import dash
 import random
-import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -10,6 +9,7 @@ from dash.exceptions import PreventUpdate
 
 from graphs import *
 from styles import *
+from main_page import main_page
 
 #################################################################################################################################
 ################################################## CARGA DE DATA ORIGINAL #######################################################
@@ -29,6 +29,8 @@ sidebar = html.Div(
         ),
         dbc.Nav(
             [
+                dbc.NavLink(
+                    "Main", href="http://127.0.0.1:8050/main", id="link_main"),
                 dbc.NavLink(
                     "KPI's", href="http://127.0.0.1:8050/hoja-1", id="link_hoja_1"),
                 dbc.NavLink("Clustering: definición",
@@ -116,6 +118,10 @@ app.layout = html.Div([
     html.Div(id="page-content")
 ])
 
+hoja_principal = html.Div([
+    dbc.Row(dbc.Col(sidebar)), dbc.Row(dbc.Col(main_page(app)))
+])
+
 hoja_1_layout = html.Div([
     sidebar, content,
     html.Div(id='page-1-content')
@@ -147,6 +153,8 @@ def display_page(pathname):
         return hoja_1_layout
     elif pathname == "/hoja-2":
         return hoja_2_layout
+    elif pathname == "/main":
+        return hoja_principal
 
 
 if __name__ == "__main__":
