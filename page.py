@@ -39,7 +39,7 @@ map_graph = dcc.Graph(
 graphs = html.Div([
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="graf1")
+            dcc.Graph(id="graf1", figure=graf1)
         ]),
         dbc.Col([
             dcc.Graph(id="graf3", figure=graf3)
@@ -139,7 +139,7 @@ def display_page(pathname):
 @app.callback(Output("graf1", "figure"), Input("slider", "value"))
 def change_graphs(year_value):
 
-    df = bd_grupo1["year_factura" == year_value]
+    df = bd_grupo1[bd_grupo1["year_factura"] == year_value]
     graf1_a = px.bar(df, x="mes_factura", y="vlr_neto_M", color="tipo_tienda", width=600, height=400,
                    color_discrete_map={
                        "TIENDA PROPIA": "gold",
