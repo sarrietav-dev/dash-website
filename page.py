@@ -1,6 +1,7 @@
 import os
 import dash
 import random
+import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -9,40 +10,10 @@ from dash.exceptions import PreventUpdate
 
 from graphs import *
 from styles import *
-from main_page import main_page
-
-#################################################################################################################################
-################################################## CARGA DE DATA ORIGINAL #######################################################
-
-#####################################################################################################################################
-############################################### Components #######################################################################
+from layouts import main_page, sidebar
 
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
-
-sidebar = html.Div(
-    [
-        html.H4("Menú", className="lead"),  # display-4
-        html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
-        html.P(
-            "Navegar al elemento deseado", className="lead"  # Esto es un elemento de párrafo
-        ),
-        dbc.Nav(
-            [
-                dbc.NavLink(
-                    "Main", href="http://127.0.0.1:8050/main", id="link_main"),
-                dbc.NavLink(
-                    "KPI's", href="http://127.0.0.1:8050/hoja-1", id="link_hoja_1"),
-                dbc.NavLink("Clustering: definición",
-                            href="http://127.0.0.1:8050/hoja-2", id="link_hoja_2"),
-                dbc.NavLink("Clustering: resultados",
-                            href="/hoja-3", id="link_hoja_3"),
-            ],
-            vertical=True,  # Esto para qué?
-            pills=True,  # Esto para qué?
-        ),
-    ], style=SIDEBAR_STYLE,
-)
 
 
 # Esto es data de ejemplo para colocar en el mapa:
@@ -68,7 +39,7 @@ map_graph = dcc.Graph(
 graphs = html.Div([
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="graf1", figure=graf1)
+            dcc.Graph(id="graf1")
         ]),
         dbc.Col([
             dcc.Graph(id="graf3", figure=graf3)
@@ -102,19 +73,27 @@ dropdown1 = html.Div([
         ])
 ])
 
+slider = dcc.Slider(id="slider",
+                    min=bd["year_factura"].min(),
+                    max=bd["year_factura"].max(),
+                    value=bd["year_factura"].max(),
+                    marks={str(year): str(year) for year in bd["year_factura"].unique()}, step=None
+                    )
+
 #################################################################################################################################
 ############################################################## CONTENIDO #########################################################
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
     dropdown1,
+    slider,
     graphs
 ], style={"margin-left": "10rem"})
 
 
 app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
-    sidebar,
+    sidebar(),
     html.Div(id="page-content")
 ])
 
@@ -123,14 +102,14 @@ hoja_principal = html.Div([
 ])
 
 hoja_1_layout = html.Div([
-    sidebar, content,
+    sidebar(), content,
     html.Div(id='page-1-content')
 ])
 
 hoja_2_layout = html.Div([
     html.Div(id='page-2-content'),
     html.H1("Hoja 2 prueba"),
-    sidebar
+    sidebar()
 ])
 
 
@@ -155,6 +134,23 @@ def display_page(pathname):
         return hoja_2_layout
     elif pathname == "/main":
         return hoja_principal
+
+
+@app.callback(Output("graf1", "figure"), Input("slider", "value"))
+def change_graphs(year_value):
+
+    df = bd_grupo1["year_factura" == year_value]
+    graf1_a = px.bar(df, x="mes_factura", y="vlr_neto_M", color="tipo_tienda", width=600, height=400,
+                   color_discrete_map={
+                       "TIENDA PROPIA": "gold",
+                       "TIENDA VIRTUAL": "black",
+                       "FRANQUICIAS": "silver"
+                   },
+                   category_orders={"tipo_tienda": [
+                       "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                   title="Ingresos por canal (Millones COP)")
+    graf1_a.update_layout(xaxis_tickangle=90)
+    return graf1_a
 
 
 if __name__ == "__main__":
