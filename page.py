@@ -90,15 +90,15 @@ content = html.Div([
     graphs
 ], style={"margin-left": "10rem"})
 
-
-app.layout = html.Div([
-    dcc.Location(id="url"),  # refresh = False
-    html.Div(id="page-content")
-])
-
 hoja_principal = html.Div([
     dbc.Row(dbc.Col(main_page(app)))
 ])
+
+app.layout = html.Div([
+    dcc.Location(id="url"),  # refresh = False
+    html.Div(children=[main_page(app)], id="page-content")
+])
+
 
 hoja_1_layout = html.Div([
     sidebar(), content,
@@ -140,14 +140,14 @@ def change_graphs(year_value):
 
     df = bd_grupo1[bd_grupo1["year_factura"] == year_value]
     graf1_a = px.bar(df, x="mes_factura", y="vlr_neto_M", color="tipo_tienda", width=600, height=400,
-                   color_discrete_map={
-                       "TIENDA PROPIA": "gold",
-                       "TIENDA VIRTUAL": "black",
-                       "FRANQUICIAS": "silver"
-                   },
-                   category_orders={"tipo_tienda": [
-                       "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
-                   title="Ingresos por canal (Millones COP)")
+                     color_discrete_map={
+                         "TIENDA PROPIA": "gold",
+                         "TIENDA VIRTUAL": "black",
+                         "FRANQUICIAS": "silver"
+                     },
+                     category_orders={"tipo_tienda": [
+                         "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                     title="Ingresos por canal (Millones COP)")
     graf1_a.update_layout(xaxis_tickangle=90)
     return graf1_a
 

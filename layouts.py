@@ -1,6 +1,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
+from dash.dependencies import Input, Output
 
 from styles import *
 
@@ -31,43 +32,61 @@ def main_page(app):
         dbc.Row([
             dbc.Col(
                 dbc.Card([
-                    dbc.CardBody([html.H3("KPI"), html.P(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
+                    dbc.CardBody([
+                        html.H3("KPI"),
+                        html.P(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam.")])
+                        commodo sollicitudin, leo quam."),
+                        dbc.Button("Go there")
+                    ])
                 ], color="warning", outline=True)
             ),
             dbc.Col(
                 dbc.Card([
-                    dbc.CardBody([html.H3("Cluster"), html.P(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
+                    dbc.CardBody([
+                        html.H3("Cluster"),
+                        html.P(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam.")])
+                        commodo sollicitudin, leo quam."),
+                    dbc.Button("Go there")
+                    ]),
                 ], color="warning", outline=True)
             ),
             dbc.Col(
                 dbc.Card([
-                    dbc.CardBody([html.H3("Resultado"), html.P(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
+                    dbc.CardBody([
+                        html.H3("Resultado"),
+                        html.P(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam.")])
+                        commodo sollicitudin, leo quam."),
+                        dbc.Button("Go there")
+                    ])
                 ], color="warning", outline=True)
             ),
             dbc.Col(
                 dbc.Card([
-                    dbc.CardBody([html.H3("XXI"), html.P(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
+                    dbc.CardBody([
+                        html.H3("XXI"),
+                        html.P(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam.")])
+                        commodo sollicitudin, leo quam."),
+                        dbc.Button("Go there")
+                    ])
                 ], color="warning", outline=True)
             ),
         ], className="m-4")
     ])
 
-    @app.callback()
-    def click_kpi():
-        pass
-
+    #@app.callback(
+        #Output("page-content", "children"),
+        #Input()
+    #)
+    #def click_kpi():
+        #pass
 
     return main_page
 
