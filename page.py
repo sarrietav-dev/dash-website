@@ -93,12 +93,11 @@ content = html.Div([
 
 app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
-    sidebar(),
     html.Div(id="page-content")
 ])
 
 hoja_principal = html.Div([
-    dbc.Row(dbc.Col(sidebar)), dbc.Row(dbc.Col(main_page(app)))
+    dbc.Row(dbc.Col(main_page(app)))
 ])
 
 hoja_1_layout = html.Div([
@@ -136,7 +135,7 @@ def display_page(pathname):
         return hoja_principal
 
 
-@app.callback(Output("graf1", "figure"), Input("slider", "value"))
+# @app.callback(Output("graf1", "figure"), Input("slider", "value"))
 def change_graphs(year_value):
 
     df = bd_grupo1[bd_grupo1["year_factura"] == year_value]
