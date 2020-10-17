@@ -91,29 +91,32 @@ content = html.Div([
 ], style={"margin-left": "10rem"})
 
 hoja_principal = html.Div([
-    dbc.Row(dbc.Col(main_page(app)))
+    html.Div(dbc.Row(dbc.Col(sidebar(False))), style={"display": "none"}),
+    
+    dbc.Row(dbc.Col(main_page(app, True)))
 ])
 
 app.layout = html.Div([
+    hoja_principal,
     dcc.Location(id="url"),  # refresh = False
-    html.Div(children=[main_page(app)], id="page-content")
-])
-
+], id="page-content")
 
 hoja_1_layout = html.Div([
-    sidebar(), content,
+    sidebar(True), content, main_page(app, False),
     html.Div(id='page-1-content')
 ])
 
 hoja_2_layout = html.Div([
     html.Div(id='page-2-content'),
     html.H1("Hoja 2 prueba"),
-    sidebar()
+    main_page(app, False),
+    sidebar(True)
 ])
 
 
 ################################################################################################################################
 ####################################################### INTERACTIVIDAD #########################################################
+
 @app.callback(
     [Output(f"link_hoja_{i}", "active") for i in range(1, 4)],
     [Input("url", "pathname")],
@@ -125,15 +128,26 @@ def habilitar_link(pathname):
 
 
 @app.callback(
-    Output("page-content", "children"), [Input("url", "pathname")])
-def display_page(pathname):
-    if pathname == "/hoja-1":
+    Output("page-content", "children"),
+    [
+        Input("link-hoja-main", "n_clicks"),
+        Input("link-hoja-1", "n_clicks"),
+        Input("link-hoja-2", "n_clicks"),
+        Input("link-hoja-3", "n_clicks"),
+        Input("button-kpi", "n_clicks"),
+        Input("button-cluster", "n_clicks"),
+        Input("button-result", "n_clicks"),
+        Input("button-xxi", "n_clicks"),
+    ]
+)
+def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
+    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
+    if "link-hoja-1" in changed_id or "button-kpi" in changed_id:
         return hoja_1_layout
-    elif pathname == "/hoja-2":
+    elif "link-hoja2" in changed_id or "button-cluster" in changed_id:
         return hoja_2_layout
-    elif pathname == "/main":
+    else:
         return hoja_principal
-
 
 # @app.callback(Output("graf1", "figure"), Input("slider", "value"))
 def change_graphs(year_value):

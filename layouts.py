@@ -6,7 +6,7 @@ from dash.dependencies import Input, Output
 from styles import *
 
 
-def main_page(app):
+def main_page(app, visible):
     main_page = html.Div([
         dbc.Row([
             dbc.Col([
@@ -38,7 +38,7 @@ def main_page(app):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there")
+                        dbc.Button("Go there", color="dark", id="button-kpi")
                     ])
                 ], color="warning", outline=True)
             ),
@@ -50,7 +50,7 @@ def main_page(app):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                    dbc.Button("Go there")
+                        dbc.Button("Go there", color="dark", id="button-cluster")
                     ]),
                 ], color="warning", outline=True)
             ),
@@ -62,7 +62,7 @@ def main_page(app):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there")
+                        dbc.Button("Go there", color="dark", id="button-result")
                     ])
                 ], color="warning", outline=True)
             ),
@@ -74,24 +74,18 @@ def main_page(app):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there")
+                        dbc.Button("Go there", color="dark", id="button-xxi")
                     ])
                 ], color="warning", outline=True)
             ),
         ], className="m-4")
-    ])
-
-    #@app.callback(
-        #Output("page-content", "children"),
-        #Input()
-    #)
-    #def click_kpi():
-        #pass
+    ], style={"display": "block" if visible else "none"})
 
     return main_page
 
 
-def sidebar():
+def sidebar(visible):
+    SIDEBAR_STYLE["display"] = "block" if visible else "none"
     sidebar = html.Div(
         [
             html.H4("Menú", className="lead"),  # display-4
@@ -101,18 +95,14 @@ def sidebar():
             ),
             dbc.Nav(
                 [
-                    dbc.NavLink(
-                        "Main", href="http://127.0.0.1:8050/main", id="link_main"),
-                    dbc.NavLink(
-                        "KPI's", href="http://127.0.0.1:8050/hoja-1", id="link_hoja_1"),
-                    dbc.NavLink("Clustering: definición",
-                                href="http://127.0.0.1:8050/hoja-2", id="link_hoja_2"),
-                    dbc.NavLink("Clustering: resultados",
-                                href="/hoja-3", id="link_hoja_3"),
+                    dbc.Button("Main", id="link-hoja-main"),
+                    dbc.Button("KPI's", id="link-hoja-1"),
+                    dbc.Button("Clustering: definición", id="link-hoja-2"),
+                    dbc.Button("Clustering: resultados", id="link-hoja-3"),
                 ],
                 vertical=True,  # Esto para qué?
                 pills=True,  # Esto para qué?
             ),
-        ], style=SIDEBAR_STYLE,
+        ], style=SIDEBAR_STYLE
     )
     return sidebar
