@@ -86,7 +86,6 @@ content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
     dropdown1,
-    slider,
     graphs
 ], style={"margin-left": "10rem"})
 
