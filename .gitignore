@@ -1,2 +1,4 @@
-.page_mockup
-.vscode
+/.page_mockup
+/.vscode
+/data
+/__pycache__
