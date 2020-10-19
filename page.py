@@ -14,24 +14,24 @@ from layouts import main_page, sidebar
 
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
-# Esto es data de ejemplo para colocar en el mapa:
-df = pd.DataFrame({
-    "Name": ["Example" + str(i + 1) for i in range(100)],
-    # Latitude between 4.700100 and 4.710000
-    "Latitud": [random.uniform(4.700100, 4.710000) for i in range(100)],
-    # Longitude between -74.070100 and -74.080000
-    "Longitud": [random.uniform(-74.070100, -74.080000) for i in range(100)],
-    "Clientes": [random.randint(0, 100) for i in range(100)],
-    "PromedioCompra": [random.uniform(0, 100) for i in range(100)],
-})
+## Esto es data de ejemplo para colocar en el mapa:
+#df = pd.DataFrame({
+    #"Name": ["Example" + str(i + 1) for i in range(100)],
+    ## Latitude between 4.700100 and 4.710000
+    #"Latitud": [random.uniform(4.700100, 4.710000) for i in range(100)],
+    ## Longitude between -74.070100 and -74.080000
+    #"Longitud": [random.uniform(-74.070100, -74.080000) for i in range(100)],
+    #"Clientes": [random.randint(0, 100) for i in range(100)],
+    #"PromedioCompra": [random.uniform(0, 100) for i in range(100)],
+#})
 
-fig = px.scatter_mapbox(df, lat="Latitud", lon="Longitud", color="PromedioCompra",
-                        size="Clientes", mapbox_style="carto-positron", zoom=14.5)
+#fig = px.scatter_mapbox(df, lat="Latitud", lon="Longitud", color="PromedioCompra",
+                        #size="Clientes", mapbox_style="carto-positron", zoom=14.5)
 
-map_graph = dcc.Graph(
-    id="map_graph",
-    figure=fig
-)
+#map_graph = dcc.Graph(
+    #id="map_graph",
+    #figure=fig
+#)
 
 # Aca van todas la gráficas:
 graphs = html.Div([
