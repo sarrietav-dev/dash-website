@@ -1,24 +1,25 @@
 import os
 import dash
 import random
+import numpy as np
 import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
-import numpy as np
+from dash.dependencies import Input, Output
 
 from graphs import *
 from styles import *
 from layouts import main_page, sidebar
+
 
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
 ############################################### Data real del mapa (provisional falta lat y long):
 centro_region_agr_2019 = pd.read_csv(
-    "data\centro_region_agr_2019.csv", sep = ";")
+    "data" + os.pathsep + "centro_region_agr_2019.csv", sep = ";")
 
 #----Info geográfica de las tiendas físicas:
 centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
