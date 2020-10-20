@@ -4,6 +4,8 @@ import plotly.graph_objects as go
 import numpy as np
 import dash_table
 
+# TODO: Add graph 0 from John's pull request.
+
 # CARGA DE BASES DE DATOS:
 bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv",
                            sep=";")

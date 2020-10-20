@@ -181,6 +181,7 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
     else:
         return hoja_principal
 
+# TODO: Make a callback that changes graph1 and graph3 based on vlr_neto and qt_facturas.
 
 if __name__ == "__main__":
     app.run_server(debug=True)
