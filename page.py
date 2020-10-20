@@ -17,72 +17,55 @@ from layouts import main_page, sidebar
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
-############################################### Data real del mapa (provisional falta lat y long):
-centro_region_agr_2019 = pd.read_csv(
-    "data" + os.pathsep + "centro_region_agr_2019.csv", sep = ";")
-
-#----Info geográfica de las tiendas físicas:
-centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
-centro_region_agr_2019_TP["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
-centro_region_agr_2019_TP["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))] 
-
-#----Info geográfica de las tiendas virtuales:
-centro_region_agr_2019_TV = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] == "TIENDA VIRTUAL"]
-centro_region_agr_2019_TV["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TV))]
-centro_region_agr_2019_TV["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TV))] 
-
-
-
-map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud", lon="longitud", color="frecuencia",
-                        size="visitas", mapbox_style="carto-positron",
-                        height = 700, width = 600, zoom=13.5)
-
-map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud", lon="longitud", color="frecuencia",
-                        size="visitas", mapbox_style="carto-positron",
-                        height = 700, width = 600, zoom=13.5)
-
-
-map_graph1 = dcc.Graph(
-    id="map_graph1",
-    figure=map1
-    )
-
-map_graph2 = dcc.Graph(
-    id="map_graph2",
-    figure=map2
-    )
-
-tabla1 = dash_table.DataTable(
-    id='table',
-    columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
-    data=bd_agr_year.iloc[:, :-2].to_dict('records')
-)
 
 # Aca van todas la gráficas:
 graphs = html.Div([
     dbc.Row([
         dbc.Col([
             dcc.Graph(id="graf6", figure=graf6)
-            ]),
+        ]),
         dbc.Col([
             tabla1
-            ]),
         ]),
+    ]),
+    dbc.Row([
+        dbc.Col(
+            dbc.DropdownMenu(
+                label="Options",
+                id="date_dropdown",
+                children=[
+                    dbc.DropdownMenuItem("Year"),
+                    dbc.DropdownMenuItem("Trim_año"),
+                    dbc.DropdownMenuItem("Year_factura")
+                ])
+        ),
+        dbc.Col([
+            dbc.RadioItems(
+                id="radio_items",
+                options=[
+                    {"label": "vlr_neto", "value": "vlr_neto"},
+                    {"label": "qt_facturas", "value": "qt_facturas"}
+                ])
+        ])
+    ]),
     dbc.Row([
         dbc.Col([
             dcc.Graph(id="graf1", figure=graf1)
-            ]),
-        
-        dbc.Col([
-            dcc.Graph(id="graf3", figure=graf3, style={"margin-left": "10rem"}),
-            ])
         ]),
-    
+
+        dbc.Col([
+            dcc.Graph(id="graf3", figure=graf3,
+                      style={"margin-left": "10rem"}),
+        ])
+    ]),
 
     dbc.Row([
         dbc.Col([
             dcc.Graph(id="graf5", figure=graf5)
         ]),
+        dbc.Col([
+            dcc.Graph(id="graph0", figure=graf0)
+        ])
     ])
 ])
 
@@ -99,20 +82,12 @@ dropdown1 = html.Div([
         ])
 ])
 
-# slider = dcc.Slider(id="slider",
-# min=bd["year_factura"].min(),
-# max=bd["year_factura"].max(),
-# value=bd["year_factura"].max(),
-# marks={str(year): str(year) for year in bd["year_factura"].unique()}, step=None
-# )
-
 #################################################################################################################################
 ############################################################## CONTENIDO #########################################################
 
 row = html.Div(
     [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
      ], style={})
-
 
 
 summary = html.Div([
@@ -126,8 +101,10 @@ summary = html.Div([
                 bd_unicos.iloc[0, 1]), style={"margin-left": "2rem"}),
             html.Div("Total Revenue:" + '{:10,.0f}'.format(
                 bd_unicos.iloc[0, 4]), style={"margin-left": "2rem"}),
-            html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
-            html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
+            html.Div(
+                "Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
+            html.Div(
+                "Info. hasta" + '{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
 
         ]),
         dbc.Col([
@@ -142,7 +119,7 @@ summary = html.Div([
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
-    summary,    
+    summary,
     dropdown1,
     graphs,
     html.Div([
@@ -150,13 +127,13 @@ content = html.Div([
             dbc.Col([
                 html.H5("Frecuencia tiendas físicas"),
                 map_graph1
-                ]),
+            ]),
             dbc.Col([
                 html.H5("Frecuencia tiendas virtuales"),
                 map_graph2
-                ]),
-            ])
-        ]),    
+            ]),
+        ])
+    ]),
 ], style={"margin-left": "10rem"})
 
 #------------------------------------------------------------------- Layout
@@ -221,7 +198,16 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
     else:
         return hoja_principal
 
-# TODO: Make a callback that changes graph1 and graph3 based on vlr_neto and qt_facturas.
 
+# TODO: Make a callback for graph1 based on year, trim_año or year_factura for x. And some bullet points for vlr_neto and qt_facturas.
+@app.callback(
+    Output("graf1", "figure"),
+    [Input("date_dropdown"), Input("radio_items")]
+)
+def foo(drop, radio):
+    pass
+
+
+# TODO: Make a callback that changes graph1 and graph3 based on vlr_neto and qt_facturas.
 if __name__ == "__main__":
     app.run_server(debug=True)
