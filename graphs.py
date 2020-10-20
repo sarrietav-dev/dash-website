@@ -3,6 +3,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import dash_table
+import os
+import random
+import dash_core_components as dcc
 
 # TODO: Add graph 0 from John's pull request.
 
@@ -196,3 +199,48 @@ graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año3]["mes"], y=bd_fre
                     line = dict(color = "tomato")
                           ))
 
+# Data real del mapa (provisional falta lat y long):
+centro_region_agr_2019 = pd.read_csv(
+    "data/centro_region_agr_2019.csv", sep=";")
+
+# ----Info geográfica de las tiendas físicas:
+centro_region_agr_2019_TP = centro_region_agr_2019[
+    centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
+centro_region_agr_2019_TP["latitud"] = [random.uniform(
+    4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
+centro_region_agr_2019_TP["longitud"] = [
+    random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))]
+
+# ----Info geográfica de las tiendas virtuales:
+centro_region_agr_2019_TV = centro_region_agr_2019[
+    centro_region_agr_2019["tipo_tienda"] == "TIENDA VIRTUAL"]
+centro_region_agr_2019_TV["latitud"] = [random.uniform(
+    4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TV))]
+centro_region_agr_2019_TV["longitud"] = [
+    random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TV))]
+
+
+map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud", lon="longitud", color="frecuencia",
+                         size="visitas", mapbox_style="carto-positron",
+                         height=700, width=600, zoom=13.5)
+
+map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud", lon="longitud", color="frecuencia",
+                         size="visitas", mapbox_style="carto-positron",
+                         height=700, width=600, zoom=13.5)
+
+
+map_graph1 = dcc.Graph(
+    id="map_graph1",
+    figure=map1
+)
+
+map_graph2 = dcc.Graph(
+    id="map_graph2",
+    figure=map2
+)
+
+tabla1 = dash_table.DataTable(
+    id='table',
+    columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
+    data=bd_agr_year.iloc[:, :-2].to_dict('records')
+)
