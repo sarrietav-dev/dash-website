@@ -4,21 +4,27 @@ import plotly.graph_objects as go
 import numpy as np
 import dash_table
 
-######################################################################## CARGA DE BASES DE DATOS:
+# CARGA DE BASES DE DATOS:
 bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv",
-                 sep=";")
+                           sep=";")
 
 bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv",
-                 sep=";")
+                          sep=";")
 
 bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",
                  sep=";")
 
+
+bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv",
+                 sep = ";")
+
 #########################################################################TRANSFORMACION DE BASES DE DATOS
 
-bd_agr_month["ticket_prom"] = bd_agr_month["vlr_neto"] / bd_agr_month["qt_facturas_unq"]
+bd_agr_month["ticket_prom"] = bd_agr_month["vlr_neto"] / \
+    bd_agr_month["qt_facturas_unq"]
 bd_agr_month["year"] = bd_agr_month["year_factura"].str[:4]
-bd_agr_month["trim_año"] = bd_agr_month["year"].astype(str) + "-Q" + bd_agr_month["trimestre"].astype(str)
+bd_agr_month["trim_año"] = bd_agr_month["year"].astype(
+    str) + "-Q" + bd_agr_month["trimestre"].astype(str)
 
 
 # % Crecimiento MoM por canal
@@ -47,25 +53,44 @@ deltas_todo.columns = ["fecha", "TP", "TV", "FR"]
 
 
 # GRAFICA 0: variaciones MoM
-graf0 = go.Figure(layout =
-go.Layout(
+
+layout = go.Layout(
     autosize=False,
     width=600,
     height=400,
-title='Variaciones MoM por canal'
+    title='Variaciones MoM por canal',
+    title_x=0.5,
+    title_y=0.8,
+    yaxis_title = "%variación",
+    xaxis_title = "mes",    
+    xaxis=dict(
+        showline=False,
+        showgrid=False
+            ),
+    yaxis=dict(
+        showline=True,
+        showgrid=False
+        ),
+    plot_bgcolor="whitesmoke"
     )
-                  )
-
+graf0 = go.Figure(layout = layout)
 graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["TP"],
                     mode='lines+markers',
-                    name='TP'))
+                    name='TP',
+                    line = dict(color = "gold")
+                        ))
+                    
 graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["TV"],
                     mode='lines+markers',
-                    name='TV'))
+                    name='TV',
+                    line = dict(color = "black")
+                        ))
 graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["FR"],
                     mode='lines+markers',
-                    name='FR'))
-
+                    name='FR',
+                    line = dict(color = "grey")
+                         
+                        ))
 
 
 
@@ -114,14 +139,58 @@ graf4 = px.pie(bd_agr_month, values='qt_facturas_unq', names='tipo_tienda', colo
                title='%Número de ventas por canal')
 
 # GRAFICA 5: LINE Evolución ticket promedio
-graf5 = px.line(bd_agr_month, x="year_factura", y="ticket_prom",
-                color="tipo_tienda", width=600, height=400,
-                color_discrete_map={
-                    "TIENDA PROPIA": "gold",
-                    "TIENDA VIRTUAL": "black",
-                    "FRANQUICIAS": "silver"
-                },
-                category_orders={"tipo_tienda": [
-                    "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
-                title="Evolución ticket promedio")
+graf5 = px.line(bd_agr_month, x = "year_factura", y = "ticket_prom", 
+            color = "tipo_tienda", width=600, height=400,
+             color_discrete_map={
+                "TIENDA PROPIA": "gold",
+                "TIENDA VIRTUAL": "black",
+                "FRANQUICIAS": "silver"
+             },
+             category_orders={"tipo_tienda": ["TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},             
+            title = "Evolución ticket promedio",
+            )
 graf5.update_layout(xaxis_tickangle=90)
+
+
+# GRAFICA 6: LINEPLOT Frecuencia acumulada por año
+año1 = bd_frec["yeard"].unique()[0]
+año2 = bd_frec["yeard"].unique()[1]
+año3 = bd_frec["yeard"].unique()[2]
+
+layout = go.Layout(
+    autosize=False,
+    width=600,
+    height=400,
+    title='Frecuencia acumulada por mes',
+    title_x=0.5,
+    title_y=0.8,
+    xaxis_title = "mes",
+    yaxis_title = "frecuencia acumulada",
+    xaxis=dict(
+        showline=True,
+        showgrid=True
+            ),
+    yaxis=dict(
+        showline=True,
+        showgrid=False
+    ),
+    plot_bgcolor="whitesmoke"
+)
+
+graf6 = go.Figure(layout = layout)
+graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año1]["mes"], y=bd_frec[bd_frec["yeard"] == año1]["frec_acum"],
+                    mode='lines+markers',
+                    name=str(año1),
+                    line = dict(color = "gold")
+                          ))
+graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año2]["mes"], y=bd_frec[bd_frec["yeard"] == año2]["frec_acum"],
+                    mode='lines+markers',
+                    name=str(año2),
+                    line = dict(color = "orange")
+                          ))
+graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año3]["mes"], y=bd_frec[bd_frec["yeard"] == año3]["frec_acum"],
+                    mode='lines+markers',
+                    name=str(año3),
+                    line = dict(color = "tomato")
+                          ))
+
