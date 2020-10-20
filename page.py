@@ -77,10 +77,8 @@ graphs = html.Div([
             ])
         ]),
     
+
     dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf0", figure=graf0)
-        ]),
         dbc.Col([
             dcc.Graph(id="graf5", figure=graf5)
         ]),
@@ -134,6 +132,7 @@ summary = html.Div([
         dbc.Col([
             #html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-right": "10rem"}),
             #html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={})
+
         ]),
     ]),
 ])
