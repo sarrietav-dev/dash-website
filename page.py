@@ -69,9 +69,6 @@ graphs = html.Div([
         dbc.Col([
             dcc.Graph(id="graf5", figure=graf5)
         ]),
-        dbc.Col([
-            dcc.Graph(id="graph0", figure=graf0)
-        ])
     ])
 ])
 
