@@ -30,18 +30,21 @@ graphs = html.Div([
     ]),
     dbc.Row([
         dbc.Col(
-            dbc.DropdownMenu(
-                label="Options",
+            dcc.Dropdown(
+                placeholder="Options",
                 id="date_dropdown",
-                children=[
-                    dbc.DropdownMenuItem("Year"),
-                    dbc.DropdownMenuItem("Trim_año"),
-                    dbc.DropdownMenuItem("Year_factura")
+                value="year_factura",
+                className="dropdow  n",
+                options=[
+                    {"label": "Year", "value": "year"},
+                    {"label": "Trim Año", "value": "trim_año"},
+                    {"label": "Year Factura", "value": "year_factura"},
                 ])
         ),
         dbc.Col([
             dbc.RadioItems(
                 id="radio_items",
+                value="vlr_neto",
                 options=[
                     {"label": "vlr_neto", "value": "vlr_neto"},
                     {"label": "qt_facturas", "value": "qt_facturas"}
@@ -202,10 +205,20 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
 # TODO: Make a callback for graph1 based on year, trim_año or year_factura for x. And some bullet points for vlr_neto and qt_facturas.
 @app.callback(
     Output("graf1", "figure"),
-    [Input("date_dropdown"), Input("radio_items")]
+    [Input("date_dropdown", "value"), Input("radio_items", "value")]
 )
 def foo(drop, radio):
-    pass
+    graf1 = px.bar(bd_agr_month, x=drop, y=radio, color="tipo_tienda", width=800, height=400,
+                   color_discrete_map={
+                       "TIENDA PROPIA": "gold",
+                       "TIENDA VIRTUAL": "black",
+                       "FRANQUICIAS": "silver"
+                   },
+                   category_orders={"tipo_tienda": [
+                       "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                   title="Ingresos por canal (Millones COP)")
+    graf1.update_layout(xaxis_tickangle=90)
+    return graf1
 
 
 # TODO: Make a callback that changes graph1 and graph3 based on vlr_neto and qt_facturas.

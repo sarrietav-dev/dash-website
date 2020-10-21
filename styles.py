@@ -15,6 +15,7 @@ SIDEBAR_STYLE = {
     "width": "10rem",
     "padding": "2rem 1rem",
     "background-color": "#AFADA6",  # estos son los códigos de colores HTML
+    "z-index": "1",
 }
 
 CONTENT_STYLE_SIDEBAR = {
