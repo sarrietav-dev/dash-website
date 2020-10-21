@@ -16,41 +16,77 @@ from layouts import main_page, sidebar
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
+############################################### Data real del mapa (provisional falta lat y long):
+centro_region_agr_2019 = pd.read_csv(
+    "data\centro_region_agr_2019_V2.csv", sep = ";", encoding = "Latin-1")
 
-# Esto es data de ejemplo para colocar en el mapa:
-df = pd.DataFrame({
-    "Name": ["Example" + str(i + 1) for i in range(100)],
-    # Latitude between 4.700100 and 4.710000
-    "Latitud": [random.uniform(4.700100, 4.710000) for i in range(100)],
-    # Longitude between -74.070100 and -74.080000
-    "Longitud": [random.uniform(-74.070100, -74.080000) for i in range(100)],
-    "Clientes": [random.randint(0, 100) for i in range(100)],
-    "PromedioCompra": [random.uniform(0, 100) for i in range(100)],
-})
+#----Info geográfica de las tiendas físicas:
+#centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
+centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL") \
+                                                  & (centro_region_agr_2019["latitud"] > 0)\
+                                                   & (centro_region_agr_2019["frecuencia"] < 4)] #excluir San Andrés??
+#centro_region_agr_2019_TP["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
+#centro_region_agr_2019_TP["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))] 
 
-fig = px.scatter_mapbox(df, lat="Latitud", lon="Longitud", color="PromedioCompra",
-                        size="Clientes", mapbox_style="carto-positron", zoom=14.5)
+#----Info geográfica de las tiendas virtuales:
+centro_region_agr_2019_TV = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] == "TIENDA VIRTUAL"]
+centro_region_agr_2019_TV["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TV))]
+centro_region_agr_2019_TV["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TV))] 
 
-map_graph = dcc.Graph(
-    id="map_graph",
-    figure=fig
+
+
+map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud", lon="longitud", color="frecuencia",
+                        size="visitas", mapbox_style="carto-positron",
+                        height = 700, width = 600, zoom=4.5)
+
+map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud", lon="longitud", color="frecuencia",
+                        size="visitas", mapbox_style="carto-positron",
+                        height = 700, width = 600, zoom=13.5)
+
+
+map_graph1 = dcc.Graph(
+    id="map_graph1",
+    figure=map1
+    )
+
+map_graph2 = dcc.Graph(
+    id="map_graph2",
+    figure=map2
+    )
+
+tabla1 = dash_table.DataTable(
+    id='table',
+    columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
+    data=bd_agr_year.iloc[:, :-2].to_dict('records')
 )
 
 # Aca van todas la gráficas:
 graphs = html.Div([
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="graf1", figure=graf1)
-        ]),
+            dcc.Graph(id="graf6", figure=graf6)
+            ]),
         dbc.Col([
-            dcc.Graph(id="graf3", figure=graf3,
-                      style={"margin-left": "10rem"}),
-        ])
-    ]),
+            tabla1
+            ]),
+        ]),
     dbc.Row([
         dbc.Col([
+            dcc.Graph(id="graf1", figure=graf1)
+            ]),
+        
+        dbc.Col([
+            dcc.Graph(id="graf3", figure=graf3, style={"margin-left": "10rem"}),
+            ])
+        ]),
+    
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id="graf0", figure=graf0)
+        ]),
+        dbc.Col([
             dcc.Graph(id="graf5", figure=graf5)
-        ])
+        ]),
     ])
 ])
 
@@ -82,11 +118,6 @@ row = html.Div(
      ], style={})
 
 
-tabla1 = dash_table.DataTable(
-    id='table',
-    columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
-    data=bd_agr_year.iloc[:, :-2].to_dict('records')
-)
 
 summary = html.Div([
     dbc.Row([
@@ -99,27 +130,39 @@ summary = html.Div([
                 bd_unicos.iloc[0, 1]), style={"margin-left": "2rem"}),
             html.Div("Total Revenue:" + '{:10,.0f}'.format(
                 bd_unicos.iloc[0, 4]), style={"margin-left": "2rem"}),
+            html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
+            html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
 
         ]),
         dbc.Col([
-            html.Div(
-                "Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-right": "10rem"}),
-            html.Div("Info. hasta" +
-                     '{}'.format(bd_unicos.iloc[0, 6]), style={})
+            #html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-right": "10rem"}),
+            #html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={})
         ]),
     ]),
 ])
 
-
+#----------------------------------------------------------------- Content
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
-    summary,
-    tabla1,
+    summary,    
     dropdown1,
-    graphs
+    graphs,
+    html.Div([
+        dbc.Row([
+            dbc.Col([
+                html.H5("Frecuencia tiendas físicas"),
+                map_graph1
+                ]),
+            dbc.Col([
+                html.H5("Frecuencia tiendas virtuales"),
+                map_graph2
+                ]),
+            ])
+        ]),    
 ], style={"margin-left": "10rem"})
 
+#------------------------------------------------------------------- Layout
 app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
