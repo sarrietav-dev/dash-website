@@ -17,13 +17,13 @@ bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv",
                           sep=";")
 
 bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",
-                 sep=";")
+                        sep=";")
 
 
 bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv",
-                 sep = ";")
+                      sep=";")
 
-#########################################################################TRANSFORMACION DE BASES DE DATOS
+# TRANSFORMACION DE BASES DE DATOS
 
 bd_agr_month["ticket_prom"] = bd_agr_month["vlr_neto"] / \
     bd_agr_month["qt_facturas_unq"]
@@ -34,26 +34,27 @@ bd_agr_month["trim_año"] = bd_agr_month["year"].astype(
 
 # % Crecimiento MoM por canal
 
-var = "vlr_neto" # o vlr_neto
+var = "vlr_neto"  # o vlr_neto
 
 para = ["TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]
 for t in para:
     deltas = []
-    temp = bd_agr_month[bd_agr_month["tipo_tienda"] == t][var].reset_index() 
+    temp = bd_agr_month[bd_agr_month["tipo_tienda"] == t][var].reset_index()
     for i, e in enumerate(temp[var]):
-        meses_ex = [0,1,2,3,4,5,6,7,8,9,10,11]
+        meses_ex = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         if i in meses_ex:
             a = None
         else:
             a = float((e/temp[var][i-12])-1)
         deltas.append(a)
     deltas = pd.Series(deltas)
-    if t == "TIENDA PROPIA":        
-        deltas_todo =   deltas
+    if t == "TIENDA PROPIA":
+        deltas_todo = deltas
     else:
-        deltas_todo =  pd.concat([deltas_todo, deltas], axis = 1)
-deltas_todo = pd.concat([pd.Series(bd_agr_month["year_factura"].unique()), deltas_todo], axis = 1)
-deltas_todo = deltas_todo.iloc[12:,]
+        deltas_todo = pd.concat([deltas_todo, deltas], axis=1)
+deltas_todo = pd.concat(
+    [pd.Series(bd_agr_month["year_factura"].unique()), deltas_todo], axis=1)
+deltas_todo = deltas_todo.iloc[12:, ]
 deltas_todo.columns = ["fecha", "TP", "TV", "FR"]
 
 
@@ -66,37 +67,36 @@ layout = go.Layout(
     title='Variaciones MoM por canal',
     title_x=0.5,
     title_y=0.8,
-    yaxis_title = "%variación",
-    xaxis_title = "mes",    
+    yaxis_title="%variación",
+    xaxis_title="mes",
     xaxis=dict(
         showline=False,
         showgrid=False
-            ),
+    ),
     yaxis=dict(
         showline=True,
         showgrid=False
-        ),
+    ),
     plot_bgcolor="whitesmoke"
-    )
-graf0 = go.Figure(layout = layout)
+)
+graf0 = go.Figure(layout=layout)
 graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["TP"],
-                    mode='lines+markers',
-                    name='TP',
-                    line = dict(color = "gold")
-                        ))
-                    
-graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["TV"],
-                    mode='lines+markers',
-                    name='TV',
-                    line = dict(color = "black")
-                        ))
-graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["FR"],
-                    mode='lines+markers',
-                    name='FR',
-                    line = dict(color = "grey")
-                         
-                        ))
+                           mode='lines+markers',
+                           name='TP',
+                           line=dict(color="gold")
+                           ))
 
+graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["TV"],
+                           mode='lines+markers',
+                           name='TV',
+                           line=dict(color="black")
+                           ))
+graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["FR"],
+                           mode='lines+markers',
+                           name='FR',
+                           line=dict(color="grey")
+
+                           ))
 
 
 # GRAFICA 1: BAR Ingresos por canal
@@ -144,16 +144,17 @@ graf4 = px.pie(bd_agr_month, values='qt_facturas_unq', names='tipo_tienda', colo
                title='%Número de ventas por canal')
 
 # GRAFICA 5: LINE Evolución ticket promedio
-graf5 = px.line(bd_agr_month, x = "year_factura", y = "ticket_prom", 
-            color = "tipo_tienda", width=600, height=400,
-             color_discrete_map={
-                "TIENDA PROPIA": "gold",
-                "TIENDA VIRTUAL": "black",
-                "FRANQUICIAS": "silver"
-             },
-             category_orders={"tipo_tienda": ["TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},             
-            title = "Evolución ticket promedio",
-            )
+graf5 = px.line(bd_agr_month, x="year_factura", y="ticket_prom",
+                color="tipo_tienda", width=600, height=400,
+                color_discrete_map={
+                    "TIENDA PROPIA": "gold",
+                    "TIENDA VIRTUAL": "black",
+                    "FRANQUICIAS": "silver"
+                },
+                category_orders={"tipo_tienda": [
+                    "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                title="Evolución ticket promedio",
+                )
 graf5.update_layout(xaxis_tickangle=90)
 
 
@@ -169,12 +170,12 @@ layout = go.Layout(
     title='Frecuencia acumulada por mes',
     title_x=0.5,
     title_y=0.8,
-    xaxis_title = "mes",
-    yaxis_title = "frecuencia acumulada",
+    xaxis_title="mes",
+    yaxis_title="frecuencia acumulada",
     xaxis=dict(
         showline=True,
         showgrid=True
-            ),
+    ),
     yaxis=dict(
         showline=True,
         showgrid=False
@@ -182,34 +183,34 @@ layout = go.Layout(
     plot_bgcolor="whitesmoke"
 )
 
-graf6 = go.Figure(layout = layout)
+graf6 = go.Figure(layout=layout)
 graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año1]["mes"], y=bd_frec[bd_frec["yeard"] == año1]["frec_acum"],
-                    mode='lines+markers',
-                    name=str(año1),
-                    line = dict(color = "gold")
-                          ))
+                           mode='lines+markers',
+                           name=str(año1),
+                           line=dict(color="gold")
+                           ))
 graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año2]["mes"], y=bd_frec[bd_frec["yeard"] == año2]["frec_acum"],
-                    mode='lines+markers',
-                    name=str(año2),
-                    line = dict(color = "orange")
-                          ))
+                           mode='lines+markers',
+                           name=str(año2),
+                           line=dict(color="orange")
+                           ))
 graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año3]["mes"], y=bd_frec[bd_frec["yeard"] == año3]["frec_acum"],
-                    mode='lines+markers',
-                    name=str(año3),
-                    line = dict(color = "tomato")
-                          ))
+                           mode='lines+markers',
+                           name=str(año3),
+                           line=dict(color="tomato")
+                           ))
 
 # Data real del mapa (provisional falta lat y long):
 centro_region_agr_2019 = pd.read_csv(
-    "data/centro_region_agr_2019.csv", sep=";")
+    "data/centro_region_agr_2019_V2.csv", sep=";", encoding="Latin-1")
 
 # ----Info geográfica de las tiendas físicas:
-centro_region_agr_2019_TP = centro_region_agr_2019[
-    centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
-centro_region_agr_2019_TP["latitud"] = [random.uniform(
-    4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
-centro_region_agr_2019_TP["longitud"] = [
-    random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))]
+#centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
+centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL")
+                                                   & (centro_region_agr_2019["latitud"] > 0)
+                                                   & (centro_region_agr_2019["frecuencia"] < 4)]  # excluir San Andrés??
+#centro_region_agr_2019_TP["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
+#centro_region_agr_2019_TP["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))]
 
 # ----Info geográfica de las tiendas virtuales:
 centro_region_agr_2019_TV = centro_region_agr_2019[
@@ -222,7 +223,7 @@ centro_region_agr_2019_TV["longitud"] = [
 
 map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud", lon="longitud", color="frecuencia",
                          size="visitas", mapbox_style="carto-positron",
-                         height=700, width=600, zoom=13.5)
+                         height=700, width=600, zoom=4.5)
 
 map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud", lon="longitud", color="frecuencia",
                          size="visitas", mapbox_style="carto-positron",
