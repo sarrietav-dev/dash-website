@@ -88,23 +88,18 @@ def main_page(app, visible):
 
 def sidebar(visible):
     SIDEBAR_STYLE["display"] = "block" if visible else "none"
-    sidebar = html.Div(
+    sidebar = html.Nav(
         [
-            html.H4("Menú", className="lead"),  # display-4
+            html.H4("Menú", className="lead navbar-brand"),  # display-4
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
-            html.P(
-                "Navegar al elemento deseado", className="lead"  # Esto es un elemento de párrafo
-            ),
-            dbc.Nav(
+            html.Div(
                 [
-                    dbc.Button("Main", id="link-hoja-main"),
-                    dbc.Button("KPI's", id="link-hoja-1"),
-                    dbc.Button("Clustering: definición", id="link-hoja-2"),
-                    dbc.Button("Clustering: resultados", id="link-hoja-3"),
+                    dbc.Button("Main", id="link-hoja-main", className="btn btn-warning m-1"),
+                    dbc.Button("KPI's", id="link-hoja-1", className="btn btn-warning m-1"),
+                    dbc.Button("Clustering: definición", id="link-hoja-2", className="btn btn-warning m-1"),
+                    dbc.Button("Clustering: resultados", id="link-hoja-3", className="btn btn-warning m-1"),
                 ],
-                vertical=True,  # Esto para qué?
-                pills=True,  # Esto para qué?
             ),
-        ], style=SIDEBAR_STYLE
+        ], style=SIDEBAR_STYLE, className="navbar navbar-dark bg-dark"
     )
     return sidebar

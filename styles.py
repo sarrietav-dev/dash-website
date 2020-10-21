@@ -14,8 +14,10 @@ SIDEBAR_STYLE = {
     "bottom": 0,
     "width": "10rem",
     "padding": "2rem 1rem",
-    "background-color": "#AFADA6",  # estos son los códigos de colores HTML
     "z-index": "1",
+    "display": "flex",
+    "flex-direction": "column",
+    "justify-content": "center",
 }
 
 CONTENT_STYLE_SIDEBAR = {
