@@ -204,7 +204,7 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
 
 # TODO: Make a callback for graph1 based on year, trim_año or year_factura for x. And some bullet points for vlr_neto and qt_facturas.
 @app.callback(
-    Output("graf1", "figure"),
+    [Output("graf1", "figure"), Output("graf3", "figure")],
     [Input("date_dropdown", "value"), Input("radio_items", "value")]
 )
 def foo(drop, radio):
@@ -218,7 +218,16 @@ def foo(drop, radio):
                        "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
                    title="Ingresos por canal (Millones COP)")
     graf1.update_layout(xaxis_tickangle=90)
-    return graf1
+
+    # GRAFICA 3: PIE Share de ingresos
+    graf3 = px.pie(bd_agr_month, values=radio, names='tipo_tienda', color="tipo_tienda",  width=400, height=400,
+                   color_discrete_map={
+                       "TIENDA PROPIA": "gold",
+                       "TIENDA VIRTUAL": "black",
+                       "FRANQUICIAS": "silver"
+                   },
+                   title='%Ingresos por canal')
+    return graf1, graf3
 
 
 # TODO: Make a callback that changes graph1 and graph3 based on vlr_neto and qt_facturas.
