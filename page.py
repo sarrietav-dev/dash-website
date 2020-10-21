@@ -204,7 +204,6 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
         return hoja_principal
 
 
-# TODO: Make a callback for graph1 based on year, trim_año or year_factura for x. And some bullet points for vlr_neto and qt_facturas.
 @app.callback(
     [Output("graf1", "figure"), Output("graf3", "figure")],
     [Input("date_dropdown", "value"), Input("radio_items", "value")]
@@ -232,6 +231,5 @@ def foo(drop, radio):
     return graf1, graf3
 
 
-# TODO: Make a callback that changes graph1 and graph3 based on vlr_neto and qt_facturas.
 if __name__ == "__main__":
     app.run_server(debug=True)
