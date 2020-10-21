@@ -12,8 +12,8 @@ def main_page(app, visible):
             dbc.Col([
                 html.Div(
                     html.Img(src=app.get_asset_url("banner.webp"), style={
-                             "max-width": "100%", "height": "auto"}),
-                )
+                             "max-width": "100%", "height": "auto", "width": "55%"}),
+                style={"display": "flex", "justify-content": "center"})
             ])
         ]),
         dbc.Row(
@@ -50,7 +50,8 @@ def main_page(app, visible):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there", color="dark", id="button-cluster")
+                        dbc.Button("Go there", color="dark",
+                                   id="button-cluster")
                     ]),
                 ], color="warning", outline=True)
             ),
@@ -62,7 +63,8 @@ def main_page(app, visible):
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there", color="dark", id="button-result")
+                        dbc.Button("Go there", color="dark",
+                                   id="button-result")
                     ])
                 ], color="warning", outline=True)
             ),
@@ -79,7 +81,7 @@ def main_page(app, visible):
                 ], color="warning", outline=True)
             ),
         ], className="m-4")
-    ], style={"display": "block" if visible else "none"})
+    ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
 
     return main_page
 
