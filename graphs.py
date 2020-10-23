@@ -202,32 +202,31 @@ graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año3]["mes"], y=bd_fre
 
 # Data real del mapa (provisional falta lat y long):
 centro_region_agr_2019 = pd.read_csv(
-    "data/centro_region_agr_2019_V2.csv", sep=";", encoding="Latin-1")
+    "data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
+#------------------------------------------------------------------------- info geo de: http://blog.jorgeivanmeza.com/wp-content/uploads/2008/09/municipioscolombiacsv.txt
+
 
 # ----Info geográfica de las tiendas físicas:
 #centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
 centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL")
-                                                   & (centro_region_agr_2019["latitud"] > 0)
+                                                   & (centro_region_agr_2019["latitud_c"] > 0)
                                                    & (centro_region_agr_2019["frecuencia"] < 4)]  # excluir San Andrés??
-#centro_region_agr_2019_TP["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
-#centro_region_agr_2019_TP["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))]
 
 # ----Info geográfica de las tiendas virtuales:
-centro_region_agr_2019_TV = centro_region_agr_2019[
-    centro_region_agr_2019["tipo_tienda"] == "TIENDA VIRTUAL"]
-centro_region_agr_2019_TV["latitud"] = [random.uniform(
-    4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TV))]
-centro_region_agr_2019_TV["longitud"] = [
-    random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TV))]
+centro_region_agr_2019_TV = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] == "TIENDA VIRTUAL")
+                                                   & (centro_region_agr_2019["latitud_m"] > 0)
+                                                   & (centro_region_agr_2019["frecuencia"] < 4)]
 
+#centro_region_agr_2019_TV["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TV))]
+#centro_region_agr_2019_TV["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TV))]
 
-map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud", lon="longitud", color="frecuencia",
+map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud_c", lon="longitud_c", color="frecuencia",
                          size="visitas", mapbox_style="carto-positron",
                          height=700, width=600, zoom=4.5)
 
-map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud", lon="longitud", color="frecuencia",
+map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud_m", lon="longitud_m", color="frecuencia",
                          size="visitas", mapbox_style="carto-positron",
-                         height=700, width=600, zoom=13.5)
+                         height=700, width=600, zoom=4.5)
 
 
 map_graph1 = dcc.Graph(
@@ -243,24 +242,5 @@ map_graph2 = dcc.Graph(
 tabla1 = dash_table.DataTable(
     id='table',
     columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
-    data=bd_agr_year.iloc[:, :-2].to_dict('records'),
-    style_cell_conditional=[
-        {
-            'if': {'column_id': c},
-            'textAlign': 'left'
-        } for c in ['Date', 'Region']
-    ],
-    style_data_conditional=[
-        {
-            'if': {'row_index': 'odd'},
-            'backgroundColor': 'rgb(248, 248, 248)'
-        }
-    ],
-    style_header={
-        'backgroundColor': 'rgb(230, 230, 230)',
-        'fontWeight': 'bold'
-    },
-    style_table={
-        'overflowX': 'auto'
-    }
+    data=bd_agr_year.iloc[:, :-2].to_dict('records')
 )
