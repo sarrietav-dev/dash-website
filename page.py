@@ -1,94 +1,22 @@
 import os
 import dash
 import random
+import numpy as np
 import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
-import numpy as np
+from dash.dependencies import Input, Output
 
 from graphs import *
 from styles import *
-from layouts import main_page, sidebar
+from layouts import *
+
 
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
-############################################### Data real del mapa (provisional falta lat y long):
-centro_region_agr_2019 = pd.read_csv(
-    "data\centro_region_agr_2019_V2.csv", sep = ";", encoding = "Latin-1")
-
-#----Info geográfica de las tiendas físicas:
-#centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
-centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL") \
-                                                  & (centro_region_agr_2019["latitud"] > 0)\
-                                                   & (centro_region_agr_2019["frecuencia"] < 4)] #excluir San Andrés??
-#centro_region_agr_2019_TP["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TP))]
-#centro_region_agr_2019_TP["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TP))] 
-
-#----Info geográfica de las tiendas virtuales:
-centro_region_agr_2019_TV = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] == "TIENDA VIRTUAL"]
-centro_region_agr_2019_TV["latitud"] = [random.uniform(4.700100, 4.710000) for i in range(len(centro_region_agr_2019_TV))]
-centro_region_agr_2019_TV["longitud"] = [random.uniform(-74.070100, -74.080000) for i in range(len(centro_region_agr_2019_TV))] 
-
-
-
-map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud", lon="longitud", color="frecuencia",
-                        size="visitas", mapbox_style="carto-positron",
-                        height = 700, width = 600, zoom=4.5)
-
-map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud", lon="longitud", color="frecuencia",
-                        size="visitas", mapbox_style="carto-positron",
-                        height = 700, width = 600, zoom=13.5)
-
-
-map_graph1 = dcc.Graph(
-    id="map_graph1",
-    figure=map1
-    )
-
-map_graph2 = dcc.Graph(
-    id="map_graph2",
-    figure=map2
-    )
-
-tabla1 = dash_table.DataTable(
-    id='table',
-    columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
-    data=bd_agr_year.iloc[:, :-2].to_dict('records')
-)
-
-# Aca van todas la gráficas:
-graphs = html.Div([
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf6", figure=graf6)
-            ]),
-        dbc.Col([
-            tabla1
-            ]),
-        ]),
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf1", figure=graf1)
-            ]),
-        
-        dbc.Col([
-            dcc.Graph(id="graf3", figure=graf3, style={"margin-left": "10rem"}),
-            ])
-        ]),
-    
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf0", figure=graf0)
-        ]),
-        dbc.Col([
-            dcc.Graph(id="graf5", figure=graf5)
-        ]),
-    ])
-])
 
 # Dropdown1:
 # Este dropdown es para graf1 y graf3, para seleccionar ver en cantidad o rev
@@ -103,20 +31,12 @@ dropdown1 = html.Div([
         ])
 ])
 
-# slider = dcc.Slider(id="slider",
-# min=bd["year_factura"].min(),
-# max=bd["year_factura"].max(),
-# value=bd["year_factura"].max(),
-# marks={str(year): str(year) for year in bd["year_factura"].unique()}, step=None
-# )
-
 #################################################################################################################################
 ############################################################## CONTENIDO #########################################################
 
 row = html.Div(
     [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
      ], style={})
-
 
 
 summary = html.Div([
@@ -130,8 +50,10 @@ summary = html.Div([
                 bd_unicos.iloc[0, 1]), style={"margin-left": "2rem"}),
             html.Div("Total Revenue:" + '{:10,.0f}'.format(
                 bd_unicos.iloc[0, 4]), style={"margin-left": "2rem"}),
-            html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
-            html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
+            html.Div(
+                "Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
+            html.Div(
+                "Info. hasta" + '{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
 
         ]),
         dbc.Col([
@@ -145,7 +67,7 @@ summary = html.Div([
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
-    summary,    
+    summary,
     dropdown1,
     graphs,
     html.Div([
@@ -153,13 +75,13 @@ content = html.Div([
             dbc.Col([
                 html.H5("Frecuencia tiendas físicas"),
                 map_graph1
-                ]),
+            ]),
             dbc.Col([
                 html.H5("Frecuencia tiendas virtuales"),
                 map_graph2
-                ]),
-            ])
-        ]),    
+            ]),
+        ])
+    ]),
 ], style={"margin-left": "10rem"})
 
 #------------------------------------------------------------------- Layout
@@ -223,6 +145,33 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
         return hoja_2_layout
     else:
         return hoja_principal
+
+
+@app.callback(
+    [Output("graf1", "figure"), Output("graf3", "figure")],
+    [Input("date_dropdown", "value"), Input("radio_items", "value")]
+)
+def foo(drop, radio):
+    graf1 = px.bar(bd_agr_month, x=drop, y=radio, color="tipo_tienda", width=800, height=400,
+                   color_discrete_map={
+                       "TIENDA PROPIA": "gold",
+                       "TIENDA VIRTUAL": "black",
+                       "FRANQUICIAS": "silver"
+                   },
+                   category_orders={"tipo_tienda": [
+                       "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                   title="Ingresos por canal (Millones COP)")
+    graf1.update_layout(xaxis_tickangle=90)
+
+    # GRAFICA 3: PIE Share de ingresos
+    graf3 = px.pie(bd_agr_month, values=radio, names='tipo_tienda', color="tipo_tienda",  width=400, height=400,
+                   color_discrete_map={
+                       "TIENDA PROPIA": "gold",
+                       "TIENDA VIRTUAL": "black",
+                       "FRANQUICIAS": "silver"
+                   },
+                   title='%Ingresos por canal')
+    return graf1, graf3
 
 
 if __name__ == "__main__":
