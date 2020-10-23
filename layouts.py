@@ -14,7 +14,7 @@ def main_page(app, visible):
                 html.Div(
                     html.Img(src=app.get_asset_url("banner.webp"), style={
                              "max-width": "100%", "height": "auto", "width": "55%"}),
-                style={"display": "flex", "justify-content": "center"})
+                    style={"display": "flex", "justify-content": "center"})
             ])
         ]),
         dbc.Row(
@@ -95,15 +95,20 @@ def sidebar(visible):
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
             html.Div(
                 [
-                    dbc.Button("Main", id="link-hoja-main", className="btn btn-warning m-1"),
-                    dbc.Button("KPI's", id="link-hoja-1", className="btn btn-warning m-1"),
-                    dbc.Button("Clustering: definición", id="link-hoja-2", className="btn btn-warning m-1"),
-                    dbc.Button("Clustering: resultados", id="link-hoja-3", className="btn btn-warning m-1"),
+                    dbc.Button("Main", id="link-hoja-main",
+                               className="btn btn-warning m-1"),
+                    dbc.Button("KPI's", id="link-hoja-1",
+                               className="btn btn-warning m-1"),
+                    dbc.Button("Clustering: definición", id="link-hoja-2",
+                               className="btn btn-warning m-1"),
+                    dbc.Button("Clustering: resultados", id="link-hoja-3",
+                               className="btn btn-warning m-1"),
                 ],
             ),
         ], style=SIDEBAR_STYLE, className="navbar navbar-dark bg-dark"
     )
     return sidebar
+
 
 graphs = html.Div([
     dbc.Row([
@@ -120,7 +125,7 @@ graphs = html.Div([
                 placeholder="Options",
                 id="date_dropdown",
                 value="year_factura",
-                className="dropdow  n",
+                className="dropdown m-3",
                 options=[
                     {"label": "Year", "value": "year"},
                     {"label": "Trim Año", "value": "trim_año"},
@@ -131,6 +136,7 @@ graphs = html.Div([
             dbc.RadioItems(
                 id="radio_items",
                 value="vlr_neto",
+                className="m-3",
                 options=[
                     {"label": "vlr_neto", "value": "vlr_neto"},
                     {"label": "qt_facturas", "value": "qt_facturas"}
@@ -150,10 +156,14 @@ graphs = html.Div([
 
     dbc.Row([
         dbc.Col([
-            dcc.Graph(id="graf0", figure=graf0)
+            html.Div(
+                dcc.Graph(id="graf0", figure=graf0)
+            ),
         ]),
         dbc.Col([
-            dcc.Graph(id="graf5", figure=graf5)
+            html.Div(
+                dcc.Graph(id="graf5", figure=graf5)
+            ),
         ]),
     ])
 ])
