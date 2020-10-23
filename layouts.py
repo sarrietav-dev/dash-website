@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
 from styles import *
+from graphs import *
 
 
 def main_page(app, visible):
@@ -103,3 +104,56 @@ def sidebar(visible):
         ], style=SIDEBAR_STYLE, className="navbar navbar-dark bg-dark"
     )
     return sidebar
+
+graphs = html.Div([
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id="graf6", figure=graf6)
+        ]),
+        dbc.Col([
+            tabla1
+        ]),
+    ]),
+    dbc.Row([
+        dbc.Col(
+            dcc.Dropdown(
+                placeholder="Options",
+                id="date_dropdown",
+                value="year_factura",
+                className="dropdow  n",
+                options=[
+                    {"label": "Year", "value": "year"},
+                    {"label": "Trim Año", "value": "trim_año"},
+                    {"label": "Year Factura", "value": "year_factura"},
+                ])
+        ),
+        dbc.Col([
+            dbc.RadioItems(
+                id="radio_items",
+                value="vlr_neto",
+                options=[
+                    {"label": "vlr_neto", "value": "vlr_neto"},
+                    {"label": "qt_facturas", "value": "qt_facturas"}
+                ])
+        ])
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id="graf1", figure=graf1)
+        ]),
+
+        dbc.Col([
+            dcc.Graph(id="graf3", figure=graf3,
+                      style={"margin-left": "10rem"}),
+        ])
+    ]),
+
+    dbc.Row([
+        dbc.Col([
+            dcc.Graph(id="graf0", figure=graf0)
+        ]),
+        dbc.Col([
+            dcc.Graph(id="graf5", figure=graf5)
+        ]),
+    ])
+])

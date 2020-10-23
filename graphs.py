@@ -243,5 +243,24 @@ map_graph2 = dcc.Graph(
 tabla1 = dash_table.DataTable(
     id='table',
     columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
-    data=bd_agr_year.iloc[:, :-2].to_dict('records')
+    data=bd_agr_year.iloc[:, :-2].to_dict('records'),
+    style_cell_conditional=[
+        {
+            'if': {'column_id': c},
+            'textAlign': 'left'
+        } for c in ['Date', 'Region']
+    ],
+    style_data_conditional=[
+        {
+            'if': {'row_index': 'odd'},
+            'backgroundColor': 'rgb(248, 248, 248)'
+        }
+    ],
+    style_header={
+        'backgroundColor': 'rgb(230, 230, 230)',
+        'fontWeight': 'bold'
+    },
+    style_table={
+        'overflowX': 'auto'
+    }
 )

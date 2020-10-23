@@ -11,66 +11,12 @@ from dash.dependencies import Input, Output
 
 from graphs import *
 from styles import *
-from layouts import main_page, sidebar
+from layouts import *
 
 
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
-
-# Aca van todas la gráficas:
-graphs = html.Div([
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf6", figure=graf6)
-        ]),
-        dbc.Col([
-            tabla1
-        ]),
-    ]),
-    dbc.Row([
-        dbc.Col(
-            dcc.Dropdown(
-                placeholder="Options",
-                id="date_dropdown",
-                value="year_factura",
-                className="dropdow  n",
-                options=[
-                    {"label": "Year", "value": "year"},
-                    {"label": "Trim Año", "value": "trim_año"},
-                    {"label": "Year Factura", "value": "year_factura"},
-                ])
-        ),
-        dbc.Col([
-            dbc.RadioItems(
-                id="radio_items",
-                value="vlr_neto",
-                options=[
-                    {"label": "vlr_neto", "value": "vlr_neto"},
-                    {"label": "qt_facturas", "value": "qt_facturas"}
-                ])
-        ])
-    ]),
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf1", figure=graf1)
-        ]),
-
-        dbc.Col([
-            dcc.Graph(id="graf3", figure=graf3,
-                      style={"margin-left": "10rem"}),
-        ])
-    ]),
-
-    dbc.Row([
-        dbc.Col([
-            dcc.Graph(id="graf0", figure=graf0)
-        ]),
-        dbc.Col([
-            dcc.Graph(id="graf5", figure=graf5)
-        ]),
-    ])
-])
 
 # Dropdown1:
 # Este dropdown es para graf1 y graf3, para seleccionar ver en cantidad o rev
