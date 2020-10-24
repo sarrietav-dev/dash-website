@@ -32,7 +32,23 @@ bd_agr_month["trim_año"] = bd_agr_month["year"].astype(
     str) + "-Q" + bd_agr_month["trimestre"].astype(str)
 
 
-# % Crecimiento MoM por canal
+# -------------------------------------------------------------- TRANSFORMACION PARA TABLE1
+bd_unicos["year_factura"] = "TOTAL"
+cols = ['year_factura', 'registros', 'fact_uniq', 'cli_uniq', 'freq', 'revenue', 'desde',  'hasta']
+bd_unicos2 = bd_unicos[cols]
+bd_unicos2 = bd_unicos2.iloc[:,:6]
+bd_unicos_merged = pd.concat([bd_agr_year.iloc[:,:-2], bd_unicos2])
+bd_unicos_merged = bd_unicos_merged.reset_index(drop = True)
+
+bd_unicos_merged.columns = ['Año', 'Registros(Núm.)', 'Compras(Núm.)', 'Clientes únicos(Núm.)','Frecuencia','Revenue(M_COP)']
+bd_unicos_merged["Revenue(M_COP)"] = (bd_unicos_merged["Revenue(M_COP)"]/1000000).apply('{:,.0f}'.format)
+bd_unicos_merged["Frecuencia"] = (bd_unicos_merged["Frecuencia"]).apply('{:,.2f}'.format)
+bd_unicos_merged["Registros(Núm.)"] = (bd_unicos_merged["Registros(Núm.)"]).apply('{:,.0f}'.format)
+bd_unicos_merged["Compras(Núm.)"] = (bd_unicos_merged["Compras(Núm.)"]).apply('{:,.0f}'.format)
+bd_unicos_merged["Clientes únicos(Núm.)"] = (bd_unicos_merged["Clientes únicos(Núm.)"]).apply('{:,.0f}'.format)
+
+
+#-------------------------------------------------------------- % Crecimiento MoM por canal
 
 var = "vlr_neto"  # o vlr_neto
 
@@ -145,7 +161,7 @@ graf4 = px.pie(bd_agr_month, values='qt_facturas_unq', names='tipo_tienda', colo
 
 # GRAFICA 5: LINE Evolución ticket promedio
 graf5 = px.line(bd_agr_month, x="year_factura", y="ticket_prom",
-                color="tipo_tienda", width=600, height=400,
+                color="tipo_tienda", width=700, height=400,
                 color_discrete_map={
                     "TIENDA PROPIA": "gold",
                     "TIENDA VIRTUAL": "black",
@@ -241,6 +257,6 @@ map_graph2 = dcc.Graph(
 
 tabla1 = dash_table.DataTable(
     id='table',
-    columns=[{"name": i, "id": i} for i in bd_agr_year.iloc[:, :-2].columns],
-    data=bd_agr_year.iloc[:, :-2].to_dict('records')
+    columns=[{"name": i, "id": i} for i in bd_unicos_merged.columns],
+    data=bd_unicos_merged.to_dict('records')
 )

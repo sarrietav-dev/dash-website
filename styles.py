@@ -18,10 +18,20 @@ SIDEBAR_STYLE = {
     "display": "flex",
     "flex-direction": "column",
     "justify-content": "center",
+    "background-color": "#716B56"
 }
 
 CONTENT_STYLE_SIDEBAR = {
     "margin-left": "10rem",
     "margin-right": "2rem",
     "padding": "2rem 1rem",
+    
+}
+
+
+CONTENT_STYLE_SUBTITLE = {
+    "margin-left": "auto",
+    "margin-right": "auto",
+    "padding-top": "0rem",
+    "background-color": "#F8DB75"
 }

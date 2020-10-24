@@ -63,14 +63,15 @@ summary = html.Div([
     ]),
 ])
 
-#----------------------------------------------------------------- Content
+#------------------------------------------------------------------ Content
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
-    summary,
-    dropdown1,
+    tabla1,
+    html.P(["Información desde >>>> " + bd_unicos.iloc[:,5][0] + "  hasta >>>> " + bd_unicos.iloc[:,6][0]]),
     graphs,
     html.Div([
+        html.H4(["Geolocalización tiendas"], style=CONTENT_STYLE_SUBTITLE),
         dbc.Row([
             dbc.Col([
                 html.H5("Frecuencia tiendas físicas"),
@@ -102,7 +103,7 @@ hoja_1_layout = html.Div([
     html.Div(id='page-1-content')
 ])
 
-hoja_2_layout = html.Div([
+hoja_2_layout = html.Div([  
     html.Div(id='page-2-content'),
     html.H1("Hoja 2 prueba"),
     main_page(app, False),
