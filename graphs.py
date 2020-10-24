@@ -7,8 +7,6 @@ import os
 import random
 import dash_core_components as dcc
 
-# TODO: Add graph 0 from John's pull request.
-
 # CARGA DE BASES DE DATOS:
 bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv",
                            sep=";")
@@ -34,21 +32,28 @@ bd_agr_month["trim_año"] = bd_agr_month["year"].astype(
 
 # -------------------------------------------------------------- TRANSFORMACION PARA TABLE1
 bd_unicos["year_factura"] = "TOTAL"
-cols = ['year_factura', 'registros', 'fact_uniq', 'cli_uniq', 'freq', 'revenue', 'desde',  'hasta']
+cols = ['year_factura', 'registros', 'fact_uniq',
+        'cli_uniq', 'freq', 'revenue', 'desde',  'hasta']
 bd_unicos2 = bd_unicos[cols]
-bd_unicos2 = bd_unicos2.iloc[:,:6]
-bd_unicos_merged = pd.concat([bd_agr_year.iloc[:,:-2], bd_unicos2])
-bd_unicos_merged = bd_unicos_merged.reset_index(drop = True)
+bd_unicos2 = bd_unicos2.iloc[:, :6]
+bd_unicos_merged = pd.concat([bd_agr_year.iloc[:, :-2], bd_unicos2])
+bd_unicos_merged = bd_unicos_merged.reset_index(drop=True)
 
-bd_unicos_merged.columns = ['Año', 'Registros(Núm.)', 'Compras(Núm.)', 'Clientes únicos(Núm.)','Frecuencia','Revenue(M_COP)']
-bd_unicos_merged["Revenue(M_COP)"] = (bd_unicos_merged["Revenue(M_COP)"]/1000000).apply('{:,.0f}'.format)
-bd_unicos_merged["Frecuencia"] = (bd_unicos_merged["Frecuencia"]).apply('{:,.2f}'.format)
-bd_unicos_merged["Registros(Núm.)"] = (bd_unicos_merged["Registros(Núm.)"]).apply('{:,.0f}'.format)
-bd_unicos_merged["Compras(Núm.)"] = (bd_unicos_merged["Compras(Núm.)"]).apply('{:,.0f}'.format)
-bd_unicos_merged["Clientes únicos(Núm.)"] = (bd_unicos_merged["Clientes únicos(Núm.)"]).apply('{:,.0f}'.format)
+bd_unicos_merged.columns = [
+    'Año', 'Registros(Núm.)', 'Compras(Núm.)', 'Clientes únicos(Núm.)', 'Frecuencia', 'Revenue(M_COP)']
+bd_unicos_merged["Revenue(M_COP)"] = (
+    bd_unicos_merged["Revenue(M_COP)"]/1000000).apply('{:,.0f}'.format)
+bd_unicos_merged["Frecuencia"] = (
+    bd_unicos_merged["Frecuencia"]).apply('{:,.2f}'.format)
+bd_unicos_merged["Registros(Núm.)"] = (
+    bd_unicos_merged["Registros(Núm.)"]).apply('{:,.0f}'.format)
+bd_unicos_merged["Compras(Núm.)"] = (
+    bd_unicos_merged["Compras(Núm.)"]).apply('{:,.0f}'.format)
+bd_unicos_merged["Clientes únicos(Núm.)"] = (
+    bd_unicos_merged["Clientes únicos(Núm.)"]).apply('{:,.0f}'.format)
 
 
-#-------------------------------------------------------------- % Crecimiento MoM por canal
+# -------------------------------------------------------------- % Crecimiento MoM por canal
 
 var = "vlr_neto"  # o vlr_neto
 
@@ -219,12 +224,13 @@ graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año3]["mes"], y=bd_fre
 # Data real del mapa (provisional falta lat y long):
 centro_region_agr_2019 = pd.read_csv(
     "data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
-#------------------------------------------------------------------------- info geo de: http://blog.jorgeivanmeza.com/wp-content/uploads/2008/09/municipioscolombiacsv.txt
+# ------------------------------------------------------------------------- info geo de: http://blog.jorgeivanmeza.com/wp-content/uploads/2008/09/municipioscolombiacsv.txt
 
 
 # ----Info geográfica de las tiendas físicas:
 #centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
 centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL")
+                                                    # FIXME: KeyError: 'latitud_c'
                                                    & (centro_region_agr_2019["latitud_c"] > 0)
                                                    & (centro_region_agr_2019["frecuencia"] < 4)]  # excluir San Andrés??
 
