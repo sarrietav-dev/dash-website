@@ -17,41 +17,35 @@ def main_page(app, visible):
                     style={"display": "flex", "justify-content": "center"})
             ])
         ]),
+        html.H3("Proyecto Perfilamiento: Aumentar la frecuencia de compra", style= {"margin-left":"10rem"}),
         dbc.Row(
-            dbc.Col(
-                html.P("Lorem ipsum dolor sit amet, \
-                    consectetur adipiscing elit. Sed ac fringilla tortor. \
-                    Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; \
-                    Duis lorem est, commodo quis molestie sed, \
-                    cursus vel purus. Nunc eu urna eget neque sollicitudin ultrices. Ut libero tortor, \
-                    pretium at tristique vitae, pretium vitae neque. Ut vestibulum mi sit amet odio vestibulum tristique. \
-                    Maecenas accumsan aliquet lacus, ut dignissim mi gravida in. In at libero volutpat, iaculis tortor sed, \
-                    dignissim felis. Pellentesque dictum molestie euismod. Mauris a efficitur justo. \
-                    Vestibulum posuere fringilla sem sed gravida. ")
+            dbc.Col(                
+                html.P("Se busca aumentar la frecuencia de compra anual por encima de 1.5 comrpas al año por cliente, \
+                        a través de un perfilamiento del cliente que permita recomendaciones que generen nuevos momentos\
+                        de compra durante el año.")
             ), className="m-3"
         ),
         dbc.Row([
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H3("KPI"),
+                        html.H4("Exploración"),
                         html.P(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                        Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there", color="dark", id="button-kpi")
+                            "Análisis de indicadores generales a través del tiempo:"),
+                        html.P("Frecuencia"),
+                        html.P("Ventas en el tiempo"),
+                        html.P("Geolocalización"),
+                        dbc.Button("IR >>", color="dark", id="button-kpi")
                     ])
                 ], color="warning", outline=True)
             ),
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H3("Cluster"),
+                        html.H4("Perfilamiento"),
                         html.P(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                        Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there", color="dark",
+                            "Resultado de los perfiles del cliente y sus carácterísticas"),
+                        dbc.Button("IR >>", color="dark",
                                    id="button-cluster")
                     ]),
                 ], color="warning", outline=True)
@@ -59,12 +53,10 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H3("Resultado"),
+                        html.H4("Recomendación"),
                         html.P(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                        Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there", color="dark",
+                            "Productos y hábitos de compra asociados a cada perfil"),
+                        dbc.Button("IR >>", color="dark",
                                    id="button-result")
                     ])
                 ], color="warning", outline=True)
@@ -72,12 +64,12 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H3("XXI"),
+                        html.H4("XXI"),
                         html.P(
                             "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
                         Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
                         commodo sollicitudin, leo quam."),
-                        dbc.Button("Go there", color="dark", id="button-xxi")
+                        dbc.Button("IR >>", color="dark", id="button-xxi")
                     ])
                 ], color="warning", outline=True)
             ),
@@ -91,34 +83,40 @@ def sidebar(visible):
     SIDEBAR_STYLE["display"] = "block" if visible else "none"
     sidebar = html.Nav(
         [
-            html.H4("Menú", className="lead navbar-brand"),  # display-4
+            html.H4("Menú", className = "lead navbar-brand", style = {"margin-left":"2rem"}),  
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
             html.Div(
                 [
-                    dbc.Button("Main", id="link-hoja-main",
+                    dbc.Button("---- Inicio -----", id="link-hoja-main",
+                               style = {"font-size": "12px"},
+                               className="btn btn-warning m-1" ),
+                    dbc.Button("Exploración", id="link-hoja-1",
+                               style = {"font-size": "12px"},
                                className="btn btn-warning m-1"),
-                    dbc.Button("KPI's", id="link-hoja-1",
+                    dbc.Button("Perfilamiento", id="link-hoja-2",
+                               style = {"font-size": "12px"},
                                className="btn btn-warning m-1"),
-                    dbc.Button("Clustering: definición", id="link-hoja-2",
-                               className="btn btn-warning m-1"),
-                    dbc.Button("Clustering: resultados", id="link-hoja-3",
+                    dbc.Button("Recomendacion", id="link-hoja-3",
+                               style = {"font-size": "12px"},
                                className="btn btn-warning m-1"),
                 ],
             ),
-        ], style=SIDEBAR_STYLE, className="navbar navbar-dark bg-dark"
+        ], style=SIDEBAR_STYLE #,className="navbar navbar-dark bg-dark"
     )
     return sidebar
 
-
+#-------------------------------------------------------------------------------- Graphs
 graphs = html.Div([
+    html.H4(["Indicadores de Frecuencia"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col([
             dcc.Graph(id="graf6", figure=graf6)
         ]),
         dbc.Col([
-            tabla1
+            dcc.Graph(id="graf6", figure=graf6) # pendiente gráfica nueva
         ]),
     ]),
+    html.H4(["Evolución de ventas"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col(
             dcc.Dropdown(
@@ -157,12 +155,12 @@ graphs = html.Div([
     dbc.Row([
         dbc.Col([
             html.Div(
-                dcc.Graph(id="graf0", figure=graf0)
+                dcc.Graph(id="graf5", figure=graf5)
             ),
         ]),
         dbc.Col([
             html.Div(
-                dcc.Graph(id="graf5", figure=graf5)
+                dcc.Graph(id="graf0", figure=graf0)
             ),
         ]),
     ])
