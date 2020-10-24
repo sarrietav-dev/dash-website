@@ -28,7 +28,6 @@ CONTENT_STYLE_SIDEBAR = {
     
 }
 
-
 CONTENT_STYLE_SUBTITLE = {
     "margin-left": "auto",
     "margin-right": "auto",
