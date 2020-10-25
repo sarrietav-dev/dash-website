@@ -174,6 +174,7 @@ def foo(drop, radio):
                    title='%Ingresos por canal')
     return graf1, graf3
 
+# TODO: Add a callback for the second map. Change the color regarding revenue or frequency.
 
 if __name__ == "__main__":
     app.run_server(debug=True)
