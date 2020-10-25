@@ -230,7 +230,6 @@ centro_region_agr_2019 = pd.read_csv(
 # ----Info geográfica de las tiendas físicas:
 #centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
 centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL")
-                                                    # FIXME: KeyError: 'latitud_c'
                                                    & (centro_region_agr_2019["latitud_c"] > 0)
                                                    & (centro_region_agr_2019["frecuencia"] < 4)]  # excluir San Andrés??
 
