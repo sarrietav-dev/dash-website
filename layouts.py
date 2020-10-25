@@ -87,7 +87,7 @@ def sidebar(visible):
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
             html.Div(
                 [
-                    dbc.Button("---- Inicio -----", id="link-hoja-main",
+                    dbc.Button("Inicio", id="link-hoja-main",
                                style = {"font-size": "12px"},
                                className="btn btn-warning m-1" ),
                     dbc.Button("Exploración", id="link-hoja-1",
