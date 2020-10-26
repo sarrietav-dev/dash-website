@@ -68,10 +68,25 @@ content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
     tabla1,
-    html.P(["Información desde >>>> " + bd_unicos.iloc[:,5][0] + "  hasta >>>> " + bd_unicos.iloc[:,6][0]]),
+    html.P(["Información desde >>>> " + bd_unicos.iloc[:, 5]
+            [0] + "  hasta >>>> " + bd_unicos.iloc[:, 6][0]]),
     graphs,
     html.Div([
         html.H4(["Geolocalización tiendas"], style=CONTENT_STYLE_SUBTITLE),
+        dbc.Row(
+            dbc.Col(
+                html.Div([
+                    dbc.RadioItems(
+                        id="map_radio_items",
+                        value="frecuencia",
+                        className="m-3",
+                        options=[
+                            {"label": "frecuencia", "value": "frecuencia"},
+                            {"label": "revenues", "value": "revenues"}
+                        ])
+                ], style={"display": "flex", "justify-content": "center"})
+            )
+        ),
         dbc.Row([
             dbc.Col([
                 html.H5("Frecuencia tiendas físicas"),
@@ -103,7 +118,7 @@ hoja_1_layout = html.Div([
     html.Div(id='page-1-content')
 ])
 
-hoja_2_layout = html.Div([  
+hoja_2_layout = html.Div([
     html.Div(id='page-2-content'),
     html.H1("Hoja 2 prueba"),
     main_page(app, False),
@@ -175,6 +190,22 @@ def foo(drop, radio):
     return graf1, graf3
 
 # TODO: Add a callback for the second map. Change the color regarding revenue or frequency.
+
+
+@app.callback([
+    Output("map_graph1", "figure"), Output("map_graph2", "figure")
+], Input("map_radio_items", "value"))
+def change_map(radio):
+    map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud_c", lon="longitud_c", color=radio,
+                             size="visitas", mapbox_style="carto-positron",
+                             height=700, width=600, zoom=4.5)
+
+    map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud_m", lon="longitud_m", color=radio,
+                             size="visitas", mapbox_style="carto-positron",
+                             height=700, width=600, zoom=4.5)
+
+    return map1, map2
+
 
 if __name__ == "__main__":
     app.run_server(debug=True)
