@@ -1,24 +1,8 @@
-import os
 import dash
-import random
-import numpy as np
-import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.exceptions import PreventUpdate
 from dash.dependencies import Input, Output
-import matplotlib.pyplot as plt
-
-import scipy
-import seaborn as sns
-from scipy.stats import norm, skew, kurtosis, describe
-import sklearn
-from sklearn.cluster import KMeans
-from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, RobustScaler, StandardScaler
-
-
-
 
 from graphs import *
 from styles import *
@@ -74,7 +58,7 @@ summary = html.Div([
     ]),
 ])
 
-#------------------------------------------------------------------ Content PAG1
+# ------------------------------------------------------------------ Content PAG1
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     row,
@@ -100,31 +84,31 @@ content = html.Div([
         ),
         dbc.Row([
             dbc.Col([
-                html.Div([html.H5("Frecuencia tiendas físicas")], style={"margin-left":"5rem"}),
+                html.Div([html.H5("Frecuencia tiendas físicas")],
+                         style={"margin-left": "5rem"}),
                 map_graph1
             ]),
             dbc.Col([
-                html.Div([html.H5("Frecuencia tiendas virtuales")], style={"margin-left":"5rem"}),
+                html.Div([html.H5("Frecuencia tiendas virtuales")],
+                         style={"margin-left": "5rem"}),
                 map_graph2
             ]),
         ])
     ]),
-    html.Div(id = "prueba"),
+    html.Div(id="prueba"),
 ], style={"margin-left": "10rem"})
 
 
-
-#------------------------------------------------------------------ Content PAG2
+# ------------------------------------------------------------------ Content PAG2
 content2 = html.Div([
     html.H1(["Perfilamiento"], style=CONTENT_STYLE),
     row,
     tabla1,
-    graphs2    
+    graphs2
 ], style={"margin-left": "10rem"})
 
 
 #dcc.Graph(id = "mg1", figure = mg1)
-
 
 
 #------------------------------------------------------------------- Layout
@@ -147,7 +131,7 @@ hoja_1_layout = html.Div([
 
 hoja_2_layout = html.Div([
     sidebar(True), content2,
-    main_page(app, False), 
+    main_page(app, False),
     html.Div(id='page-2-content')
 
 ])
@@ -189,7 +173,9 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
     else:
         return hoja_principal
 
-#------------------------------------------------------------------------- Callback para cambiar graf con tiempo, y entre $ y Qt
+# ------------------------------------------------------------------------- Callback para cambiar graf con tiempo, y entre $ y Qt
+
+
 @app.callback(
     [Output("graf1", "figure"), Output("graf3", "figure")],
     [Input("date_dropdown", "value"), Input("radio_items", "value")]
@@ -215,7 +201,6 @@ def foo(drop, radio):
                    },
                    title='%Ingresos por canal')
 
-    
     return graf1, graf3
 
 # TODO: Add a callback for the second map. Change the color regarding revenue or frequency.
@@ -236,67 +221,48 @@ def change_map(radio):
     return map1, map2
 
 
-#------------------------------------------------------------------------- Callback para cambiar tiempo de  graf5 
+# ------------------------------------------------------------------------- Callback para cambiar tiempo de  graf5
 @app.callback(
     Output("graf5", "figure"),
     Input("date_dropdown", "value")
-    )
+)
 def prueba(valor):
     if valor == "trim_año":
         return graf5_1
     elif valor == "year":
         return graf5_2
     else:
-        return graf5     
-                
+        return graf5
 
 
-# TODO: Add a callback for the second map. Change the color regarding revenue or frequency.
-
+# __________________________________________ CALLBACKS HOJA 2 ______________________________________________
 
 @app.callback(
-    [Output("map_graph1", "figure"), Output("map_graph2", "figure")
-    ], Input("map_radio_items", "value")
+    [Output("mg3", "figure"), Output("mg4", "figure")],
+    [Input("clu_dropdown_x", "value"), Input(
+        "clu_dropdown_y", "value"), Input("input_recencia", "value")]
 )
-def change_map(radio):
-    map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud_c", lon="longitud_c", color=radio,
-                             size="visitas", mapbox_style="carto-positron",
-                             height=700, width=600, zoom=4.5)
-
-    map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud_m", lon="longitud_m", color=radio,
-                             size="visitas", mapbox_style="carto-positron",
-                             height=700, width=600, zoom=4.5)
-
-    return map1, map2
-
-
-#__________________________________________ CALLBACKS HOJA 2 ______________________________________________
-
-@app.callback(
-            [Output ("mg3", "figure"), Output ("mg4", "figure")],
-            [Input("clu_dropdown_x", "value"), Input("clu_dropdown_y", "value"), Input("input_recencia", "value")]
-            )
 def change_par(valor_eje_x, valor_eje_y, vals):
-    
+
     updated_df = df3_mod[df3_mod["recencia_meses"] <= vals]
-    
+
     mg3 = px.scatter(updated_df,
-                 x = valor_eje_x,
-                 y = valor_eje_y,
-                 color="clusters",
-                 title='Scatter pares de variables')
-    
+                     x=valor_eje_x,
+                     y=valor_eje_y,
+                     color="clusters",
+                     title='Scatter pares de variables')
 
     mg4 = px.treemap(updated_df, path=[px.Constant('CLIENTES:  ' + str(updated_df["constante_cli"].sum())),
-                                "canal_det", 'region', "ciudad", "clusters"],                                 
-                                values='constante_cli',
-                                color='recencia_meses', 
-                                title = "Visualizador de clientes",
-                                color_continuous_scale='thermal_r',
-                                height = 700 )
+                                       "canal_det", 'region', "ciudad", "clusters"],
+                     values='constante_cli',
+                     color='recencia_meses',
+                     title="Visualizador de clientes",
+                     color_continuous_scale='thermal_r',
+                     height=700)
 
-    return mg3 , mg4
+    return mg3, mg4
 
-#______________________________________________________________________________________________________
+
+# ______________________________________________________________________________________________________
 if __name__ == "__main__":
     app.run_server(debug=True)
