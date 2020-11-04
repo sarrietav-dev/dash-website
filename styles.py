@@ -1,6 +1,6 @@
 # Estilo del banner de título de la página
 CONTENT_STYLE = {
-    "margin-left": "auto",
+    "margin-left": "0rem",
     "margin-right": "auto",
     "padding-top": "1rem",
     "background-color": "#FBD600"
@@ -28,9 +28,8 @@ CONTENT_STYLE_SIDEBAR = {
     
 }
 
-
 CONTENT_STYLE_SUBTITLE = {
-    "margin-left": "auto",
+    "margin-left": "1rem",
     "margin-right": "auto",
     "padding-top": "0rem",
     "background-color": "#F8DB75"
