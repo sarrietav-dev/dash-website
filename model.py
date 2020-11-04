@@ -9,6 +9,7 @@ from sklearn.decomposition import PCA
 # Input = df, DataFrame we are interested in normalizing
 # This is the Min/Max scaling method
 
+
 def normalize(df):
     result = df.copy()
 

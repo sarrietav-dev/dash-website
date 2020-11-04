@@ -7,6 +7,7 @@ from styles import *
 from graphs import *
 from model import *
 
+
 def main_page(app, visible):
     main_page = html.Div([
         dbc.Row([
@@ -17,9 +18,9 @@ def main_page(app, visible):
                     style={"display": "flex", "justify-content": "center"})
             ])
         ]),
-        html.H3("Seguimiento a la Frecuencia", style= {"margin-left":"10rem"}),
+        html.H3("Seguimiento a la Frecuencia", style={"margin-left": "10rem"}),
         dbc.Row(
-            dbc.Col(                
+            dbc.Col(
                 html.P("INTRODUCCIóN: Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
                         los resultados de negocio por medio de las herramientas analíticas y equipo humano \
                         en alianza con  el programa DS4A.\
@@ -86,30 +87,32 @@ def sidebar(visible):
     SIDEBAR_STYLE["display"] = "block" if visible else "none"
     sidebar = html.Nav(
         [
-            html.H4("Menú", className = "lead navbar-brand", style = {"margin-left":"2rem"}),  
+            html.H4("Menú", className="lead navbar-brand",
+                    style={"margin-left": "2rem"}),
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
             html.Div(
                 [
 
                     dbc.Button("Inicio", id="link-hoja-main",
-                               style = {"font-size": "12px"},
-                               className="btn btn-warning m-1" ),
+                               style={"font-size": "12px"},
+                               className="btn btn-warning m-1"),
                     dbc.Button("*Exploración*", id="link-hoja-1",
-                               style = {"font-size": "12px"},
+                               style={"font-size": "12px"},
                                className="btn btn-warning m-1"),
                     dbc.Button("Perfilamiento ", id="link-hoja-2",
-                               style = {"font-size": "12px"},
+                               style={"font-size": "12px"},
                                className="btn btn-warning m-1"),
                     dbc.Button("Recomendaciones", id="link-hoja-3",
-                               style = {"font-size": "10px"},
+                               style={"font-size": "10px"},
                                className="btn btn-warning m-1"),
                 ],
             ),
-        ], style=SIDEBAR_STYLE #,className="navbar navbar-dark bg-dark"
+        ], style=SIDEBAR_STYLE  # ,className="navbar navbar-dark bg-dark"
     )
     return sidebar
 
-#-------------------------------------------------------------------------------- Graphs PAG1
+
+# -------------------------------------------------------------------------------- Graphs PAG1
 graphs = html.Div([
     html.H4(["Indicadores de Frecuencia"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
@@ -117,8 +120,8 @@ graphs = html.Div([
             dcc.Graph(id="graf6", figure=graf6)
         ]),
         dbc.Col([
-            dcc.Graph(id="graf7", figure=graf7)            
-        ],style={"margin-left": "1rem"}),
+            dcc.Graph(id="graf7", figure=graf7)
+        ], style={"margin-left": "1rem"}),
     ]),
     html.H4(["Evolución de ventas"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
@@ -171,70 +174,76 @@ graphs = html.Div([
 ])
 
 
-#-------------------------------------------------------------------------------- Graphs PAG2
+# -------------------------------------------------------------------------------- Graphs PAG2
 
 dropdown2 = dcc.Dropdown(
-                        placeholder="Options",
-                        id="clu_dropdown_x",
-                        value="recencia_meses",
-                        className="dropdown m-3",
-                        options = [
-                            {"label": "Revenue", "value": "revenue"},
-                            {"label": "Recencia", "value": "recencia_meses"},
-                            {"label": "Visitas", "value": "visitas"},
-                            {"label": "Compras", "value": "compras"},
-                            {"label": "Ticket promedio", "value": "ticket_prom_compra"},
-                            {"label": "Precio promedio compra", "value": "precio_promedio"},
-                            {"label": "Promedio meses talla", "value": "avg_meses"},
-                            {"label": "Rango meses tallas compradas", "value": "ran_meses"},  
-                                ]
-                            )
+    placeholder="Options",
+    id="clu_dropdown_x",
+    value="recencia_meses",
+    className="dropdown m-3",
+    options=[
+        {"label": "Revenue", "value": "revenue"},
+        {"label": "Recencia", "value": "recencia_meses"},
+        {"label": "Visitas", "value": "visitas"},
+        {"label": "Compras", "value": "compras"},
+        {"label": "Ticket promedio",
+         "value": "ticket_prom_compra"},
+        {"label": "Precio promedio compra",
+         "value": "precio_promedio"},
+        {"label": "Promedio meses talla", "value": "avg_meses"},
+        {"label": "Rango meses tallas compradas",
+         "value": "ran_meses"},
+    ]
+)
 
 dropdown3 = dcc.Dropdown(
-                        placeholder="Options",
-                        id="clu_dropdown_y",
-                        value="revenue",
-                        className="dropdown m-3",
-                        options = [
-                            {"label": "Revenue", "value": "revenue"},
-                            {"label": "Recencia", "value": "recencia_meses"},
-                            {"label": "Visitas", "value": "visitas"},
-                            {"label": "Compras", "value": "compras"},
-                            {"label": "Ticket promedio", "value": "ticket_prom_compra"},
-                            {"label": "Precio promedio compra", "value": "precio_promedio"},
-                            {"label": "Promedio meses talla", "value": "avg_meses"},
-                            {"label": "Rango meses tallas compradas", "value": "ran_meses"},  
-                                ]
-                            )
+    placeholder="Options",
+    id="clu_dropdown_y",
+    value="revenue",
+    className="dropdown m-3",
+    options=[
+        {"label": "Revenue", "value": "revenue"},
+        {"label": "Recencia", "value": "recencia_meses"},
+        {"label": "Visitas", "value": "visitas"},
+        {"label": "Compras", "value": "compras"},
+        {"label": "Ticket promedio",
+         "value": "ticket_prom_compra"},
+        {"label": "Precio promedio compra",
+         "value": "precio_promedio"},
+        {"label": "Promedio meses talla", "value": "avg_meses"},
+        {"label": "Rango meses tallas compradas",
+         "value": "ran_meses"},
+    ]
+)
 
 
 input_recencia = dcc.Input(
-                        id="input_recencia",
-                        type="number",
-                        placeholder="recencia en meses",
-                        value = 25                    
-                    ) 
+    id="input_recencia",
+    type="number",
+    placeholder="recencia en meses",
+    value=25
+)
 
 slider_ticket = dcc.RangeSlider(
-                        min=df3_mod["ticket_prom_compra"].min(),
-                        max=df3_mod["ticket_prom_compra"].max(),
-                        marks={df3_mod["ticket_prom_compra"].min():{"label":"mínimo ticket"},
-                               df3_mod["ticket_prom_compra"].max():{"label":"máximo ticket"} 
-                               },
-                        value=[90000,150000]
-                        )
+    min=df3_mod["ticket_prom_compra"].min(),
+    max=df3_mod["ticket_prom_compra"].max(),
+    marks={df3_mod["ticket_prom_compra"].min(): {"label": "mínimo ticket"},
+           df3_mod["ticket_prom_compra"].max(): {"label": "máximo ticket"}
+           },
+    value=[90000, 150000]
+)
 
 
 graphs2 = html.Div([
     html.H4(["Medidas de los clústeres"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col([
-                dcc.Graph(id="mg5", figure = mg5)
+                dcc.Graph(id="mg5", figure=mg5)
                 ]),
         dbc.Col([
-                dcc.Graph(id="mg2", figure = mg2)
+                dcc.Graph(id="mg2", figure=mg2)
                 ]),
-        ]),
+    ]),
     html.H4(["Contenido clústeres"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col([
@@ -245,16 +254,24 @@ graphs2 = html.Div([
                 html.P("Ingrese valor límite de recencia en meses:"),
                 input_recencia,
                 slider_ticket,
-                ], style = {"margin-left":"5rem"}),                
+                ], style={"margin-left": "5rem"}),
         dbc.Col([
-                dcc.Graph(id="mg3", figure = mg3)
+                dcc.Graph(id="mg3", figure=mg3)
                 ]),
-        ]),
+    ]),
 
     dbc.Row([
         dbc.Col([
-                dcc.Graph(id="mg4", figure = mg4)
+                dcc.Graph(id="mg4", figure=mg4)
                 ]),
-        ])
     ])
+])
 
+
+content2 = html.Div([
+    html.H1(["Perfilamiento"], style=CONTENT_STYLE),
+    html.Div(
+        [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
+         ], style={}),
+    graphs2
+], style={"margin-left": "10rem"})

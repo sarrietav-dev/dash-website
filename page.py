@@ -29,9 +29,6 @@ dropdown1 = html.Div([
 #################################################################################################################################
 ############################################################## CONTENIDO #########################################################
 
-row = html.Div(
-    [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
-     ], style={})
 
 
 summary = html.Div([
@@ -61,7 +58,9 @@ summary = html.Div([
 # ------------------------------------------------------------------ Content PAG1
 content = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
-    row,
+    html.Div(
+        [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
+         ], style={}),
     tabla1,
     html.P(["Información desde >>>> " + bd_unicos.iloc[:, 5]
             [0] + "  hasta >>>> " + bd_unicos.iloc[:, 6][0]]),
@@ -100,12 +99,6 @@ content = html.Div([
 
 
 # ------------------------------------------------------------------ Content PAG2
-content2 = html.Div([
-    html.H1(["Perfilamiento"], style=CONTENT_STYLE),
-    row,
-    tabla1,
-    graphs2
-], style={"margin-left": "10rem"})
 
 
 #dcc.Graph(id = "mg1", figure = mg1)
@@ -202,8 +195,6 @@ def foo(drop, radio):
                    title='%Ingresos por canal')
 
     return graf1, graf3
-
-# TODO: Add a callback for the second map. Change the color regarding revenue or frequency.
 
 
 @app.callback([
