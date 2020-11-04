@@ -160,7 +160,7 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if "link-hoja-1" in changed_id or "button-kpi" in changed_id:
         return hoja_1_layout
-    elif "link-hoja2" in changed_id or "button-cluster" in changed_id:
+    elif "link-hoja-2" in changed_id or "button-cluster" in changed_id:
         return hoja_2_layout
     else:
         return hoja_principal
@@ -251,6 +251,21 @@ def change_par(valor_eje_x, valor_eje_y, vals):
                      height=700)
 
     return mg3, mg4
+
+
+@app.callback(
+    [Output("perf_paragraph", "children")],
+    [Input("perf_button1", "n_clicks"),
+     Input("perf_button2", "n_clicks"),
+     Input("perf_button3", "n_clicks"), ]
+)
+def change_paragraph(btn1, btn2, btn3):
+    if btn1 is not None:
+        return ["You clicked the 1st button"]
+    elif btn2 is not None:
+        return ["You clicked the 2st button"]
+    elif btn3 is not None:
+        return ["You clicked the 3st button"]
 
 
 # ______________________________________________________________________________________________________

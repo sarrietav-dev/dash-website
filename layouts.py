@@ -1,6 +1,7 @@
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
+from dash_html_components.Div import Div
 
 from styles import *
 from graphs import *
@@ -268,16 +269,20 @@ graphs2 = html.Div([
 
 perfilamiento_header = html.Div([
     dbc.Row([
-        dbc.Col(dbc.Button("Button1", color="secondary", id="perf_button1")),
-        dbc.Col(dbc.Button("Button2", color="secondary", id="perf_button2")),
-        dbc.Col(dbc.Button("Button3", color="secondary", id="perf_button3")),
+        html.Div([
+            dbc.Col(dbc.Button("Button1", color="secondary", id="perf_button1")),
+            dbc.Col(dbc.Button("Button2", color="secondary", id="perf_button2")),
+            dbc.Col(dbc.Button("Button3", color="secondary", id="perf_button3")),
+        ], style={"display": "flex", "justify-content": "center"}),
     ]),
     dbc.Row(
-        dbc.Col(
-            html.P(id="perf_paragraph")
-        )
+        html.Div(
+            dbc.Col(
+                html.P("", id="perf_paragraph")
+            ), style={"display": "flex", "justify-content": "center"}
+        ),
     )
-], style={"display": "flex", "justify-content": "center"})
+], style={"margin": "0 auto"})
 
 content2 = html.Div([
     html.H1(["Perfilamiento"], style=CONTENT_STYLE),
