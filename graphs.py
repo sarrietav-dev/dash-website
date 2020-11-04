@@ -371,6 +371,7 @@ centro_region_agr_2019 = pd.read_csv(
     "data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
 # ------------------ info geo de: http://blog.jorgeivanmeza.com/wp-content/uploads/2008/09/municipioscolombiacsv.txt
 
+
 # ----Info geográfica de las tiendas físicas:
 #centro_region_agr_2019_TP = centro_region_agr_2019[centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL"]
 centro_region_agr_2019_TP = centro_region_agr_2019[(centro_region_agr_2019["tipo_tienda"] != "TIENDA VIRTUAL")

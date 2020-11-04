@@ -149,6 +149,7 @@ hoja_2_layout = html.Div([
     sidebar(True), content2,
     main_page(app, False), 
     html.Div(id='page-2-content')
+
 ])
 
 
@@ -216,6 +217,23 @@ def foo(drop, radio):
 
     
     return graf1, graf3
+
+# TODO: Add a callback for the second map. Change the color regarding revenue or frequency.
+
+
+@app.callback([
+    Output("map_graph1", "figure"), Output("map_graph2", "figure")
+], Input("map_radio_items", "value"))
+def change_map(radio):
+    map1 = px.scatter_mapbox(centro_region_agr_2019_TP, lat="latitud_c", lon="longitud_c", color=radio,
+                             size="visitas", mapbox_style="carto-positron",
+                             height=700, width=600, zoom=4.5)
+
+    map2 = px.scatter_mapbox(centro_region_agr_2019_TV, lat="latitud_m", lon="longitud_m", color=radio,
+                             size="visitas", mapbox_style="carto-positron",
+                             height=700, width=600, zoom=4.5)
+
+    return map1, map2
 
 
 #------------------------------------------------------------------------- Callback para cambiar tiempo de  graf5 
