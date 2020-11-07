@@ -254,7 +254,7 @@ graphs2 = html.Div([
                 html.P("Ingrese valor límite de recencia en meses:"),
                 input_recencia,
                 slider_ticket,
-                ], style={"margin-left": "5rem"}),
+                ], style={"margin-left": "5rem"}, width=3),
         dbc.Col([
                 dcc.Graph(id="mg3", figure=mg3)
                 ]),
