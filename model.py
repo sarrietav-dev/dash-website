@@ -1,34 +1,28 @@
 # Importing all the required packages
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import scipy
-import seaborn as sns
-from scipy.stats import norm, skew, kurtosis, describe
-import sklearn
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import MinMaxScaler, MaxAbsScaler, RobustScaler, StandardScaler
-import os
 import plotly.express as px
 from sklearn.decomposition import PCA
 
-
-
 # Function Normalize
 # Input = df, DataFrame we are interested in normalizing
-# This is the Min/Max scaling method 
+# This is the Min/Max scaling method
+
 
 def normalize(df):
     result = df.copy()
-    
+
     for feature_name in df.columns:
         max_val = df[feature_name].max()
         min_val = df[feature_name].min()
-        result[feature_name] = (df[feature_name] - min_val) / (max_val - min_val)
-        
+        result[feature_name] = (
+            df[feature_name] - min_val) / (max_val - min_val)
+
     return result
 
-#----------------------------------------------------------------------------- Importar df
+
+# ----------------------------------------------------------------------------- Importar df
 df = pd.read_csv('data/offcorss_customer_202011011419_2.csv', sep=";")
 
 # reación de dos variables adicionales:
@@ -51,27 +45,28 @@ numericas = ['revenue', "ticket_prom_compra", "visitas"]
 # Estas dan un accuracy de: XXX
 
 
-con_outlier = [ 'visitas_log', 'precio_promedio_log', 'ticket_log', 'compras_x_visita_log']
+con_outlier = ['visitas_log', 'precio_promedio_log',
+               'ticket_log', 'compras_x_visita_log']
 # Filtrar bottom 1% & top 1%.
 low = .01
 high = .99
 quant_df = df[con_outlier].quantile([low, high])
-df2 = df[con_outlier].apply(lambda x: x[(x>=quant_df.loc[low,x.name]) & 
-                                    (x < quant_df.loc[high,x.name])], axis=0)
-df3 = pd.concat([df, df2], axis = 1, join ="inner")
+df2 = df[con_outlier].apply(lambda x: x[(x >= quant_df.loc[low, x.name]) &
+                                        (x < quant_df.loc[high, x.name])], axis=0)
+df3 = pd.concat([df, df2], axis=1, join="inner")
 df3 = df3.dropna()
-df3 = df3.loc[:,~df3.columns.duplicated()]
+df3 = df3.loc[:, ~df3.columns.duplicated()]
 
-#----------------------------------------------------------- Normalización de las variables seleccionadas:
-df4 =  normalize(df3[numericas])
+# ----------------------------------------------------------- Normalización de las variables seleccionadas:
+df4 = normalize(df3[numericas])
 
-#----------------------------------------------------------- Aplicación del algoritmo
+# ----------------------------------------------------------- Aplicación del algoritmo
 k = 4
 kmeans = KMeans(n_clusters=k, init='k-means++')
 kmeans.fit(df4)
 df3["clusters"] = kmeans.labels_
 
-#--------------------------------------------------------- Sumas de cuadrados:
+# --------------------------------------------------------- Sumas de cuadrados:
 kmeans.inertia_
 
 #--------------------------------------------------------------- Centroides
@@ -81,19 +76,19 @@ df_centroides.columns = list(df4[numericas])
 df_centroides = df_centroides.transpose()
 
 
-#---------------------------------------------------------------- Para de PCA:
+# ---------------------------------------------------------------- Para de PCA:
 
 clu = df3["clusters"].reset_index()
 
-pca = PCA(n_components = 2)
+pca = PCA(n_components=2)
 pca_off = pca.fit_transform(df4[numericas])
-pca_off_df = pd.DataFrame(data = pca_off, columns = ["Dim1", "Dim2"])
-pca_nombres = pd.concat([pca_off_df, clu["clusters"]], axis = 1)
+pca_off_df = pd.DataFrame(data=pca_off, columns=["Dim1", "Dim2"])
+pca_nombres = pd.concat([pca_off_df, clu["clusters"]], axis=1)
 
 
-#_____________________GRAFICOS DE MODELO _______________________________________________________________________________
+# _____________________GRAFICOS DE MODELO _______________________________________________________________________________
 
-#Modificaciones a df3 para graficar
+# Modificaciones a df3 para graficar
 df3_mod = df3.copy()
 df3_mod["clusters"] = df3_mod["clusters"].astype("string")
 df3_mod["constante_cli"] = 1
@@ -101,26 +96,26 @@ df3_mod["constante_size"] = 1
 df3_mod["recencia_meses"] = df3_mod["recencia"] / 30
 
 
-#------------------------------------------------------------------- Scatter de los PCA (MG1)
-pca_nombres["clusters"] = pca_nombres["clusters"].astype(str) 
-mg1 = px.scatter(pca_nombres, 
-                 x= "Dim1", 
-                 y = "Dim2",
+# ------------------------------------------------------------------- Scatter de los PCA (MG1)
+pca_nombres["clusters"] = pca_nombres["clusters"].astype(str)
+mg1 = px.scatter(pca_nombres,
+                 x="Dim1",
+                 y="Dim2",
                  color="clusters",
                  title='Representación gráfica clusters')
 
-#-------------------------------------------------------------------Heatmap de centroides (MG2)
-mg2 = px.imshow(df_centroides, 
+# -------------------------------------------------------------------Heatmap de centroides (MG2)
+mg2 = px.imshow(df_centroides,
                 labels=dict(x="Clúster"),
-                title= "Promedios normalizados de variables de clúster",
+                title="Promedios normalizados de variables de clúster",
                 width=500, height=400,
                 color_continuous_scale='Cividis_r'
-               )
+                )
 
-#-------------------------------------------------------------------Scatter pares de variables (MG3)
+# -------------------------------------------------------------------Scatter pares de variables (MG3)
 
-mg3 = px.scatter(df3_mod, x= "recencia_meses", 
-                 y = "avg_meses",
+mg3 = px.scatter(df3_mod, x="recencia_meses",
+                 y="avg_meses",
                  color="clusters",
                  title='Scatter pares de variables')
 
@@ -128,22 +123,23 @@ mg3 = px.scatter(df3_mod, x= "recencia_meses",
 
 # Treemap clientes por canal/region/ciudad/cluster
 mg4 = px.treemap(df3_mod, path=[px.Constant('CLIENTES:  ' + str(df3_mod["constante_cli"].sum())),
-                                "canal_det", 'region', "ciudad", "clusters"],                                 
-                                values='constante_cli',
-                                color='recencia_meses', 
-                                title = "Visualizador de clientes",
-                                color_continuous_scale='thermal_r',
-                                height = 700 )
+                                "canal_det", 'region',  "clusters"],
+                 values='constante_cli',
+                 color='recencia_meses',
+                 title="Visualizador de clientes: Canal/Región/Clúster",
+                 color_continuous_scale='thermal_r',
+                 height=700)
 
-#------------------------------------------------------------------- 3D Scatter variables clúster (MG5)
+# ------------------------------------------------------------------- 3D Scatter variables clúster (MG5)
 
-mg5 = px.scatter_3d(df3_mod, x="recencia_meses", y="avg_meses", z="visitas", 
-                  color="clusters",                     
-                  size="constante_size",
-                  opacity=1,
-                  #size="revenue", 
-                  #hover_name="district", symbol="result", 
-                  color_discrete_map = {"Joly": "blue", "Bergeron": "green", "Coderre":"red"},
-                  height = 500, width=600,
-                  title = "Visualización variables de clúster"                 
-                   )
+mg5 = px.scatter_3d(df3_mod, x="recencia_meses", y="avg_meses", z="visitas",
+                    color="clusters",
+                    size="constante_size",
+                    opacity=1,
+                    # size="revenue",
+                    # hover_name="district", symbol="result",
+                    color_discrete_map={"Joly": "blue",
+                                        "Bergeron": "green", "Coderre": "red"},
+                    height=500, width=600,
+                    title="Visualización variables de clúster"
+                    )
