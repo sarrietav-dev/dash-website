@@ -113,7 +113,6 @@ def sidebar(visible):
 
 
 # -------------------------------------------------------------------------------- Graphs PAG1
-
 graphs_tab2 = html.Div([
     html.H4(["Indicadores de Frecuencia"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
@@ -222,7 +221,6 @@ dropdown3 = dcc.Dropdown(
     ]
 )
 
-
 # Dropdown para filtrar lineplot de tiendas
 dropdown4_1 = dcc.Dropdown(
     placeholder="Options",
@@ -257,7 +255,6 @@ dropdown6_1 = dcc.Dropdown(
     searchable = False
     
 )
-
 
 
 input_recencia = dcc.Input(

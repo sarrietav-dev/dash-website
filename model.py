@@ -127,6 +127,7 @@ mg4 = px.treemap(df3_mod, path=[px.Constant('CLIENTES:  ' + str(df3_mod["constan
                  values='constante_cli',
                  color='recencia_meses',
                  title="Visualizador de clientes: Canal/Región/Clúster",
+
                  color_continuous_scale='thermal_r',
                  height=700)
 
