@@ -17,14 +17,14 @@ bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv",
 bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",
                         sep=";")
 
-
 bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv",
                       sep=";")
 
 bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",
                       sep=";")
 
-
+bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",
+                 sep = ";")
 
 # TRANSFORMACION DE BASES DE DATOS
 
@@ -364,6 +364,63 @@ graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(b
                     line = dict(color = "pink")
                           ))
 
+
+
+#------------------------------------------------------------- GRAFICA 8: LINEPLOT Frecuencia acumulada por año por CANAL - TIENDA
+
+#--------------------------------------------------- Transformación de la base
+
+bd_frec_tienda2 = bd_frec_tienda[bd_frec_tienda.duplicated()== False]
+bd_frec_tienda2["freq_acum"] = bd_frec_tienda2["compras_unicas"] / bd_frec_tienda2["clientes_unicos"]
+bd_frec_tienda2 = bd_frec_tienda2[bd_frec_tienda2["d_centro"] != 'TIENDA  SAN ANDRES  2']
+bd_frec_tienda2["d_centro"].fillna(bd_frec_tienda2["tipo_tienda"], inplace = True)
+
+
+#------------------------------------------------------------------ Plot
+layout = go.Layout(
+    autosize=False,
+    width=800,
+    height=600,
+    title='Frecuencia acumulada por mes',
+    title_x=0.5,
+    title_y=0.8,
+    xaxis_title = "mes",
+    yaxis_title = "frecuencia acumulada",
+    xaxis=dict(
+        showline=True,
+        showgrid=True
+            ),
+    yaxis=dict(
+        showline=True,
+        showgrid=False
+    ),
+    plot_bgcolor="whitesmoke"
+)
+
+
+
+graf8 = go.Figure(layout = layout)
+graf8.add_trace(go.Scatter(x= [], 
+                           y= [],                           
+                    mode='lines+markers',
+                    line = dict(color = "yellow")
+                          ))
+
+graf8.update_layout(legend=dict(
+    yanchor="bottom",
+    y=0.01,
+    xanchor="right",
+    x=0.99
+))
+
+
+#---------------------------------------------------------------------- GRAFICA 9: STRIPPLOT OJO: Pendiente poder filtrar región.
+
+graf9 = px.strip(bd_frec_tienda2, x ="mes", y = "freq_acum", color = "tipo_tienda",
+        hover_name = "d_centro", hover_data = ["clientes_unicos"],        
+        animation_frame = "yeard", range_x = [0.5,12.5],
+        title = "Frecuencia por tienda en el tiempo",
+        width = 800, height = 600)
 
 #------------------------------------------------------------------------------------------------------------------ MAPAS
 # Data real del mapa:
