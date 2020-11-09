@@ -29,41 +29,54 @@ dropdown1 = html.Div([
 #################################################################################################################################
 ############################################################## CONTENIDO #########################################################
 
-
-summary = html.Div([
-    dbc.Row([
-        dbc.Col([
-            html.Div("Núm registros:" + '{:10,.0f}'.format(
-                bd_unicos.iloc[0, 0]), style={"margin-left": "2rem"}),
-            html.Div("Clientes únicos:" + '{:10,.0f}'.format(
-                bd_unicos.iloc[0, 2]), style={"margin-left": "2rem"}),
-            html.Div("Compras únicas:" + '{:10,.0f}'.format(
-                bd_unicos.iloc[0, 1]), style={"margin-left": "2rem"}),
-            html.Div("Total Revenue:" + '{:10,.0f}'.format(
-                bd_unicos.iloc[0, 4]), style={"margin-left": "2rem"}),
-            html.Div(
-                "Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
-            html.Div(
-                "Info. hasta" + '{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
-
-        ]),
-        dbc.Col([
-            #html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-right": "10rem"}),
-            #html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={})
-        ]),
-    ]),
-])
+##summary = html.Div([
+##    dbc.Row([
+##        dbc.Col([
+##            html.Div("Núm registros:" + '{:10,.0f}'.format(
+##                bd_unicos.iloc[0, 0]), style={"margin-left": "2rem"}),
+##            html.Div("Clientes únicos:" + '{:10,.0f}'.format(
+##                bd_unicos.iloc[0, 2]), style={"margin-left": "2rem"}),
+##            html.Div("Compras únicas:" + '{:10,.0f}'.format(
+##                bd_unicos.iloc[0, 1]), style={"margin-left": "2rem"}),
+##            html.Div("Total Revenue:" + '{:10,.0f}'.format(
+##                bd_unicos.iloc[0, 4]), style={"margin-left": "2rem"}),
+##            html.Div(
+##                "Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
+##            html.Div(
+##                "Info. hasta" + '{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
+##
+##        ]),
+##        dbc.Col([
+##            #html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-right": "10rem"}),
+##            #html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={})
+##        ]),
+##    ]),
+##])
 
 # ------------------------------------------------------------------ Content PAG1
-content = html.Div([
+
+
+resumen = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     html.Div(
         [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
          ], style={}),
     tabla1,
     html.P(["Información desde >>>> " + bd_unicos.iloc[:, 5]
-            [0] + "  hasta >>>> " + bd_unicos.iloc[:, 6][0]]),
-    graphs,
+            [0] + "  hasta >>>> " + bd_unicos.iloc[:, 6][0]])
+], style={"margin-left":"10rem"})
+
+
+tab1_content = html.Div([    
+    graphs_tab1,
+    html.Div(id="prueba"),
+    ], style={"margin-left": "10rem"}
+)
+
+
+
+tab2_content = html.Div([    
+    graphs_tab2,
     html.Div([
         html.H4(["Geolocalización tiendas"], style=CONTENT_STYLE_SUBTITLE),
         dbc.Row(
@@ -93,14 +106,37 @@ content = html.Div([
             ]),
         ])
     ]),
-    html.Div(id="prueba"),
+    html.H4(["Comparador de frecuencia por tienda"], style=CONTENT_STYLE_SUBTITLE),
+    dbc.Row([
+            dcc.Graph(id="graf9", figure=graf9)
+            ], style={"margin-left":"auto"}
+        ),    
+    dbc.Row([
+        dbc.Col([
+            dropdown4_1,
+            dropdown5_1,
+            dropdown6_1,            
+            dbc.Button("Borrar", color = "Secondary",id="boton_borrar"), 
+            ],width = 4),
+        
+        dbc.Col([
+            dcc.Graph(id="graf8", figure=graf8)
+            ]),
+        ]),
+
 ], style={"margin-left": "10rem"})
 
+#----------------------------------------------------------------------------------------------------------- Tabs
 
-# ------------------------------------------------------------------ Content PAG2
+tabs = dbc.Tabs(
+    [
+        dbc.Tab(tab1_content, label= "Contexto", tab_style={"margin-left": "auto"}),
+        dbc.Tab(tab2_content, label = "Frecuencia", tab_style={"color": "#00AEF9"})
+    ]
+)
 
+# -------------------------------------------------------------------------------------------------------- Content PAG2
 
-#dcc.Graph(id = "mg1", figure = mg1)
 
 
 #------------------------------------------------------------------- Layout
@@ -116,7 +152,9 @@ hoja_principal = html.Div([
 ])
 
 hoja_1_layout = html.Div([
-    sidebar(True), content,
+    sidebar(True),
+    resumen,
+    tabs,
     main_page(app, False),
     html.Div(id='page-1-content')
 ])
@@ -130,7 +168,7 @@ hoja_2_layout = html.Div([
 
 
 ################################################################################################################################
-####################################################### INTERACTIVIDAD #########################################################
+#########################################         INTERACTIVIDAD       #########################################################
 ################################################################################################################################
 
 @app.callback(
@@ -211,7 +249,7 @@ def change_map(radio):
     return map1, map2
 
 
-# ------------------------------------------------------------------------- Callback para cambiar tiempo de  graf5
+# ---------------------------------------------------------------------------------------- Callback para cambiar tiempo de  graf5
 @app.callback(
     Output("graf5", "figure"),
     Input("date_dropdown", "value")
@@ -225,7 +263,76 @@ def prueba(valor):
         return graf5
 
 
-# __________________________________________ CALLBACKS HOJA 2 ______________________________________________
+# --------------------------------------------------------------------------------- Callback para el dropdown tienda de la graf8
+
+@app.callback(
+    Output("dropdown61_tienda", "options"),
+    Input("dropdown51_canal","value")
+    )
+def selector_tienda(canal1):
+    if canal1 == "TIENDA PROPIA":
+        return[{"label":i, "value":i} for i in \
+                  bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
+
+    elif canal1 == "FRANQUICIAS":
+        return [{"label":i, "value":i} for i in \
+                bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
+    else:
+        return [{"label":i, "value":i} for i in \
+                bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
+
+
+# --------------------------------------------------------------------------------- Callback para el pintar la tienda en graf9
+
+@app.callback(
+    Output("graf8","figure"),
+    [Input("dropdown61_tienda","value"), Input("dropdown41_año","value"), Input("boton_borrar", "n_clicks")]
+    )
+def pinta_tienda1(tienda_1, año_1, n_clicks):
+    if n_clicks:
+        graf8.update_traces()
+##        graf8 = go.Figure(layout = layout)
+##        graf8.add_trace(go.Scatter(x= [], 
+##                           y= [],                           
+##                    mode='lines+markers',
+##                    line = dict(color = "yellow")
+##                          ))
+        return graf8
+        
+    else:    
+        trace1_df = bd_frec_tienda2[(bd_frec_tienda2["yeard"] == año_1) & \
+                                 (bd_frec_tienda2["d_centro"] != "TIENDA SAN ANDRES 2") & \
+                                 (bd_frec_tienda2["d_centro"] == tienda_1)]
+    
+        graf8.update_traces()
+        graf8.add_traces(go.Scatter(x= trace1_df["mes"], 
+                           y= trace1_df["freq_acum"],                           
+                            mode='lines+markers',
+                            name=str(año_1) + " " +str(tienda_1),
+                                   ),)
+
+        return graf8
+
+#------------- Callback del botón para borrar los traces del lineplot 8
+##@app.callback(
+##    Output("graf8", "figure"),
+##    Input("boton_borrar", "n_clicks")
+##    )
+##
+##def on_button_click(self, n_clicks):
+##    if not n_clicks:
+##        raise dash.exceptions.PreventUpdate
+##
+##
+##    graf8 = go.Figure(layout = layout)
+##    graf8.add_trace(go.Scatter(x= [], 
+##                           y= [],                           
+##                    mode='lines+markers',
+##                    line = dict(color = "yellow")
+##                          ))
+##    return graf8
+    
+# __________________________________________ CALLBACKS HOJA 2 ____________________________________________________________________
 
 @app.callback(
     [Output("mg3", "figure"), Output("mg4", "figure")],
@@ -243,14 +350,15 @@ def change_par(valor_eje_x, valor_eje_y, vals):
                      title='Scatter pares de variables')
 
     mg4 = px.treemap(updated_df, path=[px.Constant('CLIENTES:  ' + str(updated_df["constante_cli"].sum())),
-                                       "canal_det", 'region', "ciudad", "clusters"],
+                                       "canal_det", 'region', "clusters"],
                      values='constante_cli',
                      color='recencia_meses',
-                     title="Visualizador de clientes",
+                     title="Visualizador de clientes: Canal/Región/Clúster",
                      color_continuous_scale='thermal_r',
                      height=700)
 
     return mg3, mg4
+
 
 
 @app.callback(

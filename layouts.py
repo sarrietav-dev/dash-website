@@ -113,7 +113,7 @@ def sidebar(visible):
 
 
 # -------------------------------------------------------------------------------- Graphs PAG1
-graphs = html.Div([
+graphs_tab2 = html.Div([
     html.H4(["Indicadores de Frecuencia"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col([
@@ -123,6 +123,11 @@ graphs = html.Div([
             dcc.Graph(id="graf7", figure=graf7)
         ], style={"margin-left": "1rem"}),
     ]),
+    ])
+    
+
+
+graphs_tab1 = html.Div([
     html.H4(["Evolución de ventas"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col(
@@ -214,6 +219,41 @@ dropdown3 = dcc.Dropdown(
         {"label": "Rango meses tallas compradas",
          "value": "ran_meses"},
     ]
+)
+
+# Dropdown para filtrar lineplot de tiendas
+dropdown4_1 = dcc.Dropdown(
+    placeholder="Options",
+    id="dropdown41_año",
+    value=[],
+    className="dropdown m-3",
+    options=[
+        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
+    ],
+    searchable = False
+)
+
+
+dropdown5_1 = dcc.Dropdown(
+    placeholder="Options",
+    id="dropdown51_canal",
+    value="TIENDA PROPIA",
+    className="dropdown m-3",
+    options=[
+        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
+    ],
+    searchable = False
+)
+
+
+# Dropdown with no values
+dropdown6_1 = dcc.Dropdown( 
+    placeholder="Options",
+    id="dropdown61_tienda",
+    value=[],
+    className="dropdown m-3",
+    searchable = False
+    
 )
 
 
