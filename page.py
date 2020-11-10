@@ -316,25 +316,6 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
 
         return graf8
 
-# ------------- Callback del botón para borrar los traces del lineplot 8
-# @app.callback(
-# Output("graf8", "figure"),
-# Input("boton_borrar", "n_clicks")
-# )
-##
-# def on_button_click(self, n_clicks):
-# if not n_clicks:
-# raise dash.exceptions.PreventUpdate
-##
-##
-# graf8 = go.Figure(layout = layout)
-# graf8.add_trace(go.Scatter(x= [],
-# y= [],
-# mode='lines+markers',
-# line = dict(color = "yellow")
-# ))
-# return graf8
-
 # __________________________________________ CALLBACKS HOJA 2 ____________________________________________________________________
 
 
