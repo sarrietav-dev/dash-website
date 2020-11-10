@@ -265,11 +265,14 @@ input_recencia = dcc.Input(
 )
 
 slider_ticket = dcc.RangeSlider(
+    id="slider-ticket",
     min=df3_mod["ticket_prom_compra"].min(),
     max=df3_mod["ticket_prom_compra"].max(),
-    marks={df3_mod["ticket_prom_compra"].min(): {"label": "mínimo ticket"},
-           df3_mod["ticket_prom_compra"].max(): {"label": "máximo ticket"}
-           },
+    marks={
+        df3_mod["ticket_prom_compra"].min(): "mínimo ticket",
+        df3_mod["ticket_prom_compra"].max() / 2: "ticket medio",
+        df3_mod["ticket_prom_compra"].max(): "máximo ticket"
+    },
     value=[90000, 150000]
 )
 
@@ -292,8 +295,8 @@ graphs2 = html.Div([
                 html.P("Selección variable eje Y:"),
                 dropdown3,
                 html.P("Ingrese valor límite de recencia en meses:"),
-                input_recencia,
                 slider_ticket,
+                html.P(id="range", style={"text-align": "center"})
                 ], style={"margin-left": "5rem"}, width=3),
         dbc.Col([
                 dcc.Graph(id="mg3", figure=mg3)

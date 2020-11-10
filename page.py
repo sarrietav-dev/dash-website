@@ -320,18 +320,19 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
 
 
 @app.callback(
-    [Output("mg3", "figure"), Output("mg4", "figure")],
+    [Output("mg3", "figure"), Output("mg4", "figure"),
+     Output("range", "children")],
     [Input("clu_dropdown_x", "value"), Input(
-        "clu_dropdown_y", "value"), Input("input_recencia", "value")]
+        "clu_dropdown_y", "value"), Input("slider-ticket", "value")]
 )
 def change_par(valor_eje_x, valor_eje_y, vals):
-
-    updated_df = df3_mod[df3_mod["recencia_meses"] <= vals]
+    vals = [int(x) for x in vals]
+    updated_df = df3_mod[(vals[0] <= df3_mod["recencia_meses"]) & (df3_mod["recencia_meses"] <= vals[1])]
 
     mg3 = px.scatter(updated_df,
                      x=valor_eje_x,
                      y=valor_eje_y,
-                     color="clusters",
+                     color="cluster_name", # <----- KeyError
                      title='Scatter pares de variables')
 
     mg4 = px.treemap(updated_df, path=[px.Constant('CLIENTES:  ' + str(updated_df["constante_cli"].sum())),
@@ -342,7 +343,7 @@ def change_par(valor_eje_x, valor_eje_y, vals):
                      color_continuous_scale='thermal_r',
                      height=700)
 
-    return mg3, mg4
+    return mg3, mg4, "{}".format(vals)
 
 
 @app.callback(
