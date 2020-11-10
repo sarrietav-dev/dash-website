@@ -225,7 +225,7 @@ dropdown3 = dcc.Dropdown(
 dropdown4_1 = dcc.Dropdown(
     placeholder="Options",
     id="dropdown41_año",
-    value=[],
+    value="2018",
     className="dropdown m-3",
     options=[
         {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
@@ -250,7 +250,7 @@ dropdown5_1 = dcc.Dropdown(
 dropdown6_1 = dcc.Dropdown( 
     placeholder="Options",
     id="dropdown61_tienda",
-    value=[],
+    value="OUTLET LA CENTRAL",
     className="dropdown m-3",
     searchable = False
     
