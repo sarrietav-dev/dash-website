@@ -290,8 +290,7 @@ graphs2 = html.Div([
                 html.P("Selección variable eje Y:"),
                 dropdown3,
                 html.P("Ingrese valor límite de recencia en meses:"),
-                html.Div(input_recencia,style={"margin-bottom":"1.5em"}),
-                html.Div(html.P("Ingrese un rango de ticket promedio de compra:")),
+                input_recencia,
                 slider_ticket,
                 ], style={"margin-left": "5rem"}),
         dbc.Col([
