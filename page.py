@@ -313,8 +313,10 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
         "clu_dropdown_y", "value"), Input("slider-ticket", "value")]
 )
 def change_par(valor_eje_x, valor_eje_y, vals):
+
     vals = [int(x) for x in vals]
     updated_df = df_cluster2[(vals[0] <= df_cluster2["recencia_meses"]) & (df_cluster2["recencia_meses"] <= vals[1])]
+    updated_df["cluster_name"] = df_cluster["cluster"].map(cluster_names) 
 
     mg3 = px.scatter(updated_df,
                      x=valor_eje_x,
