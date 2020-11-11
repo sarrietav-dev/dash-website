@@ -123,8 +123,7 @@ graphs_tab2 = html.Div([
             dcc.Graph(id="graf7", figure=graf7)
         ], style={"margin-left": "1rem"}),
     ]),
-    ])
-    
+])
 
 
 graphs_tab1 = html.Div([
@@ -225,12 +224,12 @@ dropdown3 = dcc.Dropdown(
 dropdown4_1 = dcc.Dropdown(
     placeholder="Options",
     id="dropdown41_año",
-    value=[],
+    value="2018",
     className="dropdown m-3",
     options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
+        {"label": i, "value": i} for i in bd_frec_tienda2["yeard"].unique()
     ],
-    searchable = False
+    searchable=False
 )
 
 
@@ -240,20 +239,20 @@ dropdown5_1 = dcc.Dropdown(
     value="TIENDA PROPIA",
     className="dropdown m-3",
     options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
+        {"label": i, "value": i} for i in bd_frec_tienda2["tipo_tienda"].unique()
     ],
-    searchable = False
+    searchable=False
 )
 
 
 # Dropdown with no values
-dropdown6_1 = dcc.Dropdown( 
+dropdown6_1 = dcc.Dropdown(
     placeholder="Options",
     id="dropdown61_tienda",
-    value=[],
+    value="OUTLET LA CENTRAL",
     className="dropdown m-3",
-    searchable = False
-    
+    searchable=False
+
 )
 
 
@@ -261,7 +260,8 @@ input_recencia = dcc.Input(
     id="input_recencia",
     type="number",
     placeholder="recencia en meses",
-    value=25
+    value=25,
+    style={"margin": "0 auto"}
 )
 
 slider_ticket = dcc.RangeSlider(
@@ -292,13 +292,13 @@ graphs2 = html.Div([
                 html.P("Selección variable eje Y:"),
                 dropdown3,
                 html.P("Ingrese valor límite de recencia en meses:"),
-                input_recencia,
                 slider_ticket,
-                ], style={"margin-left": "5rem"}),
+                html.P(id="range", style={"text-align": "center"})
+                ], style={"margin-left": "5rem"}, width=3),
         dbc.Col([
                 dcc.Graph(id="mg3", figure=mg3)
                 ]),
-    ]),
+    ], justify="center", align="center"),
 
     dbc.Row([
         dbc.Col([
