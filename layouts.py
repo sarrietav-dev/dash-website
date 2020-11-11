@@ -18,10 +18,10 @@ def main_page(app, visible):
                     style={"display": "flex", "justify-content": "center"})
             ])
         ]),
-        html.H3("Seguimiento a la Frecuencia", style={"margin-left": "10rem"}),
+        html.H3("Seguimiento a la Frecuencia", style={"margin-left": "20rem"}),
         dbc.Row(
             dbc.Col(
-                html.P("INTRODUCCIóN: Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
+                html.P("INTRODUCCIÓN: Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
                         los resultados de negocio por medio de las herramientas analíticas y equipo humano \
                         en alianza con  el programa DS4A.\
                         PROBLEMA: Se desea aumentar la frecuencia de compra anual por encima de 1.5 compras al año por cliente, \
@@ -36,9 +36,7 @@ def main_page(app, visible):
                         html.H4("Exploración"),
                         html.P(
                             "Análisis de indicadores generales a través del tiempo:"),
-                        html.P("Frecuencia"),
-                        html.P("Ventas en el tiempo"),
-                        html.P("Geolocalización"),
+                        html.P("Frecuencia, ventas en el tiempo, geolocalización"),
                         dbc.Button("IR", color="dark", id="button-kpi")
                     ])
                 ], color="warning", outline=True)
@@ -68,11 +66,10 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H4("XXI"),
+                        html.H4("Documentación"),
                         html.P(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                        Aenean euismod euismod tempus. Proin lobortis, nunc auctor \
-                        commodo sollicitudin, leo quam."),
+                            "Glosario  y conceptos.\
+                            Vínculos a documentación del aplicativo."),
                         dbc.Button("IR", color="dark", id="button-xxi")
                     ])
                 ], color="warning", outline=True)
@@ -96,7 +93,7 @@ def sidebar(visible):
                     dbc.Button("Inicio", id="link-hoja-main",
                                style={"font-size": "12px"},
                                className="btn btn-warning m-1"),
-                    dbc.Button("*Exploración*", id="link-hoja-1",
+                    dbc.Button("Exploración", id="link-hoja-1",
                                style={"font-size": "12px"},
                                className="btn btn-warning m-1"),
                     dbc.Button("Perfilamiento ", id="link-hoja-2",
@@ -123,7 +120,8 @@ graphs_tab2 = html.Div([
             dcc.Graph(id="graf7", figure=graf7)
         ], style={"margin-left": "1rem"}),
     ]),
-])
+    ])
+    
 
 
 graphs_tab1 = html.Div([
@@ -224,12 +222,12 @@ dropdown3 = dcc.Dropdown(
 dropdown4_1 = dcc.Dropdown(
     placeholder="Options",
     id="dropdown41_año",
-    value="2018",
+    value=[],
     className="dropdown m-3",
     options=[
-        {"label": i, "value": i} for i in bd_frec_tienda2["yeard"].unique()
+        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
     ],
-    searchable=False
+    searchable = False
 )
 
 
@@ -239,20 +237,20 @@ dropdown5_1 = dcc.Dropdown(
     value="TIENDA PROPIA",
     className="dropdown m-3",
     options=[
-        {"label": i, "value": i} for i in bd_frec_tienda2["tipo_tienda"].unique()
+        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
     ],
-    searchable=False
+    searchable = False
 )
 
 
 # Dropdown with no values
-dropdown6_1 = dcc.Dropdown(
+dropdown6_1 = dcc.Dropdown( 
     placeholder="Options",
     id="dropdown61_tienda",
-    value="OUTLET LA CENTRAL",
+    value=[],
     className="dropdown m-3",
-    searchable=False
-
+    searchable = False
+    
 )
 
 
@@ -260,8 +258,7 @@ input_recencia = dcc.Input(
     id="input_recencia",
     type="number",
     placeholder="recencia en meses",
-    value=25,
-    style={"margin": "0 auto"}
+    value=25
 )
 
 slider_ticket = dcc.RangeSlider(
@@ -292,13 +289,14 @@ graphs2 = html.Div([
                 html.P("Selección variable eje Y:"),
                 dropdown3,
                 html.P("Ingrese valor límite de recencia en meses:"),
+                html.Div(input_recencia,style={"margin-bottom":"1.5em"}),
+                html.Div(html.P("Ingrese un rango de ticket promedio de compra:")),
                 slider_ticket,
-                html.P(id="range", style={"text-align": "center"})
-                ], style={"margin-left": "5rem"}, width=3),
+                ], style={"margin-left": "5rem"}),
         dbc.Col([
                 dcc.Graph(id="mg3", figure=mg3)
                 ]),
-    ], justify="center", align="center"),
+    ]),
 
     dbc.Row([
         dbc.Col([
@@ -327,7 +325,7 @@ perfilamiento_header = html.Div([
 content2 = html.Div([
     html.H1(["Perfilamiento"], style=CONTENT_STYLE),
     html.Div(
-        [dbc.Row(dbc.Col(html.H5("Resumen de la base:")))
+        [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:")))
          ], style={}),
     perfilamiento_header,
     graphs2
