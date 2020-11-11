@@ -307,16 +307,12 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
 
 
 @app.callback(
-    [Output("mg3", "figure"), Output("mg4", "figure"),
-     Output("range", "children")],
+    [Output("mg3", "figure"), Output("mg4", "figure")],
     [Input("clu_dropdown_x", "value"), Input(
-        "clu_dropdown_y", "value"), Input("slider-ticket", "value")]
+        "clu_dropdown_y", "value"), Input("input_recencia", "value")]
 )
 def change_par(valor_eje_x, valor_eje_y, vals):
-
-    vals = [int(x) for x in vals]
-    updated_df = df_cluster2[(vals[0] <= df_cluster2["recencia_meses"]) & (df_cluster2["recencia_meses"] <= vals[1])]
-    updated_df["cluster_name"] = df_cluster["cluster"].map(cluster_names) 
+    updated_df = df_cluster2[df_cluster2["recencia_meses"] <= vals]
 
     mg3 = px.scatter(updated_df,
                      x=valor_eje_x,
@@ -332,7 +328,7 @@ def change_par(valor_eje_x, valor_eje_y, vals):
                      color_continuous_scale='thermal_r',
                      height=700)
 
-    return mg3, mg4, "{}".format(vals)
+    return mg3, mg4
 
 
 @app.callback(
