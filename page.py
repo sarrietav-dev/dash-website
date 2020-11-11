@@ -14,23 +14,12 @@ app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
 
-### Dropdown1: BORRAR
-### Este dropdown es para graf1 y graf3, para seleccionar ver en cantidad o rev
-##
-##dropdown1 = html.Div([
-##    dbc.DropdownMenu(
-##        label="Ingresos o productos",
-##        children=[
-##            dbc.DropdownMenuItem("Ingresos"),
-##            dbc.DropdownMenuItem(divider=True),
-##            dbc.DropdownMenuItem("Productos")
-##        ])
-##])
 
-#################################################################################################################################
+##################################################################################################################################
 ############################################################## CONTENIDO #########################################################
+##################################################################################################################################
 
-# ------------------------------------------------------------------ Content PAG1
+#____________________________________________CONTENIDO HOJA 1 ___________________________________________________________________
 
 
 resumen = html.Div([
@@ -41,17 +30,18 @@ resumen = html.Div([
     tabla1,
     html.P(["Información desde >>>> " + bd_unicos.iloc[:, 5]
             [0] + "  hasta >>>> " + bd_unicos.iloc[:, 6][0]])
-], style={"margin-left": "10rem"})
+], style={"margin-left":"10rem"})
 
 
-tab1_content = html.Div([
+tab1_content = html.Div([    
     graphs_tab1,
     html.Div(id="prueba"),
-], style={"margin-left": "10rem"}
+    ], style={"margin-left": "10rem"}
 )
 
 
-tab2_content = html.Div([
+
+tab2_content = html.Div([    
     graphs_tab2,
     html.Div([
         html.H4(["Geolocalización tiendas"], style=CONTENT_STYLE_SUBTITLE),
@@ -82,42 +72,97 @@ tab2_content = html.Div([
             ]),
         ])
     ]),
-    html.H4(["Comparador de frecuencia por tienda"],
-            style=CONTENT_STYLE_SUBTITLE),
+    html.H4(["Comparador de frecuencia por tienda"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
             dcc.Graph(id="graf9", figure=graf9)
-            ], style={"margin-left": "auto"}
-            ),
+            ], style={"margin-left":"auto"}
+        ),    
     dbc.Row([
         dbc.Col([
             dropdown4_1,
             dropdown5_1,
-            dropdown6_1,
-            dbc.Button("Borrar", color="Secondary", id="boton_borrar"),
-        ], width=4),
-
+            dropdown6_1,            
+            dbc.Button("Borrar", color = "Secondary",id="boton_borrar"), 
+            ],width = 4),
+        
         dbc.Col([
             dcc.Graph(id="graf8", figure=graf8)
+            ]),
         ]),
-    ]),
 
 ], style={"margin-left": "10rem"})
 
-# ----------------------------------------------------------------------------------------------------------- Tabs
+#----------------------------------------------------------------------------------------------------------- Tabs
 
 tabs = dbc.Tabs(
     [
-        dbc.Tab(tab1_content, label="Contexto",
-                tab_style={"margin-left": "auto"}),
-        dbc.Tab(tab2_content, label="Frecuencia",
-                tab_style={"color": "#00AEF9"})
+        dbc.Tab(tab1_content, label= "Contexto", tab_style={"margin-left": "auto"}),
+        dbc.Tab(tab2_content, label = "Frecuencia", tab_style={"color": "#00AEF9"})
     ]
 )
 
-# -------------------------------------------------------------------------------------------------------- Content PAG2
+#___________________________________________ CONTENIDO HOJA 2 ___________________________________________________________________
 
 
-# ------------------------------------------------------------------- Layout
+#___________________________________________ CONTENIDO HOJA 3 ___________________________________________________________________
+content3 = html.Div([
+    html.H1(["RECOMENDACIONES"], style=CONTENT_STYLE),
+    dbc.Row([
+        dbc.Col([
+                html.Div([                 
+                        html.Img(src=app.get_asset_url('niños_03.jpg'),
+                                 style={"height": "50%", "width": "23%"}),
+                        dbc.Button("Primi", size="lg", className="m-2", color="warning",  id="primi_niño"),
+                        dbc.Button("Bebe-Niño", size="lg", className="m-2", color="warning", id="bebe_niño")
+                ],style = {"margin-left":"10rem"})
+                
+            ]),
+                
+        dbc.Col([
+                html.Div([
+                         html.Img(src=app.get_asset_url('niñas_03.jpg'),
+                                 style={"height": "50%", "width": "15%"}),
+                        dbc.Button("Primi", size="lg", className="m-2", color="warning",  id="primi_niño"),
+                        dbc.Button("Bebe-Niño", size="lg", className="m-2", color="warning", id="bebe_niño")]
+                         ,style = {}
+                ),
+            ])
+        ]),
+
+
+    html.Div([
+        html.H4(["Productos más populares"], style= CONTENT_STYLE_SUBTITLE)
+    ]),
+
+    html.Div([
+        dbc.Row([            
+            dbc.Col([
+                html.P("Seleccionar clúster:"),
+                dropdown_clu,
+            ]),
+            dbc.Col([
+                html.P("Seleccionar producto:"),
+                dropdown_prod,
+            ]),
+        ])        
+    ]),
+    
+    html.Div([
+        dbc.Row([
+            dbc.Col(
+                dcc.Graph(id = "rg1", figure=rg1),
+                ),
+            dbc.Col(
+                dcc.Graph(id = "rg2", figure=rg2)
+                )
+            ])
+    ]),
+
+], style = {"margin-left":"10rem"}
+)
+
+#___________________________________________________ LAYOUT _______________________________________________________________
+
 app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
@@ -255,66 +300,80 @@ def prueba(valor):
 
 @app.callback(
     Output("dropdown61_tienda", "options"),
-    Input("dropdown51_canal", "value")
-)
+    Input("dropdown51_canal","value")
+    )
 def selector_tienda(canal1):
     if canal1 == "TIENDA PROPIA":
-        return[{"label": i, "value": i} for i in
-               bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
+        return[{"label":i, "value":i} for i in \
+                  bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
 
     elif canal1 == "FRANQUICIAS":
-        return [{"label": i, "value": i} for i in
+        return [{"label":i, "value":i} for i in \
                 bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
     else:
-        return [{"label": i, "value": i} for i in
+        return [{"label":i, "value":i} for i in \
                 bd_frec_tienda2[bd_frec_tienda2["tipo_tienda"] == canal1]["d_centro"].sort_values().unique()]
 
 
 # --------------------------------------------------------------------------------- Callback para el pintar la tienda en graf9
 
 @app.callback(
-    Output("graf8", "figure"),
-    [Input("dropdown61_tienda", "value"), Input(
-        "dropdown41_año", "value"), Input("boton_borrar", "n_clicks")]
-)
+    Output("graf8","figure"),
+    [Input("dropdown61_tienda","value"), Input("dropdown41_año","value"), Input("boton_borrar", "n_clicks")]
+    )
 def pinta_tienda1(tienda_1, año_1, n_clicks):
-    changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
-
-    graf8 = go.Figure(layout=layout)
-    if "boton_borrar" in changed_id:
+    if n_clicks:
         graf8.update_traces()
-        graf8.add_trace(go.Scatter(x=[],
-                                   y=[],
-                                   mode='lines+markers',
-                                   line=dict(color="yellow")
-                                   ))
+##        graf8 = go.Figure(layout = layout)
+##        graf8.add_trace(go.Scatter(x= [], 
+##                           y= [],                           
+##                    mode='lines+markers',
+##                    line = dict(color = "yellow")
+##                          ))
         return graf8
-    else:
-        trace1_df = bd_frec_tienda2[(bd_frec_tienda2["yeard"] == año_1) &
-                                    (bd_frec_tienda2["d_centro"] != "TIENDA SAN ANDRES 2") &
-                                    (bd_frec_tienda2["d_centro"] == tienda_1)]
-
-        graf8.add_traces(go.Scatter(x=trace1_df["mes"],
-                                    y=trace1_df["freq_acum"],
-                                    mode='lines+markers',
-                                    name=str(año_1) + " " + str(tienda_1),
-                                    ),)
+        
+    else:    
+        trace1_df = bd_frec_tienda2[(bd_frec_tienda2["yeard"] == año_1) & \
+                                 (bd_frec_tienda2["d_centro"] != "TIENDA SAN ANDRES 2") & \
+                                 (bd_frec_tienda2["d_centro"] == tienda_1)]
+    
         graf8.update_traces()
+        graf8.add_traces(go.Scatter(x= trace1_df["mes"], 
+                           y= trace1_df["freq_acum"],                           
+                            mode='lines+markers',
+                            name=str(año_1) + " " +str(tienda_1),
+                                   ),)
 
         return graf8
 
+#------------- Callback del botón para borrar los traces del lineplot 8
+##@app.callback(
+##    Output("graf8", "figure"),
+##    Input("boton_borrar", "n_clicks")
+##    )
+##
+##def on_button_click(self, n_clicks):
+##    if not n_clicks:
+##        raise dash.exceptions.PreventUpdate
+##
+##
+##    graf8 = go.Figure(layout = layout)
+##    graf8.add_trace(go.Scatter(x= [], 
+##                           y= [],                           
+##                    mode='lines+markers',
+##                    line = dict(color = "yellow")
+##                          ))
+##    return graf8
+    
 # __________________________________________ CALLBACKS HOJA 2 ____________________________________________________________________
 
-
 @app.callback(
-    [Output("mg3", "figure"), Output("mg4", "figure"),
-     Output("range", "children")],
+    [Output("mg3", "figure"), Output("mg4", "figure")],
     [Input("clu_dropdown_x", "value"), Input(
-        "clu_dropdown_y", "value"), Input("slider-ticket", "value")]
+        "clu_dropdown_y", "value"), Input("input_recencia", "value")]
 )
 def change_par(valor_eje_x, valor_eje_y, vals):
-    vals = [int(x) for x in vals]
-    updated_df = df_cluster2[(vals[0] <= df_cluster2["recencia_meses"]) & (df_cluster2["recencia_meses"] <= vals[1])]
+    updated_df = df_cluster2[df_cluster2["recencia_meses"] <= vals]
 
     mg3 = px.scatter(updated_df,
                      x=valor_eje_x,
@@ -330,7 +389,8 @@ def change_par(valor_eje_x, valor_eje_y, vals):
                      color_continuous_scale='thermal_r',
                      height=700)
 
-    return mg3, mg4, "{}".format(vals)
+    return mg3, mg4
+
 
 
 @app.callback(
@@ -347,6 +407,26 @@ def change_paragraph(btn1, btn2, btn3):
     elif btn3 is not None:
         return ["You clicked the 3st button"]
 
+
+# __________________________________________ CALLBACKS HOJA 3 ____________________________________________________________________
+
+@app.callback(
+    Output("rg1", "figure"),
+    Input("dropdown_clu_p3", "value")
+    )
+
+def clu_sel(clu):
+
+    rg1 = px.bar(f_beb[f_beb["clu_name"] == clu][["grupo_articulo", "cantidad", "porc_cantidad"]].reset_index(drop=True).sort_values(by="cantidad")
+       , x= "cantidad", y = "grupo_articulo",
+       title = "TOP 10 productos clúster " + str(clu),
+       hover_data = ["porc_cantidad"],
+       width = 600,
+       color_discrete_map={
+                "": "gold"
+             }      
+    )
+    return rg1
 
 # ______________________________________________________________________________________________________
 if __name__ == "__main__":

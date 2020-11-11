@@ -6,11 +6,11 @@ import plotly.express as px
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 import pickle
+from sqlalchemy import create_engine
 
-# Function Normalize
+#-----------------------------------------------------------------------------------Function Normalize
 # Input = df, DataFrame we are interested in normalizing
 # This is the Min/Max scaling method
-
 
 def normalize(df):
     result = df.copy()
@@ -22,6 +22,11 @@ def normalize(df):
             df[feature_name] - min_val) / (max_val - min_val)
 
     return result
+
+#------------------------------------------------------------------------------ Importar df clasificado
+engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
+
+#df_clasif = pd.read_sql_query('select * from "vw_top10_fem_beb"',con=engine)
 
 
 # ----------------------------------------------------------------------------- Importar df
@@ -67,11 +72,6 @@ df_men95_norm = normalize(df_men95[["recencia", "revenue", "visitas","compras","
 
 
 # ----------------------------------------------------------- Aplicación del algoritmo
-# Aplicación del k-means:
-##import random
-##random.seed(1234)
-##k_clu = 3
-##kmeans = KMeans(n_clusters=k_clu, init='k-means++')
 
 # Apply & Predict
 df2= df_men95_norm[["avg_meses", "precio_promedio"]]
