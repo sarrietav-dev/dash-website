@@ -293,6 +293,7 @@ graphs2 = html.Div([
                 html.P("Selección variable eje Y:"),
                 dropdown3,
                 html.P("Ingrese valor límite de recencia en meses:"),
+                input_recencia,
                 slider_ticket,
                 html.P(id="range", style={"text-align": "center"})
                 ], style={"margin-left": "5rem"}, width=3),
