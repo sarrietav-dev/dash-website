@@ -265,10 +265,11 @@ input_recencia = dcc.Input(
 )
 
 slider_ticket = dcc.RangeSlider(
+    id="slider-ticket",
     min=df_cluster2["ticket_prom_compra"].min(),
     max=df_cluster2["ticket_prom_compra"].max(),
-    marks={df_cluster2["ticket_prom_compra"].min(): {"label": "mínimo ticket"},
-           df_cluster2["ticket_prom_compra"].max(): {"label": "máximo ticket"}
+    marks={df_cluster2["ticket_prom_compra"].min():  "mínimo ticket",
+           df_cluster2["ticket_prom_compra"].max():  "máximo ticket"
            },
     value=[90000, 150000]
 )
