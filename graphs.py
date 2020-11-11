@@ -7,24 +7,27 @@ import os
 import random
 import dash_core_components as dcc
 
-# CARGA DE BASES DE DATOS:
-bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv",
-                           sep=";")
+# CARGA DE BASES DE DATOS(local):
+bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv", sep=";")
 
-bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv",
-                          sep=";")
+bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv", sep=";")
 
-bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",
-                        sep=";")
+bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",sep=";")
 
-bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv",
-                      sep=";")
+bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv", sep=";")
 
-bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",
-                      sep=";")
+bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",sep=";")
 
-bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",
-                 sep = ";")
+bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",sep = ";")
+
+
+
+# CARGA DE BASES DE DATOS(RDS):
+##engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
+##
+##bd = pd.read_sql_query('select * from "centro_region_agr_2019"',con=engine) 
+
+
 
 # TRANSFORMACION DE BASES DE DATOS
 

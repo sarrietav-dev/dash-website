@@ -8,50 +8,28 @@ from graphs import *
 from styles import *
 from layouts import *
 from model import *
+from result import *
 
 app = dash.Dash(external_stylesheets=[
                 dbc.themes.LUX], suppress_callback_exceptions=True)
 
 
-# Dropdown1:
-# Este dropdown es para graf1 y graf3, para seleccionar ver en cantidad o rev
-
-dropdown1 = html.Div([
-    dbc.DropdownMenu(
-        label="Ingresos o productos",
-        children=[
-            dbc.DropdownMenuItem("Ingresos"),
-            dbc.DropdownMenuItem(divider=True),
-            dbc.DropdownMenuItem("Productos")
-        ])
-])
+### Dropdown1: BORRAR
+### Este dropdown es para graf1 y graf3, para seleccionar ver en cantidad o rev
+##
+##dropdown1 = html.Div([
+##    dbc.DropdownMenu(
+##        label="Ingresos o productos",
+##        children=[
+##            dbc.DropdownMenuItem("Ingresos"),
+##            dbc.DropdownMenuItem(divider=True),
+##            dbc.DropdownMenuItem("Productos")
+##        ])
+##])
 
 #################################################################################################################################
 ############################################################## CONTENIDO #########################################################
 
-##summary = html.Div([
-##    dbc.Row([
-##        dbc.Col([
-##            html.Div("Núm registros:" + '{:10,.0f}'.format(
-##                bd_unicos.iloc[0, 0]), style={"margin-left": "2rem"}),
-##            html.Div("Clientes únicos:" + '{:10,.0f}'.format(
-##                bd_unicos.iloc[0, 2]), style={"margin-left": "2rem"}),
-##            html.Div("Compras únicas:" + '{:10,.0f}'.format(
-##                bd_unicos.iloc[0, 1]), style={"margin-left": "2rem"}),
-##            html.Div("Total Revenue:" + '{:10,.0f}'.format(
-##                bd_unicos.iloc[0, 4]), style={"margin-left": "2rem"}),
-##            html.Div(
-##                "Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-left": "2rem"}),
-##            html.Div(
-##                "Info. hasta" + '{}'.format(bd_unicos.iloc[0, 6]), style={"margin-left": "2rem"})
-##
-##        ]),
-##        dbc.Col([
-##            #html.Div("Info desde:" + '{}'.format(bd_unicos.iloc[0, 5]), style={"margin-right": "10rem"}),
-##            #html.Div("Info. hasta" +'{}'.format(bd_unicos.iloc[0, 6]), style={})
-##        ]),
-##    ]),
-##])
 
 # ------------------------------------------------------------------ Content PAG1
 
@@ -167,6 +145,14 @@ hoja_2_layout = html.Div([
 ])
 
 
+hoja_3_layout = html.Div([
+    sidebar(True), content3,
+    main_page(app, False),
+    html.Div(id='page-3-content')
+
+])
+
+
 ################################################################################################################################
 #########################################         INTERACTIVIDAD       #########################################################
 ################################################################################################################################
@@ -200,6 +186,8 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
         return hoja_1_layout
     elif "link-hoja-2" in changed_id or "button-cluster" in changed_id:
         return hoja_2_layout
+    elif "link-hoja-3" in changed_id or "button-result" in changed_id:
+        return hoja_3_layout
     else:
         return hoja_principal
 
@@ -341,16 +329,16 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
 )
 def change_par(valor_eje_x, valor_eje_y, vals):
 
-    updated_df = df3_mod[df3_mod["recencia_meses"] <= vals]
+    updated_df = df_cluster2[df_cluster2["recencia_meses"] <= vals]
 
     mg3 = px.scatter(updated_df,
                      x=valor_eje_x,
                      y=valor_eje_y,
-                     color="clusters",
+                     color="cluster_name",
                      title='Scatter pares de variables')
 
     mg4 = px.treemap(updated_df, path=[px.Constant('CLIENTES:  ' + str(updated_df["constante_cli"].sum())),
-                                       "canal_det", 'region', "clusters"],
+                                       "canal_det", 'region', "cluster_name"],
                      values='constante_cli',
                      color='recencia_meses',
                      title="Visualizador de clientes: Canal/Región/Clúster",
