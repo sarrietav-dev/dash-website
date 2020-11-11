@@ -373,7 +373,6 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
         "clu_dropdown_y", "value"), Input("input_recencia", "value")]
 )
 def change_par(valor_eje_x, valor_eje_y, vals):
-
     updated_df = df_cluster2[df_cluster2["recencia_meses"] <= vals]
 
     mg3 = px.scatter(updated_df,
