@@ -337,69 +337,82 @@ content2 = html.Div([
 ], style={"margin-left": "10rem"})
 
 
-def content_us(app):
+def content_us(app, visible):
     return html.Div([
-        dbc.Row([
+        dbc.Row(
             dbc.Col(
-                html.Div([
-                    html.Img(src=app.get_asset_url("team84.jpg"), style={
-                             "height": "auto", "max-width": "100%", "width": "25%"})
-                ], style={"display": "flex", "justify-content": "center", "align-items": "center"})  # TODO: Center image
-            )]),
-        dbc.Row([
-            dbc.Col([
-                html.Div([
-                    # TODO: Center this and make this blue.
-                    html.H2("Team 84", style={"color": "#7aa6c0"})
+                dbc.Button("< Back", color="primary",
+                           id="back-button", style={"align-self": "initial"}, className="btn btn-primary m-2")
+            )
+        ),
+        html.Div([
+            dbc.Row([
+                dbc.Col(
+                    html.Div([
+                        html.Img(src=app.get_asset_url("team84.jpg"), style={
+                            "height": "auto", "max-width": "100%", "width": "25%"})
+                    ], style={"display": "flex", "justify-content": "center", "align-items": "center"})  # TODO: Center image
+                )]),
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        # TODO: Center this and make this blue.
+                        html.H2("Team 84", style={"color": "#7aa6c0"})
+                    ])
+                ]),
+            ]),
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        html.P(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
+                        Etiam ut tincidunt nisl. \
+                        Vestibulum facilisis, nibh quis viverra ultrices, libero enim sodales erat, a tincidunt libero eros vel ex. \
+                        Etiam molestie nulla at ultrices euismod. \
+                        Pellentesque euismod diam ac tincidunt sollicitudin. \
+                        Donec dictum, lectus quis bibendum pharetra, arcu neque tincidunt leo, eget tempus nisl leo ut justo. \
+                        Etiam pretium tempor dolor, fringilla fringilla purus mattis non. Phasellus semper lectus eu elementum condimentum. \
+                        Aenean vitae imperdiet mi. Suspendisse eleifend elit nec neque venenatis, nec viverra leo dictum. \
+                        Phasellus convallis lacus et quam vehicula volutpat. Integer sed elementum nisl. ", style={"color": "white"}
+                        )  # TODO: Justify this and make it purple.
+                    ])
+                ]),
+            ]),
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        # TODO: Add an image of the team.
+                        html.Img(src=app.get_asset_url("team84_zoom.jpg"), style={
+                                 "width": "auto", "max-height": "100%", "height": "100%"})
+                    ])
+                ]),
+            ]),
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        html.P(
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
+                        Etiam ut tincidunt nisl. \
+                        Vestibulum facilisis, nibh quis viverra ultrices, libero enim sodales erat, a tincidunt libero eros vel ex. \
+                        Etiam molestie nulla at ultrices euismod. \
+                        Pellentesque euismod diam ac tincidunt sollicitudin. \
+                        Donec dictum, lectus quis bibendum pharetra, arcu neque tincidunt leo, eget tempus nisl leo ut justo. \
+                        Etiam pretium tempor dolor, fringilla fringilla purus mattis non. Phasellus semper lectus eu elementum condimentum. \
+                        Aenean vitae imperdiet mi. Suspendisse eleifend elit nec neque venenatis, nec viverra leo dictum. \
+                        Phasellus convallis lacus et quam vehicula volutpat. Integer sed elementum nisl. ", style={"color": "white"}
+                        )
+                    ])
                 ])
             ]),
-        ]),
-        dbc.Row([
-            dbc.Col([
-                html.Div([
-                    html.P(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                    Etiam ut tincidunt nisl. \
-                    Vestibulum facilisis, nibh quis viverra ultrices, libero enim sodales erat, a tincidunt libero eros vel ex. \
-                    Etiam molestie nulla at ultrices euismod. \
-                    Pellentesque euismod diam ac tincidunt sollicitudin. \
-                    Donec dictum, lectus quis bibendum pharetra, arcu neque tincidunt leo, eget tempus nisl leo ut justo. \
-                    Etiam pretium tempor dolor, fringilla fringilla purus mattis non. Phasellus semper lectus eu elementum condimentum. \
-                    Aenean vitae imperdiet mi. Suspendisse eleifend elit nec neque venenatis, nec viverra leo dictum. \
-                    Phasellus convallis lacus et quam vehicula volutpat. Integer sed elementum nisl. ", style={"color": "white"}
-                    )  # TODO: Justify this and make it purple.
-                ])
-            ]),
-        ]),
-        dbc.Row([
-            dbc.Col([
-                html.Div([
-                    html.Img(src=app.get_asset_url("team84_zoom.jpg"), style={"width": "auto", "max-height": "100%", "height": "100%"})  # TODO: Add an image of the team.
-                ])
-            ]),
-        ]),
-        dbc.Row([
-            dbc.Col([
-                html.Div([
-                    html.P(
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                    Etiam ut tincidunt nisl. \
-                    Vestibulum facilisis, nibh quis viverra ultrices, libero enim sodales erat, a tincidunt libero eros vel ex. \
-                    Etiam molestie nulla at ultrices euismod. \
-                    Pellentesque euismod diam ac tincidunt sollicitudin. \
-                    Donec dictum, lectus quis bibendum pharetra, arcu neque tincidunt leo, eget tempus nisl leo ut justo. \
-                    Etiam pretium tempor dolor, fringilla fringilla purus mattis non. Phasellus semper lectus eu elementum condimentum. \
-                    Aenean vitae imperdiet mi. Suspendisse eleifend elit nec neque venenatis, nec viverra leo dictum. \
-                    Phasellus convallis lacus et quam vehicula volutpat. Integer sed elementum nisl. ", style={"color": "white"}
-                    )
-                ])
-            ])
-        ]),
 
-    ], style={"background-color": "black",
-              "display": "flex",
-              "flex-direction": "column",
-              "justify-content": "center",
-              "align-items": "center",
-              "min-height": "100%",
-              "margin": "0"})
+        ], style={
+            "display": "flex",
+            "flex-direction": "column",
+            "justify-content": "center",
+            "align-items": "center",
+            "min-height": "100%",
+            "margin": "0"})
+    ], style={
+        "background-color": "black",
+        "display": "block" if visible else "none"
+    })

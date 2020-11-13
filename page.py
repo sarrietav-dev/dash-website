@@ -170,11 +170,13 @@ app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
     main_page(app, True),
+    content_us(app, False)
 ], id="page-content")
 
 hoja_principal = html.Div([
     html.Div(sidebar(False), style={"display": "none"}),
-    main_page(app, True)
+    main_page(app, True),
+    content_us(app, False)
 ])
 
 hoja_1_layout = html.Div([
@@ -182,26 +184,27 @@ hoja_1_layout = html.Div([
     resumen,
     tabs,
     main_page(app, False),
-    html.Div(id='page-1-content')
+    html.Div(id='page-1-content'),
+    content_us(app, False)
 ])
 
 hoja_2_layout = html.Div([
     sidebar(True), content2,
     main_page(app, False),
-    html.Div(id='page-2-content')
-
+    html.Div(id='page-2-content'),
+    content_us(app, False)
 ])
 
 
 hoja_3_layout = html.Div([
     sidebar(True), content3,
     main_page(app, False),
-    html.Div(id='page-3-content')
-
+    html.Div(id='page-3-content'),
+    content_us(app, False)
 ])
 
-layour_nosotros = html.Div([
-    sidebar(False), content_us(app),
+layout_nosotros = html.Div([
+    sidebar(False), content_us(app, True),
     main_page(app, False),
 ])
 
@@ -231,10 +234,11 @@ def habilitar_link(pathname):
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
         Input("button-xxi", "n_clicks"),
-        Input("button-us", "n_clicks")
+        Input("button-us", "n_clicks"),
+        Input("back-button", "n_clicks")
     ]
 )
-def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9):
+def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if "link-hoja-1" in changed_id or "button-kpi" in changed_id:
         return hoja_1_layout
@@ -243,7 +247,7 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9):
     elif "link-hoja-3" in changed_id or "button-result" in changed_id:
         return hoja_3_layout
     elif "button-us" in changed_id:
-        return layour_nosotros
+        return layout_nosotros
     else:
         return hoja_principal
 
