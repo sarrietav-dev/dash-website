@@ -200,7 +200,7 @@ hoja_3_layout = html.Div([
 
 ])
 
-layout_nosotros = html.Div([
+layour_nosotros = html.Div([
     sidebar(False), content_us(app),
     main_page(app, False),
 ])
@@ -243,7 +243,7 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9):
     elif "link-hoja-3" in changed_id or "button-result" in changed_id:
         return hoja_3_layout
     elif "button-us" in changed_id:
-        return layout_nosotros
+        return layour_nosotros
     else:
         return hoja_principal
 
