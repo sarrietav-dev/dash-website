@@ -200,6 +200,11 @@ hoja_3_layout = html.Div([
 
 ])
 
+layout_nosotros = html.Div([
+    sidebar(False), content_us(app),
+    main_page(app, False),
+])
+
 
 ################################################################################################################################
 #########################################         INTERACTIVIDAD       #########################################################
@@ -226,9 +231,10 @@ def habilitar_link(pathname):
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
         Input("button-xxi", "n_clicks"),
+        Input("button-us", "n_clicks")
     ]
 )
-def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
+def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if "link-hoja-1" in changed_id or "button-kpi" in changed_id:
         return hoja_1_layout
@@ -236,6 +242,8 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
         return hoja_2_layout
     elif "link-hoja-3" in changed_id or "button-result" in changed_id:
         return hoja_3_layout
+    elif "button-us" in changed_id:
+        return layout_nosotros
     else:
         return hoja_principal
 

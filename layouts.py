@@ -2,6 +2,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash_html_components.Div import Div
+from flask import app
 
 from styles import *
 from graphs import *
@@ -74,7 +75,12 @@ def main_page(app, visible):
                     ])
                 ], color="warning", outline=True)
             ),
-        ], className="m-4")
+        ], className="m-4"),
+        dbc.Row(
+            dbc.Col(
+                dbc.Button("Nosotros", id="button-us", color="info")
+            )
+        )
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
 
     return main_page
@@ -120,8 +126,7 @@ graphs_tab2 = html.Div([
             dcc.Graph(id="graf7", figure=graf7)
         ], style={"margin-left": "1rem"}),
     ]),
-    ])
-    
+])
 
 
 graphs_tab1 = html.Div([
@@ -225,9 +230,9 @@ dropdown4_1 = dcc.Dropdown(
     value=[],
     className="dropdown m-3",
     options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
+        {"label": i, "value": i} for i in bd_frec_tienda2["yeard"].unique()
     ],
-    searchable = False
+    searchable=False
 )
 
 
@@ -237,20 +242,20 @@ dropdown5_1 = dcc.Dropdown(
     value="TIENDA PROPIA",
     className="dropdown m-3",
     options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
+        {"label": i, "value": i} for i in bd_frec_tienda2["tipo_tienda"].unique()
     ],
-    searchable = False
+    searchable=False
 )
 
 
 # Dropdown with no values
-dropdown6_1 = dcc.Dropdown( 
+dropdown6_1 = dcc.Dropdown(
     placeholder="Options",
     id="dropdown61_tienda",
     value=[],
     className="dropdown m-3",
-    searchable = False
-    
+    searchable=False
+
 )
 
 
@@ -330,3 +335,35 @@ content2 = html.Div([
     perfilamiento_header,
     graphs2
 ], style={"margin-left": "10rem"})
+
+
+def content_us(app):
+    return html.Div(
+        dbc.Row([
+            dbc.Col(
+                html.Div([
+                    html.Img(src=app.get_asset_url("team84.jpg"))
+                ], style={}) # TODO: Center image
+            ),
+            dbc.Col([
+                html.Div([
+                    html.H2("Team 84") # TODO: Center this and make this blue.
+                ])
+            ]),
+            dbc.Col([
+                html.Div([
+                    html.P() # TODO: Justify this and make it purple.
+                ])
+            ]),
+            dbc.Col([
+                html.Div([
+                    html.Img() # TODO: Add an image of the team.
+                ])
+            ]),
+            dbc.Col([
+                html.Div([
+                    html.P()
+                ])
+            ])
+        ])
+    , style={"background-color": "black"})
