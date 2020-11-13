@@ -41,7 +41,6 @@ rg2 = px.bar(f_beb[f_beb["clu"] == 0][["grupo_articulo", "cantidad", "porc_canti
 
 
 
-
 dropdown_clu = dcc.Dropdown( 
     placeholder="Options",
     id="dropdown_clu_p3",

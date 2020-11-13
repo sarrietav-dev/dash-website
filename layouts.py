@@ -44,9 +44,9 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H4("Perfilamiento"),
+                        html.H4("Segmentación"),
                         html.P(
-                            "Resultado de los perfiles del cliente y sus carácterísticas"),
+                            "Resultado de los segmentos del cliente para toda la base y sus carácterísticas"),
                         dbc.Button("IR", color="dark",
                                    id="button-cluster")
                     ]),
@@ -57,7 +57,7 @@ def main_page(app, visible):
                     dbc.CardBody([
                         html.H4("Recomendación"),
                         html.P(
-                            "Productos y hábitos de compra asociados a cada perfil"),
+                            "Prendas asociados a cada segmento de cliente"),
                         dbc.Button("IR", color="dark",
                                    id="button-result")
                     ])
@@ -79,7 +79,7 @@ def main_page(app, visible):
 
     return main_page
 
-
+#_____________________________________________________________________________________________________ SIDEBAR
 def sidebar(visible):
     SIDEBAR_STYLE["display"] = "block" if visible else "none"
     sidebar = html.Nav(
@@ -176,6 +176,43 @@ graphs_tab1 = html.Div([
 ])
 
 
+# Dropdown para filtrar lineplot de tiendas
+dropdown4_1 = dcc.Dropdown(
+    placeholder="Options",
+    id="dropdown41_año",
+    value=[],
+    className="dropdown m-3",
+    options=[
+        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
+    ],
+    searchable = False
+)
+
+
+dropdown5_1 = dcc.Dropdown(
+    placeholder="Options",
+    id="dropdown51_canal",
+    value="TIENDA PROPIA",
+    className="dropdown m-3",
+    options=[
+        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
+    ],
+    searchable = False
+)
+
+
+# Dropdown with no values
+dropdown6_1 = dcc.Dropdown( 
+    placeholder="Options",
+    id="dropdown61_tienda",
+    value=[],
+    className="dropdown m-3",
+    searchable = False
+    
+)
+
+
+
 # -------------------------------------------------------------------------------- Graphs PAG2
 
 dropdown2 = dcc.Dropdown(
@@ -218,40 +255,6 @@ dropdown3 = dcc.Dropdown(
     ]
 )
 
-# Dropdown para filtrar lineplot de tiendas
-dropdown4_1 = dcc.Dropdown(
-    placeholder="Options",
-    id="dropdown41_año",
-    value=[],
-    className="dropdown m-3",
-    options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
-    ],
-    searchable = False
-)
-
-
-dropdown5_1 = dcc.Dropdown(
-    placeholder="Options",
-    id="dropdown51_canal",
-    value="TIENDA PROPIA",
-    className="dropdown m-3",
-    options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
-    ],
-    searchable = False
-)
-
-
-# Dropdown with no values
-dropdown6_1 = dcc.Dropdown( 
-    placeholder="Options",
-    id="dropdown61_tienda",
-    value=[],
-    className="dropdown m-3",
-    searchable = False
-    
-)
 
 
 input_recencia = dcc.Input(
@@ -261,16 +264,65 @@ input_recencia = dcc.Input(
     value=25
 )
 
+#------------------------------------------------------------------ Slider ticket promedio
 slider_ticket = dcc.RangeSlider(
-    id="slider-ticket",
+    id="slider_ticket",
     min=df_cluster2["ticket_prom_compra"].min(),
     max=df_cluster2["ticket_prom_compra"].max(),
-    marks={df_cluster2["ticket_prom_compra"].min():  "mínimo ticket",
-           df_cluster2["ticket_prom_compra"].max():  "máximo ticket"
+    marks={df_cluster2["ticket_prom_compra"].min(): "mín",
+           50000:"25k",
+           100000:"50k",
+           200000:"200k",
+           300000:"300k",
+           400000:"400k",
+           600000:"600k",
+           1000000:"1M",
+           df_cluster2["ticket_prom_compra"].max():  "máx"
            },
-    value=[90000, 150000]
+    step = 50000,
+    value=[df_cluster2["ticket_prom_compra"].min(), df_cluster2["ticket_prom_compra"].max()]
 )
 
+#------------------------------------------------------------------- Slider recencia
+slider_recencia = dcc.RangeSlider(
+    id="slider_recencia",
+    min=df_cluster2["recencia_meses"].min(),
+    max=df_cluster2["recencia_meses"].max(),
+    marks={df_cluster2["recencia_meses"].min():  "mín",
+           3:"3meses",
+           6:"6meses",
+           9:"9meses",
+           12:"12meses",
+           18:"16meses",
+           24:"24meses",
+           df_cluster2["recencia_meses"].max():  "máx"
+           },
+    step = 1,
+    value=[df_cluster2["recencia_meses"].min(), df_cluster2["recencia_meses"].max()]
+)
+
+#---------------------------------------------------------------Dropdown escala color treemap
+dropdow_escala_tree = dcc.Dropdown(
+    placeholder="Options",
+    id="drop_tree",
+    value="recencia_meses",
+    className="dropdown m-3",
+    options=[
+        {"label": "Revenue", "value": "revenue"},
+        {"label": "Recencia", "value": "recencia_meses"},
+        {"label": "Visitas", "value": "visitas"},
+        {"label": "Compras", "value": "compras"},
+        {"label": "Ticket promedio",
+         "value": "ticket_prom_compra"},
+        {"label": "Precio promedio compra",
+         "value": "precio_promedio"},
+        {"label": "Promedio meses talla", "value": "avg_meses"},
+        {"label": "Rango meses tallas compradas",
+         "value": "ran_meses"},
+    ]
+)   
+
+#----------------------------------------------------------------------------------------------------------- Graphs2
 
 graphs2 = html.Div([
     html.H4(["Medidas de los clústeres"], style=CONTENT_STYLE_SUBTITLE),
@@ -285,44 +337,54 @@ graphs2 = html.Div([
     html.H4(["Contenido clústeres"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col([
-                html.P("Selección variable eje X:"),
+                html.Div([html.P("Selección variable eje X:")],style={"margin-top":"1rem"}),
                 dropdown2,
                 html.P("Selección variable eje Y:"),
                 dropdown3,
-                html.P("Ingrese valor límite de recencia en meses:"),
-                html.Div(input_recencia,style={"margin-bottom":"1.5em"}),
-                html.Div(html.P("Ingrese un rango de ticket promedio de compra:")),
-                slider_ticket,
+                html.P("Seleccione el rango de ticket promedio (step 50k):"),                
+                html.Div(slider_ticket, style={"margin-bottom":"3.5rem"}),
+                html.P("Seleccione el rango de recencia en meses:"), 
+                html.Div(slider_recencia, style={"margin-bottom":"3.5rem"}),
+                html.Div([html.P("Selección escala de color:")],style={"margin-top":"1rem"}),
+                dropdow_escala_tree,
                 ], style={"margin-left": "5rem"}),
         dbc.Col([
                 dcc.Graph(id="mg3", figure=mg3)
-                ]),
+            ]),        
     ]),
 
     dbc.Row([
         dbc.Col([
                 dcc.Graph(id="mg4", figure=mg4)
-                ]),
-    ])
+            ])
+    ]),
+    html.P("OU: Outlet, TP: Tienda propia, FR: Franquicia\
+        El tamaño de cada cuadrado indica el número de clientes."),
 ])
 
+#---------------------------------------------------------------------- Botones segmento
 perfilamiento_header = html.Div([
     dbc.Row([
         html.Div([
-            dbc.Col(dbc.Button("Button1", color="secondary", id="perf_button1")),
-            dbc.Col(dbc.Button("Button2", color="secondary", id="perf_button2")),
-            dbc.Col(dbc.Button("Button3", color="secondary", id="perf_button3")),
+            dbc.Col(dbc.Button("Precio bajo", color="warning",  id="perf_button1", size = "sm")),
+            dbc.Col(dbc.Button("Precio medio", color="warning", id="perf_button2", size = "sm")),
+            dbc.Col(dbc.Button("Precio alto", color="warning",id="perf_button3", size = "sm")),
+            dbc.Col(dbc.Button("Offcorss fans", color="warning", id="perf_button4", size = "sm")),
         ], style={"display": "flex", "justify-content": "center"}),
     ]),
     dbc.Row(
         html.Div(
             dbc.Col(
-                html.P("", id="perf_paragraph")
+                html.P("", id="perf_paragraph"),
             ), style={"display": "flex", "justify-content": "center"}
         ),
     )
 ], style={"margin": "0 auto"})
 
+
+   
+
+#----------------------------------------------------------------------- Content 2
 content2 = html.Div([
     html.H1(["Perfilamiento"], style=CONTENT_STYLE),
     html.Div(
@@ -331,3 +393,7 @@ content2 = html.Div([
     perfilamiento_header,
     graphs2
 ], style={"margin-left": "10rem"})
+
+
+
+
