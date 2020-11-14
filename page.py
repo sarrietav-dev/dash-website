@@ -122,6 +122,7 @@ tabs = dcc.Tabs(
 # ___________________________________________ CONTENIDO HOJA 2 ___________________________________________________________________
 #Ver hoja layout
 
+
 # ___________________________________________ CONTENIDO HOJA 3 ___________________________________________________________________
 content3 = html.Div([
     html.H1(["RECOMENDACIONES"], style=CONTENT_STYLE),
@@ -185,34 +186,40 @@ app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
     main_page(app, True),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ], id="page-content")
 
 hoja_principal = html.Div([
     html.Div(sidebar(False), style={"display": "none"}),
-    main_page(app, True)
+    main_page(app, True),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 hoja_1_layout = html.Div([
-    sidebar(True),
+    sidebar("block"),
     resumen,
     tabs,
     main_page(app, False),
-    html.Div(id='page-1-content')
+    html.Div(content_us(app, False), style={"display": "none"}),
+    html.Div(id='page-1-content'),
 ])
 
 hoja_2_layout = html.Div([
-    sidebar(True), content2,
+    sidebar("block"), content2,
     main_page(app, False),
-    html.Div(id='page-2-content')
-
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 
 hoja_3_layout = html.Div([
-    sidebar(True), content3,
+    sidebar("block"), content3,
     main_page(app, False),
-    html.Div(id='page-3-content')
+    html.Div(content_us(app, False), style={"display": "none"}),
+])
 
+layout_nosotros = html.Div([
+    html.Div(sidebar(False), style={"display": "none"}), content_us(app, True),
+    main_page(app, False),
 ])
 
 
@@ -241,9 +248,11 @@ def habilitar_link(pathname):
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
         Input("button-xxi", "n_clicks"),
+        Input("button-us", "n_clicks"),
+        Input("back-button", "n_clicks")
     ]
 )
-def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
+def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if "link-hoja-1" in changed_id or "button-kpi" in changed_id:
         return hoja_1_layout
@@ -251,6 +260,8 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
         return hoja_2_layout
     elif "link-hoja-3" in changed_id or "button-result" in changed_id:
         return hoja_3_layout
+    elif "button-us" in changed_id:
+        return layout_nosotros
     else:
         return hoja_principal
 
@@ -419,6 +430,7 @@ def change_paragraph(btn1, btn2, btn3, btn4):
 # __________________________________________ CALLBACKS HOJA 3 ____________________________________________________________________
 
 @app.callback(
+
     [Output("rg1", "figure"),Output("rg2", "figure")],
     [Input("dropdown_clu_p3", "value"), Input("dropdown_grupo_p3", "value"),
      Input("primi_m", "n_clicks"), Input("primi_f", "n_clicks"),
@@ -512,6 +524,7 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6):
 
 
     return rg1,rg2
+
 
 
 # ______________________________________________________________________________________________________
