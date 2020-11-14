@@ -88,8 +88,8 @@ def main_page(app, visible):
     return main_page
 
 
-def sidebar(visible):
-    SIDEBAR_STYLE["display"] = "block" if visible else "none"
+def sidebar(visible_nav):
+    SIDEBAR_STYLE["display"] = visible_nav
     sidebar = html.Nav(
         [
             html.H4("Menú", className="lead navbar-brand",

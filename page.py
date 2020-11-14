@@ -20,7 +20,6 @@ app = dash.Dash(external_stylesheets=[
 
 # ____________________________________________CONTENIDO HOJA 1 ___________________________________________________________________
 
-
 resumen = html.Div([
     html.H1(["Offcorss Dash mock-up"], style=CONTENT_STYLE),
     html.Div(
@@ -170,41 +169,39 @@ app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
     main_page(app, True),
-    content_us(app, False)
+    html.Div(content_us(app, False), style={"display": "none"}),
 ], id="page-content")
 
 hoja_principal = html.Div([
     html.Div(sidebar(False), style={"display": "none"}),
     main_page(app, True),
-    content_us(app, False)
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 hoja_1_layout = html.Div([
-    sidebar(True),
+    sidebar("block"),
     resumen,
     tabs,
     main_page(app, False),
+    html.Div(content_us(app, False), style={"display": "none"}),
     html.Div(id='page-1-content'),
-    content_us(app, False)
 ])
 
 hoja_2_layout = html.Div([
-    sidebar(True), content2,
+    sidebar("block"), content2,
     main_page(app, False),
-    html.Div(id='page-2-content'),
-    content_us(app, False)
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 
 hoja_3_layout = html.Div([
-    sidebar(True), content3,
+    sidebar("block"), content3,
     main_page(app, False),
-    html.Div(id='page-3-content'),
-    content_us(app, False)
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 layout_nosotros = html.Div([
-    sidebar(False), content_us(app, True),
+    html.Div(sidebar(False), style={"display": "none"}), content_us(app, True),
     main_page(app, False),
 ])
 
