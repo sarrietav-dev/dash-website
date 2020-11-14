@@ -489,19 +489,9 @@ def team_faces(app):
             dbc.Card([
                 dbc.CardImg(src=app.get_asset_url("jenny.jpeg"), top=True),
                 dbc.CardBody([
-                    html.H4(),
+                    html.H4("Jeniffer Duarte", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary")
-                ])
-            ])
-        ]),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardImg(src=app.get_asset_url("jhonathan.jpeg"), top=True),
-                dbc.CardBody([
-                    html.H4(),
-                    html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary")
+                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
                 ])
             ])
         ]),
@@ -509,9 +499,19 @@ def team_faces(app):
             dbc.Card([
                 dbc.CardImg(src=app.get_asset_url("lau.jpeg"), top=True),
                 dbc.CardBody([
-                    html.H4(),
+                    html.H4("Laura Sierra", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary")
+                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
+                ])
+            ])
+        ]),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardImg(src=app.get_asset_url("jhonathan.jpeg"), top=True),
+                dbc.CardBody([
+                    html.H4("Johathan Madrid", className="card-title"),
+                    html.P(className="card-text"),
+                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
                 ])
             ])
         ]),
@@ -519,9 +519,9 @@ def team_faces(app):
             dbc.Card([
                 dbc.CardImg(src=app.get_asset_url("seb.png"), top=True),
                 dbc.CardBody([
-                    html.H4(),
+                    html.H4("Sebastian Arrieta", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("Github", color="primary")
+                    dbc.Button("Github", color="primary", href="", target="_blank")
                 ])
             ])
         ]),
@@ -529,9 +529,9 @@ def team_faces(app):
             dbc.Card([
                 dbc.CardImg(src=app.get_asset_url(""), top=True),
                 dbc.CardBody([
-                    html.H4(),
+                    html.H4("John Davinson", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary")
+                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
                 ])
             ])
         ]),
