@@ -6,6 +6,7 @@ import dash_table
 import os
 import random
 import dash_core_components as dcc
+from model import*
 
 # CARGA DE BASES DE DATOS(local):
 bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv", sep=";")
@@ -200,7 +201,7 @@ graf5 = px.line(bd_agr_month, x="year_factura", y="ticket_prom",
                 )
 graf5.update_layout(xaxis_tickangle=90)
 
-#------------------------------------------------------GRAFICA 5.1: LINE Evolución ticket promedio por trimestre
+#-----------------------------------------------------------------------GRAFICA 5.1: LINE Evolución ticket promedio por trimestre
 
 graf5_1 = px.line(bd_agr_month2, x = "trim_año", y = "ticket_prom", 
             color = "tipo_tienda", width=600, height=400,
@@ -214,7 +215,7 @@ graf5_1 = px.line(bd_agr_month2, x = "trim_año", y = "ticket_prom",
             template = "simple_white")
 graf5_1.update_layout(xaxis_tickangle=90)
 
-#------------------------------------------------------GRAFICA 5.1: LINE Evolución ticket promedio por año
+#----------------------------------------------------------------------------GRAFICA 5.2: LINE Evolución ticket promedio por año
 
 graf5_2 = px.line(bd_agr_month3, x = "year", y = "ticket_prom", 
             color = "tipo_tienda", width=600, height=400,
@@ -467,4 +468,10 @@ tabla1 = dash_table.DataTable(
     id='table',
     columns=[{"name": i, "id": i} for i in bd_unicos_merged.columns],
     data=bd_unicos_merged.to_dict('records')
+)
+
+tabla21 = dash_table.DataTable(
+    id='table21',
+    columns=[{"name": i, "id": i} for i in tabla2.columns],
+    data=tabla2.to_dict('records')
 )

@@ -23,21 +23,17 @@ def normalize(df):
 
     return result
 
-#------------------------------------------------------------------------------ Importar df clasificado
+#--------------------------------------------------------------------------------------- Importar df clasificado
 engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 
 #df_clasif = pd.read_sql_query('select * from "vw_top10_fem_beb"',con=engine)
 
-
-# ----------------------------------------------------------------------------- Importar df
+# --------------------------------------------------------------------------------------- Importar df
 df = pd.read_csv('data/offcorss_customer_202011011419_2.csv', sep=";")
-#df = pd.read_csv('data/offcorss_customer_202011011353_overall.csv', sep=";") # COn la base completa
+#df_clas = pd.read_csv('data/offcorss_customer_202011011353_overall.csv', sep=";") # Base completa clasificada
+#df = df_clas.copy() # Aca cuando se selecciona la base completa de los 1.3M de clientes
 
-# reación de dos variables adicionales:
-df["ran_meses"] = df["max_meses"]-df["min_meses"]
-df["compras_x_visita"] = df["compras"] / df["visitas"]
-
-# Transformación de variables:
+# Creación de dos variables adicionales:
 df["ran_meses"] = df["max_meses"]-df["min_meses"]
 df["compras_x_visita"] = df["compras"] / df["visitas"]
 
@@ -47,12 +43,53 @@ df["avg_meses_log"] = np.log(df["avg_meses"]+1)
 df["compras_x_visita_log"] = np.log(df["compras_x_visita"]+1)
 df["ticket_prom_compra_log"] = np.log(df["ticket_prom_compra"]+1)
 
+#____________________________________________________________________________________________APLICACIÓN AUTOMÁTICA CLASIFICACIÓN
+##para_pca = ["revenue", "visitas","compras"]
+##
+##scaler = StandardScaler()
+##df_seg = scaler.fit_transform(df[para_pca])
+##pca = PCA()
+##pca.fit(df_seg)
+##pca = PCA(n_components = 1)
+##pca_df = pca.fit_transform(df_seg)
+##pca_df = pd.DataFrame(data = pca_df, columns = ["Dim1"])
+##scores_pca = normalize(pca_df)
+##
+### Separación del percentil 0.95 de la base para creación de clúster con mayores a dicho percentil:
+##df["score_pca"] = scores_pca
+##q95 = df["score_pca"].quantile(0.95)
+##df_may95 = df[df["score_pca"]> q95]
+##df_men95 = df[df["score_pca"]<= q95]
+##
+##df_men95_norm = normalize(df_men95[["recencia", "revenue", "visitas","compras","precio_promedio_log", 
+##                        "ticket_prom_compra", "ticket_prom_compra_log",  "ran_meses", "avg_meses_log", 
+##                                    "avg_meses", "precio_promedio","compras_x_visita", "compras_x_visita_log"]])
+##
+##
+### ----------------------------------------------------------- Aplicación del algoritmo:
+##
+##df2= df_men95_norm[["avg_meses", "precio_promedio"]]
+##
+##kmeans = pickle.load(open("models/model.pkl", "rb"))
+##kmeans.fit(df2)
+##labels = kmeans.predict(df2)
+##centroids = kmeans.cluster_centers_
+##kmeans.inertia_
+##
+###--------------------------------------------------------------- Centroides:
+##centroids = kmeans.cluster_centers_
+##df_centroides = pd.DataFrame(centroids)
+##df_centroides.columns = list(df2.columns)
+##df_centroides = df_centroides.transpose()
+##
+###--------------------------------------------------------------- Union de las bases y pegar clasificación de clústeres:
+##df_men95["cluster"] = labels
+##df_may95["cluster"] = "f"
+##df_cluster = df_men95.append(df_may95)
 
-# Aplicación del PCA sobre las variables seleccionadas:
-para_pca = ["revenue", "visitas","compras"]
-
+#____________________________________________________________________________________________APLICACIÓN MANUAL CLASIFICACIÓN
 scaler = StandardScaler()
-df_seg = scaler.fit_transform(df[para_pca])
+df_seg = scaler.fit_transform(df[["revenue", "visitas","compras"]])
 pca = PCA()
 pca.fit(df_seg)
 pca = PCA(n_components = 1)
@@ -60,47 +97,22 @@ pca_df = pca.fit_transform(df_seg)
 pca_df = pd.DataFrame(data = pca_df, columns = ["Dim1"])
 scores_pca = normalize(pca_df)
 
-# Separación del percentil 0.95 de la base para creación de clúster con mayores a dicho percentil:
 df["score_pca"] = scores_pca
 q95 = df["score_pca"].quantile(0.95)
-df_may95 = df[df["score_pca"]> q95]
-df_men95 = df[df["score_pca"]<= q95]
 
-df_men95_norm = normalize(df_men95[["recencia", "revenue", "visitas","compras","precio_promedio_log", 
-                        "ticket_prom_compra", "ticket_prom_compra_log",  "ran_meses", "avg_meses_log", 
-                                    "avg_meses", "precio_promedio","compras_x_visita", "compras_x_visita_log"]])
+bins = [0, 36466, 60479,df["precio_promedio"].max()]
+labels = ["<36k", "36k-60k", ">60k"]
 
+df["rango_precio"] = pd.cut(df["precio_promedio"], bins=bins, labels=labels)
+df["cluster"] = [0  if x =="<36k" else 1 if x == "36k-60k" else 2  for x in df["rango_precio"]]
+df["cluster"] =  list(np.select([df["score_pca"]>q95, df["score_pca"]<=q95], [9, df["cluster"]]))
 
-# ----------------------------------------------------------- Aplicación del algoritmo
-
-# Apply & Predict
-df2= df_men95_norm[["avg_meses", "precio_promedio"]]
-
-kmeans = pickle.load(open("models/model.pkl", "rb"))
-kmeans.fit(df2)
-labels = kmeans.predict(df2)
-centroids = kmeans.cluster_centers_
-
-
-#----------------------- Sumas de cuadrados:
-kmeans.inertia_
-
-#--------------------------------------------------------------- Centroides
-centroids = kmeans.cluster_centers_
-df_centroides = pd.DataFrame(centroids)
-df_centroides.columns = list(df2.columns)
-df_centroides = df_centroides.transpose()
-
-#--------------------------------------------------------------- Union de las bases y pegar clasificación de clústeres:
-df_men95["cluster"] = labels
-df_may95["cluster"] = "f"
-df_cluster = df_men95.append(df_may95)
-
-cluster_names = {0:"low_price ", 1:"medium_price", 2:"high_price", "f":"offcorss_fans"}
+df_cluster = df.copy()
+cluster_names = {0:"low_price ", 1:"medium_price", 2:"high_price", 9:"offcorss_fans"}
 df_cluster["cluster_name"] = df_cluster["cluster"].map(cluster_names) 
 
 
-# _____________________GRAFICOS DE MODELO _______________________________________________________________________________
+# _______________________________________________GRAFICOS DE MODELO _______________________________________________________________
 
 # Modificaciones a df3 para graficar
 df_cluster2 = df_cluster.copy()
@@ -108,14 +120,32 @@ df_cluster2["constante_cli"] = 1
 df_cluster2["constante_size"] = 1
 df_cluster2["recencia_meses"] = df_cluster2["recencia"] / 30
 
-
-
 # -------------------------------------------------------------------Heatmap de centroides (MG2)
-mg2 = px.imshow(df_centroides,
-                labels=dict(x="Clúster"),
-                title="Promedios normalizados de variables de clúster",
-                width=500, height=400,
-                color_continuous_scale='Cividis_r'
+##mg2 = px.imshow(df_centroides,
+##                labels=dict(x="Clúster"),
+##                title="Promedios normalizados de variables de clúster",
+##                width=500, height=400,
+##                color_continuous_scale='Cividis_r'
+##                )
+
+heat= df_cluster[["visitas", "compras", "revenue", "recencia", "ticket_prom_compra", "avg_meses", 
+          "precio_promedio", "compras_x_visita", "cluster_name"]]
+heat1 = heat.groupby("cluster_name").mean().reset_index()
+
+heat2 = heat.groupby("cluster_name").mean().reset_index()
+heat2 = heat2.set_index("cluster_name")
+tabla2 = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
+tabla2 = tabla2.rename(columns = {"cluster_name": "clientes"}) 
+tabla2 = pd.DataFrame(tabla2.loc["medium_price"]).transpose()
+
+
+
+mg2 = px.imshow(normalize(heat1.iloc[:,1:]),
+                labels= dict(y = "cluster"),
+                title= "Promedios normalizados por principales variables",
+                y = list(heat1["cluster_name"]),
+                width= 600, height= 600,
+                color_continuous_scale= 'Cividis_r'
                 )
 
 # -------------------------------------------------------------------Scatter pares de variables (MG3)
@@ -123,7 +153,8 @@ mg2 = px.imshow(df_centroides,
 mg3 = px.scatter(df_cluster2, x="recencia_meses",
                  y="avg_meses",
                  color="cluster_name",
-                 title='Scatter pares de variables')
+                 title='Scatter pares de variables',
+                 height = 550)
 
 #-------------------------------------------------------------------------------- Treemap (MG4)
 
@@ -139,7 +170,7 @@ mg4 = px.treemap(df_cluster2, path=[px.Constant('CLIENTES:  ' + str(df_cluster2[
 
 # ------------------------------------------------------------------- 3D Scatter variables clúster (MG5)
 
-mg5 = px.scatter_3d(df_cluster2, x="recencia_meses", y="avg_meses", z="visitas",
+mg5 = px.scatter_3d(df_cluster2, x="precio_promedio", y="avg_meses", z="visitas",
                     color="cluster_name",
                     size="constante_size",
                     opacity=1,
@@ -147,6 +178,6 @@ mg5 = px.scatter_3d(df_cluster2, x="recencia_meses", y="avg_meses", z="visitas",
                     # hover_name="district", symbol="result",
                     color_discrete_map={"Joly": "blue",
                                         "Bergeron": "green", "Coderre": "red"},
-                    height=500, width=600,
-                    title="Visualización variables de clúster"
+                    height=700, width=700,
+                    title="Visualización variables de clústeres"
                     )
