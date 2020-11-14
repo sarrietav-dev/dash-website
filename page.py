@@ -241,6 +241,8 @@ def habilitar_link(pathname):
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
         Input("button-xxi", "n_clicks"),
+        Input("button-us", "n_clicks"),
+        Input("back-button", "n_clicks")
     ]
 )
 def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11):
@@ -251,6 +253,8 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, bt
         return hoja_2_layout
     elif "link-hoja-3" in changed_id or "button-result" in changed_id:
         return hoja_3_layout
+    elif "button-us" in changed_id:
+        return layout_nosotros
     else:
         return hoja_principal
 
