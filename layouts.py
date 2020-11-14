@@ -472,7 +472,7 @@ def team_faces(app):
                     html.H4("Jeniffer Duarte", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="https://www.linkedin.com/in/jeniffer-johana-duarte-sanchez-56317250/", target="_blank")
                 ])
             ])
         ]),
@@ -483,7 +483,7 @@ def team_faces(app):
                     html.H4("Laura Sierra", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="http://linkedin.com/in/laura-sierra-serna-74413143", target="_blank")
                 ])
             ])
         ]),
@@ -494,7 +494,7 @@ def team_faces(app):
                     html.H4("Jonathan Madrid", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="https://www.linkedin.com/in/jonathan-madrid-hincapie-72015926/", target="_blank")
                 ])
             ])
         ]),
@@ -505,7 +505,7 @@ def team_faces(app):
                     html.H4("Sebastian Arrieta", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("Github", color="primary",
-                               href="", target="_blank")
+                               href="https://github.com/sarrietav-dev", target="_blank")
                 ])
             ])
         ]),
@@ -516,7 +516,7 @@ def team_faces(app):
                     html.H4("John Davinson", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="https://www.linkedin.com/in/john-davison-a0212022", target="_blank")
                 ])
             ])
         ]),
