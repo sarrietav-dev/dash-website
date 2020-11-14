@@ -66,7 +66,7 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H4("Glosario y Documentación"),
+                        html.H4("Documentación"),
                         html.P(
                             "Glosario  y conceptos.\
                             Vínculos a documentación del aplicativo."),
@@ -84,7 +84,6 @@ def main_page(app, visible):
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
 
     return main_page
-
 
 
 def sidebar(visible_nav):
