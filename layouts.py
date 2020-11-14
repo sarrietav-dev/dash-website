@@ -429,7 +429,7 @@ def content_us(app, visible):
                 dbc.Col([
                     html.Div([
                         # TODO: Center this and make this blue.
-                        html.H2("Team 84", style={"color": "#7aa6c0"})
+                        html.H1("Team 84", style={"color": "#7aa6c0"})
                     ])
                 ]),
             ]),
