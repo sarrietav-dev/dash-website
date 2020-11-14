@@ -97,8 +97,7 @@ def sidebar(visible_nav):
             html.H4("Menú", className="lead navbar-brand",
                     style={"margin-left": "2rem"}),
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
-            html.Div(
-                [
+            html.Div([
 
                     dbc.Button("Inicio", id="link-hoja-main",
                                style={"font-size": "12px"},
@@ -110,6 +109,9 @@ def sidebar(visible_nav):
                                style={"font-size": "12px"},
                                className="btn btn-warning m-1"),
                     dbc.Button("Recomendaciones", id="link-hoja-3",
+                               style={"font-size": "10px"},
+                               className="btn btn-warning m-1"),
+                    dbc.Button("Documentación", id="link-hoja-4",
                                style={"font-size": "10px"},
                                className="btn btn-warning m-1"),
                 ],
