@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
+from dash.exceptions import PreventUpdate
 
 from graphs import *
 from styles import *
@@ -119,7 +120,7 @@ tabs = dcc.Tabs(
 )
 
 # ___________________________________________ CONTENIDO HOJA 2 ___________________________________________________________________
-
+#Ver hoja layout
 
 # ___________________________________________ CONTENIDO HOJA 3 ___________________________________________________________________
 content3 = html.Div([
@@ -127,23 +128,21 @@ content3 = html.Div([
     dbc.Row([
         dbc.Col([
                 html.Div([
-                    html.Img(src=app.get_asset_url('niños_03.jpg'),
-                             style={"height": "50%", "width": "23%"}),
-                    dbc.Button("Primi", size="lg", className="m-2",
-                               color="warning",  id="primi_niño"),
-                    dbc.Button("Bebe-Niño", size="lg", className="m-2",
-                               color="warning", id="bebe_niño")
+                    html.Img(src=app.get_asset_url('niños_03.jpg'),style={"height": "50%", "width": "23%"}),
+                    dbc.Button("Primi", size="lg", className="m-2", color="warning",  id="primi_m"),
+                    dbc.Button("Bebe", size="lg", className="m-2",color="warning", id="bebe_m"),
+                    dbc.Button("Niño", size="lg", className="m-2",color="warning", id="niño_m")
                 ], style={"margin-left": "10rem"})
 
                 ]),
 
         dbc.Col([
                 html.Div([
-                         html.Img(src=app.get_asset_url('niñas_03.jpg'),
-                                  style={"height": "50%", "width": "15%"}),
-                         dbc.Button("Primi", size="lg", className="m-2",
-                                    color="warning",  id="primi_niño"),
-                         dbc.Button("Bebe-Niño", size="lg", className="m-2", color="warning", id="bebe_niño")], style={}
+                         html.Img(src=app.get_asset_url('niñas_03.jpg'),style={"height": "50%", "width": "15%"}),
+                         dbc.Button("Primi", size="lg", className="m-2",color="warning",  id="primi_f"),
+                         dbc.Button("Bebe", size="lg", className="m-2", color="warning", id="bebe_f"),
+                         dbc.Button("Niña", size="lg", className="m-2", color="warning", id="niño_f")
+                         ], style={}
                          ),
                 ])
     ]),
@@ -420,20 +419,99 @@ def change_paragraph(btn1, btn2, btn3, btn4):
 # __________________________________________ CALLBACKS HOJA 3 ____________________________________________________________________
 
 @app.callback(
-    Output("rg1", "figure"),
-    Input("dropdown_clu_p3", "value")
+    [Output("rg1", "figure"),Output("rg2", "figure")],
+    [Input("dropdown_clu_p3", "value"), Input("dropdown_grupo_p3", "value"),
+     Input("primi_m", "n_clicks"), Input("primi_f", "n_clicks"),
+     Input("bebe_m", "n_clicks"), Input("bebe_f", "n_clicks"),
+     Input("niño_m", "n_clicks"), Input("niño_f", "n_clicks"),
+     ]
 )
-def clu_sel(clu):
+def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6):
+    
+    changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
+    if "primi_m" in changed_id:
+        genero = "MASCULINO"
+        edad = "PRIMI"              
+        
+##    if "primi_f:
+##        genero = "FEMENINO"
+##        edad = "PRIMI"
+##        primi_f = 0
+##        
+##    if bebe_m:
+##         genero = "MASCULINO"
+##         edad = "BEBES"
+##         bebe_m = 0
+##         
+##    if bebe_f:
+##         genero = "FEMENINO"
+##         edad = "BEBES"
+##         bebe_f = 0
+##
+##    if niño_m:
+##         genero = "MASCULINO"
+##         edad = "NIÑOS"
+##         niño_m = 0
+##
+##    if niño_f:
+##         genero = "FEMENINO"
+##         edad = "NIÑOS"
+##         niño_f = 0
 
-    rg1 = px.bar(f_beb[f_beb["clu_name"] == clu][["grupo_articulo", "cantidad", "porc_cantidad"]].reset_index(drop=True).sort_values(by="cantidad"), x="cantidad", y="grupo_articulo",
-                 title="TOP 10 productos clúster " + str(clu),
-                 hover_data=["porc_cantidad"],
-                 width=600,
-                 color_discrete_map={
-        "": "gold"
-    }
+
+
+
+    tabla_grupo_art = df_grupo_art[(df_grupo_art["genero"] == genero) &\
+                               (df_grupo_art["edad"] == edad) &\
+                               (df_grupo_art["clu_name"] == cluster)]\
+                                [["grupo_articulo", "cantidad", "freq_relativa"]]\
+                                .reset_index(drop=True).sort_values(by="cantidad", ascending = False)
+
+    tabla_tipo_art = df_tipo_art[(df_tipo_art["genero"] == genero) &\
+                                   (df_tipo_art["edad"] == edad) &\
+                                   (df_tipo_art["clu_name"] == cluster)&\
+                                   (df_tipo_art["grupo_articulo"] == grupo_art)]\
+                                    [["tipo_articulo", "cantidad", "freq_relativa", "tipo_tejido"]]\
+                                    .reset_index(drop=True).sort_values(by="cantidad", ascending = False)
+
+
+#----------------------------Gráfica de barras 1: Grupo artículo
+    rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
+                   title = "TOP 10 productos clúster " + cluster +" "+ genero + " " + edad,
+                   hover_data = ["freq_relativa"],
+                   color_discrete_map={
+                            "": "gold"
+                }      
     )
-    return rg1
+
+#----------------------------Gráfica de barras 2: Tipo artículo
+    rg2 = go.Figure(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["cantidad"], 
+                           y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["tipo_articulo"], 
+                           name='TEJIDO PLANO',
+                          orientation='h',
+                          marker_color='silver'))
+    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PUNTO']["cantidad"], 
+                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PUNTO']["tipo_articulo"], 
+                         name='TEJIDO PUNTO',
+                         orientation='h',
+                         marker_color='gold'))
+    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'NO TEJIDO']["cantidad"], 
+                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'NO TEJIDO']["tipo_articulo"], 
+                         name='NO TEJIDO',
+                         orientation='h',
+                         marker_color='black'))
+    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'INDISTINTO']["cantidad"], 
+                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'INDISTINTO']["tipo_articulo"], 
+                         name='INDISTINTO',
+                         orientation='h',
+                         marker_color='lightsalmon'))
+
+
+    rg2.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'})
+    rg2.update_layout(title_text='Top 10 tipos de ' +  grupo_art)
+
+
+    return rg1,rg2
 
 
 # ______________________________________________________________________________________________________
