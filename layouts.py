@@ -78,7 +78,7 @@ def main_page(app, visible):
         dbc.Row(
             dbc.Col(
                 html.Div(
-                    dbc.Button("Nosotros", id="button-us", color="info", className="mb-3"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
+                    dbc.Button("Nosotros", id="button-us", color="info", className="m-3"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
             )
         )
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
