@@ -18,7 +18,7 @@ def main_page(app, visible):
                     style={"display": "flex", "justify-content": "center"})
             ])
         ]),
-        html.H3("Seguimiento a la Frecuencia", style={"margin-left": "20rem"}),
+        html.H3("Seguimiento a la Frecuencia", style={"text-align": "center"}),
         dbc.Row(
             dbc.Col(
                 html.P("INTRODUCCIÓN: Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
@@ -28,7 +28,7 @@ def main_page(app, visible):
                         a través de un perfilamiento del cliente que permita recomendaciones que generen nuevos momentos\
                         de compra durante el año.")
             ), className="m-3"
-        ),
+        , justify="center"),
         dbc.Row([
             dbc.Col(
                 dbc.Card([
