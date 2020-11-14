@@ -184,34 +184,40 @@ app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
     main_page(app, True),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ], id="page-content")
 
 hoja_principal = html.Div([
     html.Div(sidebar(False), style={"display": "none"}),
-    main_page(app, True)
+    main_page(app, True),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 hoja_1_layout = html.Div([
-    sidebar(True),
+    sidebar("block"),
     resumen,
     tabs,
     main_page(app, False),
-    html.Div(id='page-1-content')
+    html.Div(content_us(app, False), style={"display": "none"}),
+    html.Div(id='page-1-content'),
 ])
 
 hoja_2_layout = html.Div([
-    sidebar(True), content2,
+    sidebar("block"), content2,
     main_page(app, False),
-    html.Div(id='page-2-content')
-
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 
 hoja_3_layout = html.Div([
-    sidebar(True), content3,
+    sidebar("block"), content3,
     main_page(app, False),
-    html.Div(id='page-3-content')
+    html.Div(content_us(app, False), style={"display": "none"}),
+])
 
+layout_nosotros = html.Div([
+    html.Div(sidebar(False), style={"display": "none"}), content_us(app, True),
+    main_page(app, False),
 ])
 
 
