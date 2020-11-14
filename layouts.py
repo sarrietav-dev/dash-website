@@ -1,10 +1,7 @@
-from dash_bootstrap_components._components.Card import Card
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash_html_components.Button import Button
 from dash_html_components.Div import Div
-from flask import app
 
 from styles import *
 from graphs import *
@@ -69,7 +66,7 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H4("Documentación"),
+                        html.H4("Glosario y Documentación"),
                         html.P(
                             "Glosario  y conceptos.\
                             Vínculos a documentación del aplicativo."),
@@ -87,6 +84,7 @@ def main_page(app, visible):
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
 
     return main_page
+
 
 
 def sidebar(visible_nav):
@@ -131,7 +129,8 @@ graphs_tab2 = html.Div([
             dcc.Graph(id="graf7", figure=graf7)
         ], style={"margin-left": "1rem"}),
     ]),
-])
+    ])
+    
 
 
 graphs_tab1 = html.Div([
@@ -265,12 +264,12 @@ dropdown3 = dcc.Dropdown(
 )
 
 
-input_recencia = dcc.Input(
-    id="input_recencia",
-    type="number",
-    placeholder="recencia en meses",
-    value=25
-)
+##input_recencia = dcc.Input(
+##    id="input_recencia",
+##    type="number",
+##    placeholder="recencia en meses",
+##    value=25
+##)
 
 # ------------------------------------------------------------------ Slider ticket promedio
 slider_ticket = dcc.RangeSlider(
@@ -332,7 +331,7 @@ dropdow_escala_tree = dcc.Dropdown(
     ]
 )
 
-#----------------------------------------------------------------------------------------------------------- Graphs2
+#--------------------------------------------------------------------------------------------------------Elemento graphs2
 
 graphs2 = html.Div([
     html.H4(["Medidas de los clústeres"], style=CONTENT_STYLE_SUBTITLE),
@@ -378,14 +377,11 @@ graphs2 = html.Div([
 perfilamiento_header = html.Div([
     dbc.Row([
         html.Div([
-            dbc.Col(dbc.Button("Precio bajo", color="warning",
-                               id="perf_button1", size="sm")),
-            dbc.Col(dbc.Button("Precio medio", color="warning",
-                               id="perf_button2", size="sm")),
-            dbc.Col(dbc.Button("Precio alto", color="warning",
-                               id="perf_button3", size="sm")),
-            dbc.Col(dbc.Button("Offcorss fans", color="warning",
-                               id="perf_button4", size="sm")),
+            dbc.Col(dbc.Button("Sale hunters", color="warning",  id="perf_button1", size = "sm")),
+            dbc.Col(dbc.Button("Average customer", color="warning", id="perf_button2", size = "sm")),
+            dbc.Col(dbc.Button("Selective customer", color="warning",id="perf_button3", size = "sm")),
+            dbc.Col(dbc.Button("Offcorss fanatics", color="warning", id="perf_button4", size = "sm")),
+
         ], style={"display": "flex", "justify-content": "center"}),
     ]),
     dbc.Row(
@@ -395,16 +391,18 @@ perfilamiento_header = html.Div([
             ), style={"display": "flex", "justify-content": "center"}
         ),
     )
-], style={"margin": "0 auto"})
+], style={"margin-left": "15rem"})
 
 
 # ----------------------------------------------------------------------- Content 2
 content2 = html.Div([
     html.H1(["Perfilamiento"], style=CONTENT_STYLE),
     html.Div(
-        [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:")))
-         ], style={}),
-    perfilamiento_header,
+        [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:"))),
+         perfilamiento_header,
+         html.Div(id = "tabla_resumen_clu")
+        ], style={}
+    ),
     graphs2
 ], style={"margin-left": "10rem"})
 

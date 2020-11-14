@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 
 df_res = pd.read_sql_query('select * from "vw_offcorss_descar_clu_agr"',con=engine)
-cluster_names_p3 = {0:"sale_hunters", 1:"average_customer", 2:"selective_customer", 3:"offcorrs_fans"}
+cluster_names_p3 = {0:"sale_hunters", 1:"average_customer", 2:"selective_customer", 3:"offcorss_fans"}
 df_res["clu_name"] = df_res["clu"].map(cluster_names_p3)
 df_res2 = df_res[df_res["clu"].isna() == False] # Remove NAS
 df_res2 = df_res2[df_res2["grupo_articulo"].isnull() == False] # Remove None
