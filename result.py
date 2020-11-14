@@ -6,40 +6,59 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
+import plotly.graph_objects as go
 
 engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 
-#f_beb = pd.read_sql_query('select * from "vw_top10_fem_beb"',con=engine)
+df_res = pd.read_sql_query('select * from "vw_offcorss_descar_clu_agr"',con=engine)
+cluster_names_p3 = {0:"sale_hunters", 1:"average_customer", 2:"selective_customer", 3:"offcorrs_fans"}
+df_res["clu_name"] = df_res["clu"].map(cluster_names_p3)
+df_res2 = df_res[df_res["clu"].isna() == False] # Remove NAS
+df_res2 = df_res2[df_res2["grupo_articulo"].isnull() == False] # Remove None
 
-f_beb = pd.read_csv("data/vw_top10_fem_beb_202011101811.csv",sep = ";")
-f_beb["porc_cantidad"] = 0.10
-cluster_names_p3 = {0:"low_price ", 1:"medium_price", 2:"high_price", 3:"Fans"}
-f_beb["clu_name"] = f_beb["clu"].map(cluster_names_p3) 
+# Agrupación 1
+df_grupo_art = df_res2.groupby(["genero","edad", "grupo_articulo", "clu_name"]).sum().reset_index()
 
-#_______________________________________________ GRAFICOS Y OBJETOS _____________________________________________________
+gen = "MASCULINO"
+ed = "PRIMI"
+clu = "sale_hunters"
+ga = "CAMISA"
 
-rg1 = px.bar(f_beb[f_beb["clu"] == 0][["grupo_articulo", "cantidad", "porc_cantidad"]].reset_index(drop=True).sort_values(by="cantidad")
-       , x= "cantidad", y = "grupo_articulo",
-       title = "TOP 10 productos clúster " + str(0),
-       hover_data = ["porc_cantidad"],
-       width = 600,
+tabla_grupo_art = df_grupo_art[(df_grupo_art["genero"] == gen) &\
+                               (df_grupo_art["edad"] == ed) &\
+                               (df_grupo_art["clu_name"] == clu)]\
+                                [["grupo_articulo", "cantidad", "freq_relativa"]]\
+                                .reset_index(drop=True).sort_values(by="cantidad", ascending = False)
+
+# Agrupación 2
+df_tipo_art = df_res2.groupby(["genero","edad", "grupo_articulo","tipo_articulo" , "tipo_tejido", "clu_name"]).sum().reset_index()
+
+tabla_tipo_art = df_tipo_art[(df_tipo_art["genero"] == gen) &\
+                               (df_tipo_art["edad"] == ed) &\
+                               (df_tipo_art["clu_name"] == clu)&\
+                               (df_tipo_art["grupo_articulo"] == ga)]\
+                                [["tipo_articulo", "cantidad", "freq_relativa", "tipo_tejido"]]\
+                                .reset_index(drop=True).sort_values(by="cantidad", ascending = False)
+
+
+#_______________________________________________ GRAFICOS Y OBJETOS ______________________________________________________________
+
+rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
+       title = "TOP 10 productos clúster " + clu +" "+ gen + " " + ed,
+       hover_data = ["freq_relativa"],
        color_discrete_map={
                 "": "gold"
              }      
 )
 
+rg2 = go.Figure(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["cantidad"], 
+                       y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["tipo_articulo"], 
+                       name='TEJIDO PLANO',
+                      orientation='h',
+                      marker_color='silver'))
 
-rg2 = px.bar(f_beb[f_beb["clu"] == 0][["grupo_articulo", "cantidad", "porc_cantidad"]].reset_index(drop=True).sort_values(by="cantidad")
-       , x= "cantidad", y = "grupo_articulo",
-       title = "TOP 10 productos clúster " + str(0),
-       hover_data = ["porc_cantidad"],
-       width = 600,
-       color_discrete_map={
-                "": "grey"
-             }      
-)
-
-
+rg2.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'})
+rg2.update_layout(title_text='Top 10 tipos de ' +  ga)
 
 
 dropdown_clu = dcc.Dropdown( 
@@ -47,17 +66,17 @@ dropdown_clu = dcc.Dropdown(
     id="dropdown_clu_p3",
     value=[],
     className="dropdown m-3",
-    options= [{"label":e, "value":e} for e in f_beb["clu_name"].unique()],    
+    options= [{"label":e, "value":e} for e in df_res2["clu_name"].unique()],    
     searchable = False
     
 )
 
 dropdown_prod = dcc.Dropdown( 
     placeholder="Options",
-    id="dropdown_prdo_p3",
+    id="dropdown_grupo_p3",
     value=[],
     className="dropdown m-3",
-    options = [{"label":e, "value":e} for e in f_beb["grupo_articulo"].sort_values().unique()],
+    options = [{"label":e, "value":e} for e in df_res2["grupo_articulo"].sort_values().unique()],
     searchable = False
     
 )
