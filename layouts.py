@@ -440,8 +440,11 @@ def content_us(app, visible):
                 ]),
             ]),
             team_faces(app),
-            dbc.Row(
-                corp_images(app), justify="between"),
+            html.Div(style={"margin": "3em auto"}),
+            html.Div(
+                dbc.Row(
+                    corp_images(app), justify="between"), className="mt-4"
+            ),
         ], style={
             "display": "flex",
             "flex-direction": "column",
@@ -528,6 +531,7 @@ def corp_images(app):
         "max-width": "100%",
         "width": "300px",
         "height": "auto",
+        "margin": "auto 3em",
     }
     return [
         dbc.Col(
