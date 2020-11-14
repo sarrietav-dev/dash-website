@@ -81,13 +81,12 @@ def main_page(app, visible):
         dbc.Row(
             dbc.Col(
                 html.Div(
-                    dbc.Button("Nosotros", id="button-us", color="info"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
+                    dbc.Button("Nosotros", id="button-us", color="info", className="mb-3"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
             )
         )
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
 
     return main_page
-
 
 
 def sidebar(visible_nav):
@@ -99,22 +98,22 @@ def sidebar(visible_nav):
             html.Hr(),  # Esto es una línea horizontal que separa lo de arriba
             html.Div([
 
-                    dbc.Button("Inicio", id="link-hoja-main",
-                               style={"font-size": "12px"},
-                               className="btn btn-warning m-1"),
-                    dbc.Button("Exploración", id="link-hoja-1",
-                               style={"font-size": "12px"},
-                               className="btn btn-warning m-1"),
-                    dbc.Button("Perfilamiento ", id="link-hoja-2",
-                               style={"font-size": "12px"},
-                               className="btn btn-warning m-1"),
-                    dbc.Button("Recomendaciones", id="link-hoja-3",
-                               style={"font-size": "10px"},
-                               className="btn btn-warning m-1"),
-                    dbc.Button("Documentación", id="link-hoja-4",
-                               style={"font-size": "10px"},
-                               className="btn btn-warning m-1"),
-                ],
+                dbc.Button("Inicio", id="link-hoja-main",
+                           style={"font-size": "12px"},
+                           className="btn btn-warning m-1"),
+                dbc.Button("Exploración", id="link-hoja-1",
+                           style={"font-size": "12px"},
+                           className="btn btn-warning m-1"),
+                dbc.Button("Perfilamiento ", id="link-hoja-2",
+                           style={"font-size": "12px"},
+                           className="btn btn-warning m-1"),
+                dbc.Button("Recomendaciones", id="link-hoja-3",
+                           style={"font-size": "10px"},
+                           className="btn btn-warning m-1"),
+                dbc.Button("Documentación", id="link-hoja-4",
+                           style={"font-size": "10px"},
+                           className="btn btn-warning m-1"),
+            ],
             ),
         ], style=SIDEBAR_STYLE  # ,className="navbar navbar-dark bg-dark"
     )
@@ -194,9 +193,9 @@ dropdown4_1 = dcc.Dropdown(
     value=[],
     className="dropdown m-3",
     options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["yeard"].unique()
+        {"label": i, "value": i} for i in bd_frec_tienda2["yeard"].unique()
     ],
-    searchable = False
+    searchable=False
 )
 
 
@@ -206,22 +205,21 @@ dropdown5_1 = dcc.Dropdown(
     value="TIENDA PROPIA",
     className="dropdown m-3",
     options=[
-        {"label":i, "value":i} for i in bd_frec_tienda2["tipo_tienda"].unique()
+        {"label": i, "value": i} for i in bd_frec_tienda2["tipo_tienda"].unique()
     ],
-    searchable = False
+    searchable=False
 )
 
 
 # Dropdown with no values
-dropdown6_1 = dcc.Dropdown( 
+dropdown6_1 = dcc.Dropdown(
     placeholder="Options",
     id="dropdown61_tienda",
     value=[],
     className="dropdown m-3",
-    searchable = False
-    
-)
+    searchable=False
 
+)
 
 
 # -------------------------------------------------------------------------------- Graphs PAG2
@@ -274,44 +272,46 @@ input_recencia = dcc.Input(
     value=25
 )
 
-#------------------------------------------------------------------ Slider ticket promedio
+# ------------------------------------------------------------------ Slider ticket promedio
 slider_ticket = dcc.RangeSlider(
     id="slider_ticket",
     min=df_cluster2["ticket_prom_compra"].min(),
     max=df_cluster2["ticket_prom_compra"].max(),
     marks={df_cluster2["ticket_prom_compra"].min(): "mín",
-           50000:"25k",
-           100000:"50k",
-           200000:"200k",
-           300000:"300k",
-           400000:"400k",
-           600000:"600k",
-           1000000:"1M",
+           50000: "25k",
+           100000: "50k",
+           200000: "200k",
+           300000: "300k",
+           400000: "400k",
+           600000: "600k",
+           1000000: "1M",
            df_cluster2["ticket_prom_compra"].max():  "máx"
            },
-    step = 50000,
-    value=[df_cluster2["ticket_prom_compra"].min(), df_cluster2["ticket_prom_compra"].max()]
+    step=50000,
+    value=[df_cluster2["ticket_prom_compra"].min(
+    ), df_cluster2["ticket_prom_compra"].max()]
 )
 
-#------------------------------------------------------------------- Slider recencia
+# ------------------------------------------------------------------- Slider recencia
 slider_recencia = dcc.RangeSlider(
     id="slider_recencia",
     min=df_cluster2["recencia_meses"].min(),
     max=df_cluster2["recencia_meses"].max(),
     marks={df_cluster2["recencia_meses"].min():  "mín",
-           3:"3meses",
-           6:"6meses",
-           9:"9meses",
-           12:"12meses",
-           18:"16meses",
-           24:"24meses",
+           3: "3meses",
+           6: "6meses",
+           9: "9meses",
+           12: "12meses",
+           18: "16meses",
+           24: "24meses",
            df_cluster2["recencia_meses"].max():  "máx"
            },
-    step = 1,
-    value=[df_cluster2["recencia_meses"].min(), df_cluster2["recencia_meses"].max()]
+    step=1,
+    value=[df_cluster2["recencia_meses"].min(
+    ), df_cluster2["recencia_meses"].max()]
 )
 
-#---------------------------------------------------------------Dropdown escala color treemap
+# ---------------------------------------------------------------Dropdown escala color treemap
 dropdow_escala_tree = dcc.Dropdown(
     placeholder="Options",
     id="drop_tree",
@@ -330,7 +330,7 @@ dropdow_escala_tree = dcc.Dropdown(
         {"label": "Rango meses tallas compradas",
          "value": "ran_meses"},
     ]
-)   
+)
 
 #----------------------------------------------------------------------------------------------------------- Graphs2
 
@@ -347,39 +347,45 @@ graphs2 = html.Div([
     html.H4(["Contenido clústeres"], style=CONTENT_STYLE_SUBTITLE),
     dbc.Row([
         dbc.Col([
-                html.Div([html.P("Selección variable eje X:")],style={"margin-top":"1rem"}),
+                html.Div([html.P("Selección variable eje X:")],
+                         style={"margin-top": "1rem"}),
                 dropdown2,
                 html.P("Selección variable eje Y:"),
                 dropdown3,
-                html.P("Seleccione el rango de ticket promedio (step 50k):"),                
-                html.Div(slider_ticket, style={"margin-bottom":"3.5rem"}),
-                html.P("Seleccione el rango de recencia en meses:"), 
-                html.Div(slider_recencia, style={"margin-bottom":"3.5rem"}),
-                html.Div([html.P("Selección escala de color:")],style={"margin-top":"1rem"}),
+                html.P("Seleccione el rango de ticket promedio (step 50k):"),
+                html.Div(slider_ticket, style={"margin-bottom": "3.5rem"}),
+                html.P("Seleccione el rango de recencia en meses:"),
+                html.Div(slider_recencia, style={"margin-bottom": "3.5rem"}),
+                html.Div([html.P("Selección escala de color:")],
+                         style={"margin-top": "1rem"}),
                 dropdow_escala_tree,
                 ], style={"margin-left": "5rem"}),
         dbc.Col([
                 dcc.Graph(id="mg3", figure=mg3)
-            ]),        
+                ]),
     ]),
 
     dbc.Row([
         dbc.Col([
                 dcc.Graph(id="mg4", figure=mg4)
-            ])
+                ])
     ]),
     html.P("OU: Outlet, TP: Tienda propia, FR: Franquicia\
         El tamaño de cada cuadrado indica el número de clientes."),
 ])
 
-#---------------------------------------------------------------------- Botones segmento
+# ---------------------------------------------------------------------- Botones segmento
 perfilamiento_header = html.Div([
     dbc.Row([
         html.Div([
-            dbc.Col(dbc.Button("Precio bajo", color="warning",  id="perf_button1", size = "sm")),
-            dbc.Col(dbc.Button("Precio medio", color="warning", id="perf_button2", size = "sm")),
-            dbc.Col(dbc.Button("Precio alto", color="warning",id="perf_button3", size = "sm")),
-            dbc.Col(dbc.Button("Offcorss fans", color="warning", id="perf_button4", size = "sm")),
+            dbc.Col(dbc.Button("Precio bajo", color="warning",
+                               id="perf_button1", size="sm")),
+            dbc.Col(dbc.Button("Precio medio", color="warning",
+                               id="perf_button2", size="sm")),
+            dbc.Col(dbc.Button("Precio alto", color="warning",
+                               id="perf_button3", size="sm")),
+            dbc.Col(dbc.Button("Offcorss fans", color="warning",
+                               id="perf_button4", size="sm")),
         ], style={"display": "flex", "justify-content": "center"}),
     ]),
     dbc.Row(
@@ -392,9 +398,7 @@ perfilamiento_header = html.Div([
 ], style={"margin": "0 auto"})
 
 
-   
-
-#----------------------------------------------------------------------- Content 2
+# ----------------------------------------------------------------------- Content 2
 content2 = html.Div([
     html.H1(["Perfilamiento"], style=CONTENT_STYLE),
     html.Div(
@@ -403,6 +407,7 @@ content2 = html.Div([
     perfilamiento_header,
     graphs2
 ], style={"margin-left": "10rem"})
+
 
 def content_us(app, visible):
     return html.Div([
@@ -431,39 +436,12 @@ def content_us(app, visible):
             dbc.Row([
                 dbc.Col([
                     html.Div([
-                        html.P(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                        Etiam ut tincidunt nisl. \
-                        Vestibulum facilisis, nibh quis viverra ultrices, libero enim sodales erat, a tincidunt libero eros vel ex. \
-                        Etiam molestie nulla at ultrices euismod. \
-                        Pellentesque euismod diam ac tincidunt sollicitudin. \
-                        Donec dictum, lectus quis bibendum pharetra, arcu neque tincidunt leo, eget tempus nisl leo ut justo. \
-                        Etiam pretium tempor dolor, fringilla fringilla purus mattis non. Phasellus semper lectus eu elementum condimentum. \
-                        Aenean vitae imperdiet mi. Suspendisse eleifend elit nec neque venenatis, nec viverra leo dictum. \
-                        Phasellus convallis lacus et quam vehicula volutpat. Integer sed elementum nisl. ", style={"color": "white"}
-                        )  # TODO: Justify this and make it purple.
                     ])
                 ]),
             ]),
             team_faces(app),
-            dbc.Row([
-                dbc.Col([
-                    html.Div([
-                        html.P(
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. \
-                        Etiam ut tincidunt nisl. \
-                        Vestibulum facilisis, nibh quis viverra ultrices, libero enim sodales erat, a tincidunt libero eros vel ex. \
-                        Etiam molestie nulla at ultrices euismod. \
-                        Pellentesque euismod diam ac tincidunt sollicitudin. \
-                        Donec dictum, lectus quis bibendum pharetra, arcu neque tincidunt leo, eget tempus nisl leo ut justo. \
-                        Etiam pretium tempor dolor, fringilla fringilla purus mattis non. Phasellus semper lectus eu elementum condimentum. \
-                        Aenean vitae imperdiet mi. Suspendisse eleifend elit nec neque venenatis, nec viverra leo dictum. \
-                        Phasellus convallis lacus et quam vehicula volutpat. Integer sed elementum nisl. ", style={"color": "white"}
-                        )
-                    ])
-                ])
-            ]),
-
+            dbc.Row(
+                corp_images(app), justify="between"),
         ], style={
             "display": "flex",
             "flex-direction": "column",
@@ -476,12 +454,14 @@ def content_us(app, visible):
         "display": "block" if visible else "none"
     })
 
+
 faces_style = {
     "max-width": "100%",
     "height": "auto",
     "width": "200px",
     "border-radius": "50%",
 }
+
 
 def team_faces(app):
     return dbc.Row([
@@ -491,7 +471,8 @@ def team_faces(app):
                 dbc.CardBody([
                     html.H4("Jeniffer Duarte", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
+                    dbc.Button("LinkedIn", color="primary",
+                               href="", target="_blank")
                 ])
             ])
         ]),
@@ -501,7 +482,8 @@ def team_faces(app):
                 dbc.CardBody([
                     html.H4("Laura Sierra", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
+                    dbc.Button("LinkedIn", color="primary",
+                               href="", target="_blank")
                 ])
             ])
         ]),
@@ -509,9 +491,10 @@ def team_faces(app):
             dbc.Card([
                 dbc.CardImg(src=app.get_asset_url("jhonathan.jpeg"), top=True),
                 dbc.CardBody([
-                    html.H4("Johathan Madrid", className="card-title"),
+                    html.H4("Jonathan Madrid", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
+                    dbc.Button("LinkedIn", color="primary",
+                               href="", target="_blank")
                 ])
             ])
         ]),
@@ -521,18 +504,39 @@ def team_faces(app):
                 dbc.CardBody([
                     html.H4("Sebastian Arrieta", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("Github", color="primary", href="", target="_blank")
+                    dbc.Button("Github", color="primary",
+                               href="", target="_blank")
                 ])
             ])
         ]),
         dbc.Col([
             dbc.Card([
-                dbc.CardImg(src=app.get_asset_url(""), top=True),
+                dbc.CardImg(src=app.get_asset_url("john.jpeg"), top=True),
                 dbc.CardBody([
                     html.H4("John Davinson", className="card-title"),
                     html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary", href="", target="_blank")
+                    dbc.Button("LinkedIn", color="primary",
+                               href="", target="_blank")
                 ])
             ])
         ]),
     ])
+
+
+def corp_images(app):
+    img_styles = {
+        "max-width": "100%",
+        "width": "300px",
+        "height": "auto",
+    }
+    return [
+        dbc.Col(
+            html.Img(src=app.get_asset_url("corr1.jpeg"), style=img_styles)
+        ),
+        dbc.Col(
+            html.Img(src=app.get_asset_url("ds4a.jpeg"), style=img_styles)
+        ),
+        dbc.Col(
+            html.Img(src=app.get_asset_url("softbank.jpeg"), style=img_styles)
+        ),
+    ]
