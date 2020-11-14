@@ -236,13 +236,14 @@ def habilitar_link(pathname):
         Input("link-hoja-1", "n_clicks"),
         Input("link-hoja-2", "n_clicks"),
         Input("link-hoja-3", "n_clicks"),
+        Input("link-hoja-4", "n_clicks"),
         Input("button-kpi", "n_clicks"),
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
         Input("button-xxi", "n_clicks"),
     ]
 )
-def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8):
+def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11):
     changed_id = [p['prop_id'] for p in dash.callback_context.triggered][0]
     if "link-hoja-1" in changed_id or "button-kpi" in changed_id:
         return hoja_1_layout
