@@ -1,6 +1,8 @@
+from dash_bootstrap_components._components.Card import Card
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
+from dash_html_components.Button import Button
 from dash_html_components.Div import Div
 from flask import app
 
@@ -79,8 +81,7 @@ def main_page(app, visible):
         dbc.Row(
             dbc.Col(
                 html.Div(
-                    dbc.Button("Nosotros", id="button-us", color="info")
-                , style={"display": "flex", "justify-content": "center", "align-items": "center"}),
+                    dbc.Button("Nosotros", id="button-us", color="info"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
             )
         )
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
@@ -380,15 +381,7 @@ def content_us(app, visible):
                     ])
                 ]),
             ]),
-            dbc.Row([
-                dbc.Col([
-                    html.Div([
-                        # TODO: Add an image of the team.
-                        html.Img(src=app.get_asset_url("team84_zoom.jpg"), style={
-                                 "width": "auto", "max-height": "100%", "height": "100%"})
-                    ])
-                ]),
-            ]),
+            team_faces(app),
             dbc.Row([
                 dbc.Col([
                     html.Div([
@@ -418,3 +411,64 @@ def content_us(app, visible):
         "background-color": "black",
         "display": "block" if visible else "none"
     })
+
+faces_style = {
+    "max-width": "100%",
+    "height": "auto",
+    "width": "200px",
+    "border-radius": "50%",
+}
+
+def team_faces(app):
+    return dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardImg(src=app.get_asset_url("jenny.jpeg"), top=True),
+                dbc.CardBody([
+                    html.H4(),
+                    html.P(className="card-text"),
+                    dbc.Button("LinkedIn", color="primary")
+                ])
+            ])
+        ]),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardImg(src=app.get_asset_url("jhonathan.jpeg"), top=True),
+                dbc.CardBody([
+                    html.H4(),
+                    html.P(className="card-text"),
+                    dbc.Button("LinkedIn", color="primary")
+                ])
+            ])
+        ]),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardImg(src=app.get_asset_url("lau.jpeg"), top=True),
+                dbc.CardBody([
+                    html.H4(),
+                    html.P(className="card-text"),
+                    dbc.Button("LinkedIn", color="primary")
+                ])
+            ])
+        ]),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardImg(src=app.get_asset_url("seb.png"), top=True),
+                dbc.CardBody([
+                    html.H4(),
+                    html.P(className="card-text"),
+                    dbc.Button("Github", color="primary")
+                ])
+            ])
+        ]),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardImg(src=app.get_asset_url(""), top=True),
+                dbc.CardBody([
+                    html.H4(),
+                    html.P(className="card-text"),
+                    dbc.Button("LinkedIn", color="primary")
+                ])
+            ])
+        ]),
+    ])
