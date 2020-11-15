@@ -75,9 +75,9 @@ tab2_content = html.Div([
     html.Div([
         dbc.Row([
             dbc.Col([
-                dcc.Graph(id="graf9", figure=graf9, responsive=True)
+                dcc.Graph(id="graf9", figure=graf9)
             ], align="center", width=9),
-        ], style={"margin-left": "auto"}),
+        ]),
     ], style={"display": "flex", "justify-content": "center"}),
     dbc.Row([
         dbc.Col([
@@ -379,13 +379,17 @@ def selector_tienda(canal1):
 )
 def pinta_tienda1(tienda_1, año_1, n_clicks):
     graf8 = go.Figure(layout=layout)
+    print(type(n_clicks))
+    past_state = n_clicks
     if n_clicks:
-        graf8.update_traces()
         graf8.add_trace(go.Scatter(x=[],
                                    y=[],
                                    mode='lines+markers',
                                    line=dict(color="yellow")
-                                   ))
+                                
+                                  ))
+        graf8.update_traces()
+        n_clicks = past_state
         return graf8
 
     else:
@@ -393,12 +397,12 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
                                     (bd_frec_tienda2["d_centro"] != "TIENDA SAN ANDRES 2") &
                                     (bd_frec_tienda2["d_centro"] == tienda_1)]
 
-        graf8.update_traces()
         graf8.add_traces(go.Scatter(x=trace1_df["mes"],
                                     y=trace1_df["freq_acum"],
                                     mode='lines+markers',
                                     name=str(año_1) + " " + str(tienda_1),
                                     ),)
+        graf8.update_traces()
 
         return graf8
 
