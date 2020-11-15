@@ -470,8 +470,26 @@ tabla1 = dash_table.DataTable(
     data=bd_unicos_merged.to_dict('records')
 )
 
-tabla21 = dash_table.DataTable(
-    id='table21',
-    columns=[{"name": i, "id": i} for i in tabla2.columns],
-    data=tabla2.to_dict('records')
+tabla_A = dash_table.DataTable(
+    id='tablaA',
+    columns=[{"name": i, "id": i} for i in tablaA.columns],
+    data=tablaA.to_dict('records')
+)
+
+tabla_B = dash_table.DataTable(
+    id='tablaB',
+    columns=[{"name": i, "id": i} for i in tablaB.columns],
+    data=tablaB.to_dict('records')
+)
+
+tabla_C = dash_table.DataTable(
+    id='tablaC',
+    columns=[{"name": i, "id": i} for i in tablaC.columns],
+    data=tablaC.to_dict('records')
+)
+
+tabla_D = dash_table.DataTable(
+    id='tablaD',
+    columns=[{"name": i, "id": i} for i in tablaD.columns],
+    data=tablaD.to_dict('records')
 )

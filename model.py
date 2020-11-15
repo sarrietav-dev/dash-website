@@ -26,22 +26,16 @@ def normalize(df):
 #--------------------------------------------------------------------------------------- Importar df clasificado
 engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 
-#df_clasif = pd.read_sql_query('select * from "vw_top10_fem_beb"',con=engine)
+df_clasif = pd.read_sql_query('select * from "vw_offcorss_customer" limit 10000',con=engine)
 
 # --------------------------------------------------------------------------------------- Importar df
-df = pd.read_csv('data/offcorss_customer_202011011419_2.csv', sep=";")
-#df_clas = pd.read_csv('data/offcorss_customer_202011011353_overall.csv', sep=";") # Base completa clasificada
-#df = df_clas.copy() # Aca cuando se selecciona la base completa de los 1.3M de clientes
+#df = pd.read_csv('data/offcorss_customer_202011011419_2.csv', sep=";")
+
+df = df_clasif.copy() # Aca cuando se selecciona la base completa de los 1.3M de clientes
 
 # Creación de dos variables adicionales:
 df["ran_meses"] = df["max_meses"]-df["min_meses"]
 df["compras_x_visita"] = df["compras"] / df["visitas"]
-
-# Logs
-df["precio_promedio_log"] = np.log(df["precio_promedio"]+1)
-df["avg_meses_log"] = np.log(df["avg_meses"]+1)
-df["compras_x_visita_log"] = np.log(df["compras_x_visita"]+1)
-df["ticket_prom_compra_log"] = np.log(df["ticket_prom_compra"]+1)
 
 #____________________________________________________________________________________________APLICACIÓN AUTOMÁTICA CLASIFICACIÓN
 ##para_pca = ["revenue", "visitas","compras"]
@@ -88,28 +82,28 @@ df["ticket_prom_compra_log"] = np.log(df["ticket_prom_compra"]+1)
 ##df_cluster = df_men95.append(df_may95)
 
 #____________________________________________________________________________________________APLICACIÓN MANUAL CLASIFICACIÓN
-scaler = StandardScaler()
-df_seg = scaler.fit_transform(df[["revenue", "visitas","compras"]])
-pca = PCA()
-pca.fit(df_seg)
-pca = PCA(n_components = 1)
-pca_df = pca.fit_transform(df_seg)
-pca_df = pd.DataFrame(data = pca_df, columns = ["Dim1"])
-scores_pca = normalize(pca_df)
+##scaler = StandardScaler()
+##df_seg = scaler.fit_transform(df[["revenue", "visitas","compras"]])
+##pca = PCA()
+##pca.fit(df_seg)
+##pca = PCA(n_components = 1)
+##pca_df = pca.fit_transform(df_seg)
+##pca_df = pd.DataFrame(data = pca_df, columns = ["Dim1"])
+##scores_pca = normalize(pca_df)
 
-df["score_pca"] = scores_pca
-q95 = df["score_pca"].quantile(0.95)
+##df["score_pca"] = scores_pca
+##q95 = df["score_pca"].quantile(0.95)
+##
+##bins = [0, 36466, 60479,df["precio_promedio"].max()]
+##labels = ["<36k", "36k-60k", ">60k"]
 
-bins = [0, 36466, 60479,df["precio_promedio"].max()]
-labels = ["<36k", "36k-60k", ">60k"]
-
-df["rango_precio"] = pd.cut(df["precio_promedio"], bins=bins, labels=labels)
-df["cluster"] = [0  if x =="<36k" else 1 if x == "36k-60k" else 2  for x in df["rango_precio"]]
-df["cluster"] =  list(np.select([df["score_pca"]>q95, df["score_pca"]<=q95], [9, df["cluster"]]))
+##df["rango_precio"] = pd.cut(df["precio_promedio"], bins=bins, labels=labels)
+##df["cluster"] = [0  if x =="<36k" else 1 if x == "36k-60k" else 2  for x in df["rango_precio"]]
+##df["cluster"] =  list(np.select([df["score_pca"]>q95, df["score_pca"]<=q95], [9, df["cluster"]]))
 
 df_cluster = df.copy()
-cluster_names = {0:"low_price ", 1:"medium_price", 2:"high_price", 9:"offcorss_fans"}
-df_cluster["cluster_name"] = df_cluster["cluster"].map(cluster_names) 
+cluster_names = {0:"sale_hunters", 1:"average_customer", 2:"selective_customer", 3:"offcorss_fans"}
+df_cluster["cluster_name"] = df_cluster["clu"].map(cluster_names) 
 
 
 # _______________________________________________GRAFICOS DE MODELO _______________________________________________________________
@@ -121,32 +115,38 @@ df_cluster2["constante_size"] = 1
 df_cluster2["recencia_meses"] = df_cluster2["recencia"] / 30
 
 # -------------------------------------------------------------------Heatmap de centroides (MG2)
-##mg2 = px.imshow(df_centroides,
-##                labels=dict(x="Clúster"),
-##                title="Promedios normalizados de variables de clúster",
-##                width=500, height=400,
-##                color_continuous_scale='Cividis_r'
-##                )
 
 heat= df_cluster[["visitas", "compras", "revenue", "recencia", "ticket_prom_compra", "avg_meses", 
           "precio_promedio", "compras_x_visita", "cluster_name"]]
 heat1 = heat.groupby("cluster_name").mean().reset_index()
 
-heat2 = heat.groupby("cluster_name").mean().reset_index()
-heat2 = heat2.set_index("cluster_name")
-tabla2 = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
-tabla2 = tabla2.rename(columns = {"cluster_name": "clientes"}) 
-tabla2 = pd.DataFrame(tabla2.loc["medium_price"]).transpose()
-
-
+heat2 = heat.groupby("cluster_name").mean().reset_index() #Para el resumen de tablas de clúster
+heat2 = heat2.set_index("cluster_name") #Para el resumen de tablas de clúster
 
 mg2 = px.imshow(normalize(heat1.iloc[:,1:]),
                 labels= dict(y = "cluster"),
                 title= "Promedios normalizados por principales variables",
                 y = list(heat1["cluster_name"]),
-                width= 600, height= 600,
+                width= 700, height= 600,
                 color_continuous_scale= 'Cividis_r'
                 )
+#--------------------------------------------------------------------------------# Para tabla resúmen
+tablaA = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
+tablaA = tablaA.rename(columns = {"cluster_name": "clientes"}) 
+tablaA = pd.DataFrame(tablaA.loc["sale_hunters"]).transpose()
+
+tablaB = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
+tablaB = tablaB.rename(columns = {"cluster_name": "clientes"}) 
+tablaB = pd.DataFrame(tablaB.loc["average_customer"]).transpose()
+
+tablaC = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
+tablaC = tablaC.rename(columns = {"cluster_name": "clientes"}) 
+tablaC = pd.DataFrame(tablaC.loc["selective_customer"]).transpose()
+
+tablaD = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
+tablaD = tablaD.rename(columns = {"cluster_name": "clientes"}) 
+tablaD = pd.DataFrame(tablaD.loc["offcorss_fans"]).transpose()
+
 
 # -------------------------------------------------------------------Scatter pares de variables (MG3)
 
@@ -156,7 +156,7 @@ mg3 = px.scatter(df_cluster2, x="recencia_meses",
                  title='Scatter pares de variables',
                  height = 550)
 
-#-------------------------------------------------------------------------------- Treemap (MG4)
+#---------------------------------------------------------------------Treemap (MG4)
 
 # Treemap clientes por canal/region/ciudad/cluster
 mg4 = px.treemap(df_cluster2, path=[px.Constant('CLIENTES:  ' + str(df_cluster2["constante_cli"].sum())),
@@ -168,16 +168,13 @@ mg4 = px.treemap(df_cluster2, path=[px.Constant('CLIENTES:  ' + str(df_cluster2[
                  color_continuous_scale='thermal_r',
                  height=700)
 
-# ------------------------------------------------------------------- 3D Scatter variables clúster (MG5)
+# --------------------------------------------------------------------3D Scatter variables clúster (MG5)
 
 mg5 = px.scatter_3d(df_cluster2, x="precio_promedio", y="avg_meses", z="visitas",
                     color="cluster_name",
                     size="constante_size",
                     opacity=1,
-                    # size="revenue",
-                    # hover_name="district", symbol="result",
-                    color_discrete_map={"Joly": "blue",
-                                        "Bergeron": "green", "Coderre": "red"},
+                    color_discrete_map={"Joly": "blue","Bergeron": "green", "Coderre": "red"},
                     height=700, width=700,
                     title="Visualización variables de clústeres"
                     )
