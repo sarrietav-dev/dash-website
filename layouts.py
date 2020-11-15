@@ -20,10 +20,10 @@ def main_page(app, visible):
         html.H3("Seguimiento a la Frecuencia", style={"text-align": "center"}),
         dbc.Row(
             dbc.Col(
-                html.P("INTRODUCCIÓN: Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
+                html.P("Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
                         los resultados de negocio por medio de las herramientas analíticas y equipo humano \
                         en alianza con  el programa DS4A.\
-                        PROBLEMA: Se desea aumentar la frecuencia de compra anual por encima de 1.5 compras al año por cliente, \
+                        Se desea aumentar la frecuencia de compra anual por encima de 1.5 compras al año por cliente, \
                         a través de un perfilamiento del cliente que permita recomendaciones que generen nuevos momentos\
                         de compra durante el año.")
             ), className="m-3", justify="center"),
@@ -92,7 +92,7 @@ def sidebar(visible_nav):
                 dbc.Button("Exploración", id="link-hoja-1",
                            style={"font-size": "12px"},
                            className="btn btn-warning m-1"),
-                dbc.Button("Perfilamiento ", id="link-hoja-2",
+                dbc.Button("Segmentación ", id="link-hoja-2",
                            style={"font-size": "12px"},
                            className="btn btn-warning m-1"),
                 dbc.Button("Recomendaciones", id="link-hoja-3",
@@ -215,7 +215,7 @@ dropdown6_1 = dcc.Dropdown(
 dropdown2 = dcc.Dropdown(
     placeholder="Options",
     id="clu_dropdown_x",
-    value="recencia_meses",
+    value="precio_promedio",
     className="dropdown m-3",
     options=[
         {"label": "Revenue", "value": "revenue"},
@@ -389,7 +389,10 @@ perfilamiento_header = html.Div([
 
 # ----------------------------------------------------------------------- Content 2
 content2 = html.Div([
-    html.H1(["Perfilamiento"], style=CONTENT_STYLE),
+    html.H1(["Segmentación"], style=CONTENT_STYLE),
+    html.P("Aca se muestra una clasificación para 25 mil clientes por restricciones de velocidad,\
+            la base completa se uso para la hoja 'recomendaciones'."),
+            
     html.Div(
         [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:"))),
          perfilamiento_header,

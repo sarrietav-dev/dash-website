@@ -26,7 +26,7 @@ def normalize(df):
 #--------------------------------------------------------------------------------------- Importar df clasificado
 engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 
-df_clasif = pd.read_sql_query('select * from "vw_offcorss_customer" limit 10000',con=engine)
+df_clasif = pd.read_sql_query('select * from "vw_offcorss_customer" limit 25000',con=engine)
 
 # --------------------------------------------------------------------------------------- Importar df
 #df = pd.read_csv('data/offcorss_customer_202011011419_2.csv', sep=";")
@@ -134,19 +134,22 @@ mg2 = px.imshow(normalize(heat1.iloc[:,1:]),
 tablaA = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
 tablaA = tablaA.rename(columns = {"cluster_name": "clientes"}) 
 tablaA = pd.DataFrame(tablaA.loc["sale_hunters"]).transpose()
+tablaA = pd.DataFrame(tablaA.iloc[0,0:].apply("{:.2f}".format)).transpose()
 
 tablaB = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
 tablaB = tablaB.rename(columns = {"cluster_name": "clientes"}) 
 tablaB = pd.DataFrame(tablaB.loc["average_customer"]).transpose()
+tablaB = pd.DataFrame(tablaB.iloc[0,0:].apply("{:.2f}".format)).transpose()
 
 tablaC = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
 tablaC = tablaC.rename(columns = {"cluster_name": "clientes"}) 
 tablaC = pd.DataFrame(tablaC.loc["selective_customer"]).transpose()
+tablaC = pd.DataFrame(tablaC.iloc[0,0:].apply("{:.2f}".format)).transpose()
 
 tablaD = pd.concat([df_cluster["cluster_name"].value_counts(), heat2], axis = 1)
 tablaD = tablaD.rename(columns = {"cluster_name": "clientes"}) 
 tablaD = pd.DataFrame(tablaD.loc["offcorss_fans"]).transpose()
-
+tablaD = pd.DataFrame(tablaD.iloc[0,0:].apply("{:.2f}".format)).transpose()
 
 # -------------------------------------------------------------------Scatter pares de variables (MG3)
 

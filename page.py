@@ -124,6 +124,8 @@ tabs = dcc.Tabs(
 # ___________________________________________ CONTENIDO HOJA 3 ___________________________________________________________________
 content3 = html.Div([
     html.H1(["RECOMENDACIONES"], style=CONTENT_STYLE),
+    html.P("Vet el top 10 de productos y su detalle. \
+            Elegir primero una categoria de edad masculina o femenina, y luego el clúster deseado."),
     dbc.Row([
         dbc.Col([
                 html.Div([
@@ -154,6 +156,10 @@ content3 = html.Div([
     html.Div([
         dbc.Row([
             dbc.Col([
+                html.P("Top 10 / Bottom 5:"),
+                dropdown_top,
+            ]),
+            dbc.Col([
                 html.P("Seleccionar clúster:"),
                 dropdown_clu,
             ]),
@@ -161,6 +167,7 @@ content3 = html.Div([
                 html.P("Seleccionar producto:"),
                 dropdown_prod,
             ]),
+            
         ])
     ]),
 
@@ -444,9 +451,10 @@ def change_paragraph(btn1, btn2, btn3, btn4):
      Input("primi_m", "n_clicks"), Input("primi_f", "n_clicks"),
      Input("bebe_m", "n_clicks"), Input("bebe_f", "n_clicks"),
      Input("niño_m", "n_clicks"), Input("niño_f", "n_clicks"),
+     Input("dropdown_top10_p3", "value")
      ]
 )
-def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6):
+def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
     genero = "MASCULINO"
     edad = "PRIMI"
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
@@ -497,13 +505,27 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6):
 
 
 #--------------Gráfica de barras 1: Grupo artículo
-    rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
-                   title = "TOP 10 productos clúster " + cluster +" "+ genero + " " + edad,
+
+    if top == "tail":
+        rg1 = px.bar(tabla_grupo_art.tail(5).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
+                   title = "Bottom 5 productos clúster " + cluster +" "+ genero + " " + edad,
+                   hover_data = ["freq_relativa"],
+                   color_discrete_map={
+                            "": "lightsalmon"
+                }      
+        )
+
+    
+    elif top == "head":
+        rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
+                   title = "Top 10 productos clúster " + cluster +" "+ genero + " " + edad,
                    hover_data = ["freq_relativa"],
                    color_discrete_map={
                             "": "gold"
                 }      
-    )
+        )
+       
+        
 
 #--------------Gráfica de barras 2: Tipo artículo
     rg2 = go.Figure(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["cantidad"], 

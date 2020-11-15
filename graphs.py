@@ -43,6 +43,7 @@ bd_agr_month2 = bd_agr_month[["trim_año", "tipo_tienda", "vlr_neto", "qt_factur
                         .groupby(["trim_año", "tipo_tienda"]).sum().reset_index()
 bd_agr_month2["ticket_prom"] = bd_agr_month2["vlr_neto"] / bd_agr_month2["qt_facturas_unq"]
 
+
 # Para gráfica 5_2
 bd_agr_month3 = bd_agr_month[["year", "tipo_tienda", "vlr_neto", "qt_facturas_unq"]]\
                         .groupby(["year", "tipo_tienda"]).sum().reset_index()
@@ -470,6 +471,7 @@ tabla1 = dash_table.DataTable(
     data=bd_unicos_merged.to_dict('records')
 )
 
+#--------------------------------------------------------------------- TABLAS DE RESUMEN DE CLUSTERES HOJA 2
 tabla_A = dash_table.DataTable(
     id='tablaA',
     columns=[{"name": i, "id": i} for i in tablaA.columns],

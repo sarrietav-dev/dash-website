@@ -67,7 +67,8 @@ dropdown_clu = dcc.Dropdown(
     value=[],
     className="dropdown m-3",
     options= [{"label":e, "value":e} for e in df_res2["clu_name"].unique()],    
-    searchable = False
+    searchable = False,
+    style={'height': '30px', 'width': '300px'}
     
 )
 
@@ -77,7 +78,19 @@ dropdown_prod = dcc.Dropdown(
     value=[],
     className="dropdown m-3",
     options = [{"label":e, "value":e} for e in df_res2["grupo_articulo"].sort_values().unique()],
-    searchable = False
+    searchable = False,
+    style={'height': '30px', 'width': '300px'}
+    
+)
+
+dropdown_top = dcc.Dropdown( 
+    placeholder="Options",
+    id="dropdown_top10_p3",
+    value=[],
+    className="dropdown m-3",
+    options = [{"label":"Top 10", "value": "head"}, {"label":"Bottom 5", "value":"tail"}],
+    searchable = False,
+    style={'height': '30px', 'width': '150px'}
     
 )
 
