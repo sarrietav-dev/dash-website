@@ -189,13 +189,13 @@ content3 = html.Div([
 
 app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
-    html.Div(sidebar(False), style={"display": "none"}),
+    html.Div(sidebar("none"), style={"display": "none"}),
     main_page(app, True),
     html.Div(content_us(app, False), style={"display": "none"}),
 ], id="page-content")
 
 hoja_principal = html.Div([
-    html.Div(sidebar(False), style={"display": "none"}),
+    html.Div(sidebar("none"), style={"display": "none"}),
     main_page(app, True),
     html.Div(content_us(app, False), style={"display": "none"}),
 ])
@@ -223,8 +223,14 @@ hoja_3_layout = html.Div([
 ])
 
 layout_nosotros = html.Div([
-    html.Div(sidebar(False), style={"display": "none"}), content_us(app, True),
+    html.Div(sidebar("none"), style={"display": "none"}), content_us(app, True),
     main_page(app, False),
+])
+
+doc_layout = html.Div([
+    sidebar("block"), documentation,
+    main_page(app, False),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 
@@ -253,7 +259,7 @@ def habilitar_link(pathname):
         Input("button-kpi", "n_clicks"),
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
-        Input("button-xxi", "n_clicks"),
+        Input("button-doc", "n_clicks"),
         Input("button-us", "n_clicks"),
         Input("back-button", "n_clicks")
     ]
@@ -268,6 +274,8 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, bt
         return hoja_3_layout
     elif "button-us" in changed_id:
         return layout_nosotros
+    elif "button-doc" in changed_id:
+        return doc_layout
     else:
         return hoja_principal
 
