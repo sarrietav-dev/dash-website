@@ -1,3 +1,4 @@
+from dash_bootstrap_components._components.CardDeck import CardDeck
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -28,56 +29,49 @@ def main_page(app, visible):
                         a través de un perfilamiento del cliente que permita recomendaciones que generen nuevos momentos\
                         de compra durante el año.")
             ), className="m-3", justify="center"),
-        dbc.Row([
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H4("Exploración"),
-                        html.P(
-                            "Análisis de indicadores generales a través del tiempo:"),
-                        html.P("Frecuencia, ventas en el tiempo, geolocalización"),
-                        dbc.Button("IR", color="dark", id="button-kpi")
-                    ])
-                ], color="warning", outline=True)
-            ),
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H4("Segmentación"),
-                        html.P(
-                            "Resultado de los segmentos del cliente para toda la base y sus carácterísticas"),
-                        dbc.Button("IR", color="dark",
-                                   id="button-cluster")
-                    ]),
-                ], color="warning", outline=True)
-            ),
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H4("Recomendación"),
-                        html.P(
-                            "Prendas asociados a cada segmento de cliente"),
-                        dbc.Button("IR", color="dark",
-                                   id="button-result")
-                    ])
-                ], color="warning", outline=True)
-            ),
-            dbc.Col(
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H4("Documentación"),
-                        html.P(
-                            "Glosario  y conceptos.\
+        dbc.CardDeck([
+
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("Exploración"),
+                    html.P(
+                        "Análisis de indicadores generales a través del tiempo:"),
+                    html.P("Frecuencia, ventas en el tiempo, geolocalización"),
+                    dbc.Button("IR", color="dark", id="button-kpi")
+                ])
+            ], color="warning", outline=True),
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("Segmentación"),
+                    html.P(
+                        "Resultado de los segmentos del cliente para toda la base y sus carácterísticas"),
+                    dbc.Button("IR", color="dark",
+                               id="button-cluster")
+                ]),
+            ], color="warning", outline=True),
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("Recomendación"),
+                    html.P(
+                        "Prendas asociados a cada segmento de cliente"),
+                    dbc.Button("IR", color="dark",
+                               id="button-result")
+                ])
+            ], color="warning", outline=True),
+            dbc.Card([
+                dbc.CardBody([
+                    html.H4("Documentación"),
+                    html.P(
+                        "Glosario  y conceptos.\
                             Vínculos a documentación del aplicativo."),
-                        dbc.Button("IR", color="dark", id="button-doc")
-                    ])
-                ], color="warning", outline=True)
-            ),
-        ], className="m-4"),
+                    dbc.Button("IR", color="dark", id="button-doc")
+                ])
+            ], color="warning", outline=True),
+        ]),
         dbc.Row(
             dbc.Col(
                 html.Div(
-                    dbc.Button("Nosotros", id="button-us", color="info", className="m-3"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
+                    dbc.Button("Nosotros", id="button-us", color="info", className="m-4"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
             )
         )
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
@@ -466,60 +460,51 @@ faces_style = {
 
 
 def team_faces(app):
-    return dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardImg(src=app.get_asset_url("jenny.jpeg"), top=True),
-                dbc.CardBody([
-                    html.H4("Jeniffer Duarte", className="card-title"),
-                    html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary",
-                               href="https://www.linkedin.com/in/jeniffer-johana-duarte-sanchez-56317250/", target="_blank")
-                ])
+    return dbc.CardDeck([
+        dbc.Card([
+            dbc.CardImg(src=app.get_asset_url("jenny.jpeg"), top=True),
+            dbc.CardBody([
+                html.H4("Jeniffer Duarte", className="card-title"),
+                html.P("PhD en Estadística", className="card-text"),
+                dbc.Button("LinkedIn", color="primary",
+                           href="https://www.linkedin.com/in/jeniffer-johana-duarte-sanchez-56317250/", target="_blank")
             ])
         ]),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardImg(src=app.get_asset_url("lau.jpeg"), top=True),
-                dbc.CardBody([
-                    html.H4("Laura Sierra", className="card-title"),
-                    html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary",
-                               href="http://linkedin.com/in/laura-sierra-serna-74413143", target="_blank")
-                ])
+        dbc.Card([
+            dbc.CardImg(src=app.get_asset_url("lau.jpeg"), top=True),
+            dbc.CardBody([
+                html.H4("Laura Sierra", className="card-title"),
+                html.P("Ingeniera Industrial", className="card-text"),
+                dbc.Button("LinkedIn", color="primary",
+                           href="http://linkedin.com/in/laura-sierra-serna-74413143", target="_blank")
             ])
         ]),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardImg(src=app.get_asset_url("jhonathan.jpeg"), top=True),
-                dbc.CardBody([
-                    html.H4("Jonathan Madrid", className="card-title"),
-                    html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary",
-                               href="https://www.linkedin.com/in/jonathan-madrid-hincapie-72015926/", target="_blank")
-                ])
+        dbc.Card([
+            dbc.CardImg(src=app.get_asset_url("jhonathan.jpeg"), top=True),
+            dbc.CardBody([
+                html.H4("Jonathan Madrid", className="card-title"),
+                html.P("Ingeniero de Sistemas", className="card-text"),
+                dbc.Button("LinkedIn", color="primary",
+                           href="https://www.linkedin.com/in/jonathan-madrid-hincapie-72015926/", target="_blank")
             ])
         ]),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardImg(src=app.get_asset_url("seb.png"), top=True),
-                dbc.CardBody([
-                    html.H4("Sebastian Arrieta", className="card-title"),
-                    html.P(className="card-text"),
-                    dbc.Button("Github", color="primary",
-                               href="https://github.com/sarrietav-dev", target="_blank")
-                ])
+        dbc.Card([
+            dbc.CardImg(src=app.get_asset_url("seb.png"), top=True),
+            dbc.CardBody([
+                html.H4("Sebastian Arrieta", className="card-title"),
+                html.P("Estudiante de Ingeniería de Sistemas",
+                       className="card-text"),
+                dbc.Button("Github", color="primary",
+                           href="https://github.com/sarrietav-dev", target="_blank")
             ])
         ]),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardImg(src=app.get_asset_url("john.jpeg"), top=True),
-                dbc.CardBody([
-                    html.H4("John Davinson", className="card-title"),
-                    html.P(className="card-text"),
-                    dbc.Button("LinkedIn", color="primary",
-                               href="https://www.linkedin.com/in/john-davison-a0212022", target="_blank")
-                ])
+        dbc.Card([
+            dbc.CardImg(src=app.get_asset_url("john.jpeg"), top=True),
+            dbc.CardBody([
+                html.H4("John Davinson", className="card-title"),
+                html.P("Administrador de Empresas", className="card-text"),
+                dbc.Button("LinkedIn", color="primary",
+                           href="https://www.linkedin.com/in/john-davison-a0212022", target="_blank")
             ])
         ]),
     ])
