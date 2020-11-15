@@ -18,17 +18,17 @@ def main_page(app, visible):
                     style={"display": "flex", "justify-content": "center"})
             ])
         ]),
-        html.H3("Seguimiento a la Frecuencia", style={"margin-left": "20rem"}),
+        html.H3("Seguimiento a la Frecuencia", style={"text-align": "center"}),
         dbc.Row(
             dbc.Col(
-                html.P("INTRODUCCIÓN: Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
+                html.P("Offcorss es la empresa lider en el mercado, y como tal busca impactar positivamente\
                         los resultados de negocio por medio de las herramientas analíticas y equipo humano \
                         en alianza con  el programa DS4A.\
-                        PROBLEMA: Se desea aumentar la frecuencia de compra anual por encima de 1.5 compras al año por cliente, \
+                        Se desea aumentar la frecuencia de compra anual por encima de 1.5 compras al año por cliente, \
                         a través de un perfilamiento del cliente que permita recomendaciones que generen nuevos momentos\
                         de compra durante el año.")
             ), className="m-3"
-        ),
+        , justify="center"),
         dbc.Row([
             dbc.Col(
                 dbc.Card([
@@ -66,7 +66,7 @@ def main_page(app, visible):
             dbc.Col(
                 dbc.Card([
                     dbc.CardBody([
-                        html.H4("Glosario y Documentación"),
+                        html.H4("Documentación"),
                         html.P(
                             "Glosario  y conceptos.\
                             Vínculos a documentación del aplicativo."),
@@ -78,13 +78,12 @@ def main_page(app, visible):
         dbc.Row(
             dbc.Col(
                 html.Div(
-                    dbc.Button("Nosotros", id="button-us", color="info", className="mb-3"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
+                    dbc.Button("Nosotros", id="button-us", color="info", className="m-3"), style={"display": "flex", "justify-content": "center", "align-items": "center"}),
             )
         )
     ], style={"display": "block" if visible else "none", "background-color": "#efe8df"})
 
     return main_page
-
 
 
 def sidebar(visible_nav):
@@ -102,7 +101,7 @@ def sidebar(visible_nav):
                 dbc.Button("Exploración", id="link-hoja-1",
                            style={"font-size": "12px"},
                            className="btn btn-warning m-1"),
-                dbc.Button("Perfilamiento ", id="link-hoja-2",
+                dbc.Button("Segmentación ", id="link-hoja-2",
                            style={"font-size": "12px"},
                            className="btn btn-warning m-1"),
                 dbc.Button("Recomendaciones", id="link-hoja-3",
@@ -226,7 +225,7 @@ dropdown6_1 = dcc.Dropdown(
 dropdown2 = dcc.Dropdown(
     placeholder="Options",
     id="clu_dropdown_x",
-    value="recencia_meses",
+    value="precio_promedio",
     className="dropdown m-3",
     options=[
         {"label": "Revenue", "value": "revenue"},
@@ -396,7 +395,10 @@ perfilamiento_header = html.Div([
 
 # ----------------------------------------------------------------------- Content 2
 content2 = html.Div([
-    html.H1(["Perfilamiento"], style=CONTENT_STYLE),
+    html.H1(["Segmentación"], style=CONTENT_STYLE),
+    html.P("Aca se muestra una clasificación para 25 mil clientes por restricciones de velocidad,\
+            la base completa se uso para la hoja 'recomendaciones'."),
+            
     html.Div(
         [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:"))),
          perfilamiento_header,
@@ -473,7 +475,7 @@ def team_faces(app):
                     html.H4("Jeniffer Duarte", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="https://www.linkedin.com/in/jeniffer-johana-duarte-sanchez-56317250/", target="_blank")
                 ])
             ])
         ]),
@@ -484,7 +486,7 @@ def team_faces(app):
                     html.H4("Laura Sierra", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="http://linkedin.com/in/laura-sierra-serna-74413143", target="_blank")
                 ])
             ])
         ]),
@@ -495,7 +497,7 @@ def team_faces(app):
                     html.H4("Jonathan Madrid", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="https://www.linkedin.com/in/jonathan-madrid-hincapie-72015926/", target="_blank")
                 ])
             ])
         ]),
@@ -506,7 +508,7 @@ def team_faces(app):
                     html.H4("Sebastian Arrieta", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("Github", color="primary",
-                               href="", target="_blank")
+                               href="https://github.com/sarrietav-dev", target="_blank")
                 ])
             ])
         ]),
@@ -517,7 +519,7 @@ def team_faces(app):
                     html.H4("John Davinson", className="card-title"),
                     html.P(className="card-text"),
                     dbc.Button("LinkedIn", color="primary",
-                               href="", target="_blank")
+                               href="https://www.linkedin.com/in/john-davison-a0212022", target="_blank")
                 ])
             ])
         ]),

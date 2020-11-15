@@ -124,6 +124,8 @@ tabs = dcc.Tabs(
 # ___________________________________________ CONTENIDO HOJA 3 ___________________________________________________________________
 content3 = html.Div([
     html.H1(["RECOMENDACIONES"], style=CONTENT_STYLE),
+    html.P("Vet el top 10 de productos y su detalle. \
+            Elegir primero una categoria de edad masculina o femenina, y luego el clúster deseado."),
     dbc.Row([
         dbc.Col([
                 html.Div([
@@ -154,6 +156,10 @@ content3 = html.Div([
     html.Div([
         dbc.Row([
             dbc.Col([
+                html.P("Top 10 / Bottom 5:"),
+                dropdown_top,
+            ]),
+            dbc.Col([
                 html.P("Seleccionar clúster:"),
                 dropdown_clu,
             ]),
@@ -161,6 +167,7 @@ content3 = html.Div([
                 html.P("Seleccionar producto:"),
                 dropdown_prod,
             ]),
+            
         ])
     ]),
 
@@ -184,34 +191,40 @@ app.layout = html.Div([
     dcc.Location(id="url"),  # refresh = False
     html.Div(sidebar(False), style={"display": "none"}),
     main_page(app, True),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ], id="page-content")
 
 hoja_principal = html.Div([
     html.Div(sidebar(False), style={"display": "none"}),
-    main_page(app, True)
+    main_page(app, True),
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 hoja_1_layout = html.Div([
-    sidebar(True),
+    sidebar("block"),
     resumen,
     tabs,
     main_page(app, False),
-    html.Div(id='page-1-content')
+    html.Div(content_us(app, False), style={"display": "none"}),
+    html.Div(id='page-1-content'),
 ])
 
 hoja_2_layout = html.Div([
-    sidebar(True), content2,
+    sidebar("block"), content2,
     main_page(app, False),
-    html.Div(id='page-2-content')
-
+    html.Div(content_us(app, False), style={"display": "none"}),
 ])
 
 
 hoja_3_layout = html.Div([
-    sidebar(True), content3,
+    sidebar("block"), content3,
     main_page(app, False),
-    html.Div(id='page-3-content')
+    html.Div(content_us(app, False), style={"display": "none"}),
+])
 
+layout_nosotros = html.Div([
+    html.Div(sidebar(False), style={"display": "none"}), content_us(app, True),
+    main_page(app, False),
 ])
 
 
@@ -241,6 +254,8 @@ def habilitar_link(pathname):
         Input("button-cluster", "n_clicks"),
         Input("button-result", "n_clicks"),
         Input("button-xxi", "n_clicks"),
+        Input("button-us", "n_clicks"),
+        Input("back-button", "n_clicks")
     ]
 )
 def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, btn11):
@@ -251,6 +266,8 @@ def display_page(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9, btn10, bt
         return hoja_2_layout
     elif "link-hoja-3" in changed_id or "button-result" in changed_id:
         return hoja_3_layout
+    elif "button-us" in changed_id:
+        return layout_nosotros
     else:
         return hoja_principal
 
@@ -426,9 +443,10 @@ def change_paragraph(btn1, btn2, btn3, btn4):
      Input("primi_m", "n_clicks"), Input("primi_f", "n_clicks"),
      Input("bebe_m", "n_clicks"), Input("bebe_f", "n_clicks"),
      Input("niño_m", "n_clicks"), Input("niño_f", "n_clicks"),
+     Input("dropdown_top10_p3", "value")
      ]
 )
-def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6):
+def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
     genero = "MASCULINO"
     edad = "PRIMI"
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
@@ -479,13 +497,27 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6):
 
 
 #--------------Gráfica de barras 1: Grupo artículo
-    rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
-                   title = "TOP 10 productos clúster " + cluster +" "+ genero + " " + edad,
+
+    if top == "tail":
+        rg1 = px.bar(tabla_grupo_art.tail(5).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
+                   title = "Bottom 5 productos clúster " + cluster +" "+ genero + " " + edad,
+                   hover_data = ["freq_relativa"],
+                   color_discrete_map={
+                            "": "lightsalmon"
+                }      
+        )
+
+    
+    elif top == "head":
+        rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
+                   title = "Top 10 productos clúster " + cluster +" "+ genero + " " + edad,
                    hover_data = ["freq_relativa"],
                    color_discrete_map={
                             "": "gold"
                 }      
-    )
+        )
+       
+        
 
 #--------------Gráfica de barras 2: Tipo artículo
     rg2 = go.Figure(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["cantidad"], 
