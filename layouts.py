@@ -27,8 +27,7 @@ def main_page(app, visible):
                         PROBLEMA: Se desea aumentar la frecuencia de compra anual por encima de 1.5 compras al año por cliente, \
                         a través de un perfilamiento del cliente que permita recomendaciones que generen nuevos momentos\
                         de compra durante el año.")
-            ), className="m-3"
-        , justify="center"),
+            ), className="m-3", justify="center"),
         dbc.Row([
             dbc.Col(
                 dbc.Card([
@@ -70,7 +69,7 @@ def main_page(app, visible):
                         html.P(
                             "Glosario  y conceptos.\
                             Vínculos a documentación del aplicativo."),
-                        dbc.Button("IR", color="dark", id="button-xxi")
+                        dbc.Button("IR", color="dark", id="button-doc")
                     ])
                 ], color="warning", outline=True)
             ),
@@ -128,8 +127,7 @@ graphs_tab2 = html.Div([
             dcc.Graph(id="graf7", figure=graf7)
         ], style={"margin-left": "1rem"}),
     ]),
-    ])
-    
+])
 
 
 graphs_tab1 = html.Div([
@@ -263,12 +261,12 @@ dropdown3 = dcc.Dropdown(
 )
 
 
-##input_recencia = dcc.Input(
-##    id="input_recencia",
-##    type="number",
+# input_recencia = dcc.Input(
+# id="input_recencia",
+# type="number",
 ##    placeholder="recencia en meses",
-##    value=25
-##)
+# value=25
+# )
 
 # ------------------------------------------------------------------ Slider ticket promedio
 slider_ticket = dcc.RangeSlider(
@@ -330,7 +328,7 @@ dropdow_escala_tree = dcc.Dropdown(
     ]
 )
 
-#--------------------------------------------------------------------------------------------------------Elemento graphs2
+# --------------------------------------------------------------------------------------------------------Elemento graphs2
 
 graphs2 = html.Div([
     html.H4(["Medidas de los clústeres"], style=CONTENT_STYLE_SUBTITLE),
@@ -376,10 +374,14 @@ graphs2 = html.Div([
 perfilamiento_header = html.Div([
     dbc.Row([
         html.Div([
-            dbc.Col(dbc.Button("Sale hunters", color="warning",  id="perf_button1", size = "sm")),
-            dbc.Col(dbc.Button("Average customer", color="warning", id="perf_button2", size = "sm")),
-            dbc.Col(dbc.Button("Selective customer", color="warning",id="perf_button3", size = "sm")),
-            dbc.Col(dbc.Button("Offcorss fanatics", color="warning", id="perf_button4", size = "sm")),
+            dbc.Col(dbc.Button("Sale hunters", color="warning",
+                               id="perf_button1", size="sm")),
+            dbc.Col(dbc.Button("Average customer", color="warning",
+                               id="perf_button2", size="sm")),
+            dbc.Col(dbc.Button("Selective customer",
+                               color="warning", id="perf_button3", size="sm")),
+            dbc.Col(dbc.Button("Offcorss fanatics",
+                               color="warning", id="perf_button4", size="sm")),
 
         ], style={"display": "flex", "justify-content": "center"}),
     ]),
@@ -399,8 +401,8 @@ content2 = html.Div([
     html.Div(
         [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:"))),
          perfilamiento_header,
-         html.Div(id = "tabla_resumen_clu")
-        ], style={}
+         html.Div(id="tabla_resumen_clu")
+         ], style={}
     ),
     graphs2
 ], style={"margin-left": "10rem"})
@@ -541,3 +543,37 @@ def corp_images(app):
             html.Img(src=app.get_asset_url("softbank.jpeg"), style=img_styles)
         ),
     ]
+
+
+documentation = html.Div([
+    dbc.Row([
+        dbc.Col([
+            html.H2("Visitas"),
+            html.P(
+                "Catidad de veces que el cliente compró en el periodo de tiempo suministrado.")
+        ]),
+        dbc.Col([
+            html.H2("Frecuencia"),
+            html.P(
+                "Indicador con medición anual. (Total visitas/ total clientes) en el periodo en cuestión")
+        ]),
+        dbc.Col([
+            html.H2("Ticket Promedio"),
+            html.P("Medida en COP. Es el valor promedio de cada compra. Promedio de las sumas de los valores netos de compra    ")
+        ]),
+    ], className="mb-6"),
+    dbc.Row([
+        dbc.Col([
+            html.H2("Revenue"),
+            html.P("Suma del valor neto de las compras.")
+        ]),
+        dbc.Col([
+            html.H2("Edad promedio (Avg age)"),
+            html.P("Se definió una variable de edad asociada a la talla comprada, y posteriormente se sacó el promedio de edades para las compras de cada cliente.")
+        ]),
+        dbc.Col([
+            html.H2("Rango edad  (Ran age)"),
+            html.P("Basado en el indicador \"avg age\", es el rango entre la máxima edad y la mínima edad para las compras de un cliente. Un rango amplio indica que el cliente compró productos para diversos rangos de edad.")
+        ]),
+    ])
+], style={"margin-left": "10rem"})
