@@ -72,10 +72,13 @@ tab2_content = html.Div([
     ]),
     html.H4(["Comparador de frecuencia por tienda"],
             style=CONTENT_STYLE_SUBTITLE),
-    dbc.Row([
-            dcc.Graph(id="graf9", figure=graf9)
-            ], style={"margin-left": "auto"}
-            ),
+    html.Div([
+        dbc.Row([
+            dbc.Col([
+                dcc.Graph(id="graf9", figure=graf9, responsive=True)
+            ], align="center", width=9),
+        ], style={"margin-left": "auto"}),
+    ], style={"display": "flex", "justify-content": "center"}),
     dbc.Row([
         dbc.Col([
             dropdown4_1,
@@ -108,18 +111,18 @@ tab_selected_style = {
 }
 
 
-
 tabs = dcc.Tabs(
-    children = 
-        [
-        dcc.Tab(tab1_content, label="Contexto", style=tab_style, selected_style=tab_selected_style),
-        dcc.Tab(tab2_content, label="Frecuencia",style= tab_style ,selected_style=tab_selected_style),
-                    
-    ],                 
+    children=[
+        dcc.Tab(tab1_content, label="Contexto", style=tab_style,
+                selected_style=tab_selected_style),
+        dcc.Tab(tab2_content, label="Frecuencia", style=tab_style,
+                selected_style=tab_selected_style),
+
+    ],
 )
 
 # ___________________________________________ CONTENIDO HOJA 2 ___________________________________________________________________
-#Ver hoja layout línea 387
+# Ver hoja layout línea 387
 
 # ___________________________________________ CONTENIDO HOJA 3 ___________________________________________________________________
 content3 = html.Div([
@@ -129,20 +132,28 @@ content3 = html.Div([
     dbc.Row([
         dbc.Col([
                 html.Div([
-                    html.Img(src=app.get_asset_url('niños_03.jpg'),style={"height": "50%", "width": "23%"}),
-                    dbc.Button("Primi", size="lg", className="m-2", color="warning",  id="primi_m"),
-                    dbc.Button("Bebe", size="lg", className="m-2",color="warning", id="bebe_m"),
-                    dbc.Button("Niño", size="lg", className="m-2",color="warning", id="niño_m")
+                    html.Img(src=app.get_asset_url('niños_03.jpg'),
+                             style={"height": "50%", "width": "23%"}),
+                    dbc.Button("Primi", size="lg", className="m-2",
+                               color="warning",  id="primi_m"),
+                    dbc.Button("Bebe", size="lg", className="m-2",
+                               color="warning", id="bebe_m"),
+                    dbc.Button("Niño", size="lg", className="m-2",
+                               color="warning", id="niño_m")
                 ], style={"margin-left": "10rem"})
 
                 ]),
 
         dbc.Col([
                 html.Div([
-                         html.Img(src=app.get_asset_url('niñas_03.jpg'),style={"height": "50%", "width": "15%"}),
-                         dbc.Button("Primi", size="lg", className="m-2",color="warning",  id="primi_f"),
-                         dbc.Button("Bebe", size="lg", className="m-2", color="warning", id="bebe_f"),
-                         dbc.Button("Niña", size="lg", className="m-2", color="warning", id="niño_f")
+                         html.Img(src=app.get_asset_url('niñas_03.jpg'),
+                                  style={"height": "50%", "width": "15%"}),
+                         dbc.Button("Primi", size="lg", className="m-2",
+                                    color="warning",  id="primi_f"),
+                         dbc.Button("Bebe", size="lg", className="m-2",
+                                    color="warning", id="bebe_f"),
+                         dbc.Button("Niña", size="lg", className="m-2",
+                                    color="warning", id="niño_f")
                          ], style={}
                          ),
                 ])
@@ -167,7 +178,7 @@ content3 = html.Div([
                 html.P("Seleccionar producto:"),
                 dropdown_prod,
             ]),
-            
+
         ])
     ]),
 
@@ -223,7 +234,8 @@ hoja_3_layout = html.Div([
 ])
 
 layout_nosotros = html.Div([
-    html.Div(sidebar("none"), style={"display": "none"}), content_us(app, True),
+    html.Div(sidebar("none"), style={
+             "display": "none"}), content_us(app, True),
     main_page(app, False),
 ])
 
@@ -366,8 +378,14 @@ def selector_tienda(canal1):
         "dropdown41_año", "value"), Input("boton_borrar", "n_clicks")]
 )
 def pinta_tienda1(tienda_1, año_1, n_clicks):
+    graf8 = go.Figure(layout=layout)
     if n_clicks:
         graf8.update_traces()
+        graf8.add_trace(go.Scatter(x=[],
+                                   y=[],
+                                   mode='lines+markers',
+                                   line=dict(color="yellow")
+                                   ))
         return graf8
 
     else:
@@ -390,34 +408,36 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
 @app.callback(
     [Output("mg3", "figure"), Output("mg4", "figure")],
     [Input("clu_dropdown_x", "value"),
-     Input("clu_dropdown_y", "value"),     
+     Input("clu_dropdown_y", "value"),
      Input("slider_ticket", "value"),
      Input("slider_recencia", "value"),
      Input("drop_tree", "value"),
-     
+
      ]
 )
 def change_par(valor_eje_x, valor_eje_y, ticket, recencia, drop_tree):
-    updated_df = df_cluster2[(df_cluster2["recencia_meses"] <= recencia[1]) &\
-                         (df_cluster2["recencia_meses"] > recencia[0]) &\
-                         (df_cluster2["ticket_prom_compra"] <= ticket[1]) &\
-                         (df_cluster2["ticket_prom_compra"] > ticket[0])
-                        ]
+    updated_df = df_cluster2[(df_cluster2["recencia_meses"] <= recencia[1]) &
+                             (df_cluster2["recencia_meses"] > recencia[0]) &
+                             (df_cluster2["ticket_prom_compra"] <= ticket[1]) &
+                             (df_cluster2["ticket_prom_compra"] > ticket[0])
+                             ]
 
     mg3 = px.scatter(updated_df,
                      x=valor_eje_x,
                      y=valor_eje_y,
                      color="cluster_name",
                      title='Scatter pares de variables',
-                     height = 550)
+                     height=550)
 
     mg4 = px.treemap(updated_df, path=[px.Constant('CLIENTES:  ' + str(updated_df["constante_cli"].sum())),
                                        "canal_det", 'region', "cluster_name"],
-                     values ='constante_cli',
-                     color = drop_tree,
-                     title = "Visualizador de clientes: Canal/Región/Clúster: " +
+                     values='constante_cli',
+                     color=drop_tree,
+                     title="Visualizador de clientes: Canal/Región/Clúster: " +
                      "Recencia desde " + "{:.0f}".format(recencia[0]) + " hasta " + "{:.0f}".format(recencia[1]) +
-                     " - Ticket desde " + "${:10,.0f}".format(ticket[0]) + " hasta " + "${:10,.0f}".format(ticket[1]),
+                     " - Ticket desde " +
+                     "${:10,.0f}".format(
+                         ticket[0]) + " hasta " + "${:10,.0f}".format(ticket[1]),
                      color_continuous_scale='thermal_r',
                      height=700)
 
@@ -429,24 +449,24 @@ def change_par(valor_eje_x, valor_eje_y, ticket, recencia, drop_tree):
     [Input("perf_button1", "n_clicks"),
      Input("perf_button2", "n_clicks"),
      Input("perf_button3", "n_clicks"),
-     Input("perf_button4", "n_clicks"),]
+     Input("perf_button4", "n_clicks"), ]
 )
 def change_paragraph(btn1, btn2, btn3, btn4):
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
-    if "perf_button1" in changed_id:        
-        return  tabla_A
+    if "perf_button1" in changed_id:
+        return tabla_A
     elif "perf_button2" in changed_id:
-        return  tabla_B
+        return tabla_B
     elif "perf_button3" in changed_id:
-        return  tabla_C
+        return tabla_C
     elif "perf_button4" in changed_id:
-        return  tabla_D
+        return tabla_D
 
 
 # __________________________________________ CALLBACKS HOJA 3 ____________________________________________________________________
 
 @app.callback(
-    [Output("rg1", "figure"),Output("rg2", "figure")],
+    [Output("rg1", "figure"), Output("rg2", "figure")],
     [Input("dropdown_clu_p3", "value"), Input("dropdown_grupo_p3", "value"),
      Input("primi_m", "n_clicks"), Input("primi_f", "n_clicks"),
      Input("bebe_m", "n_clicks"), Input("bebe_f", "n_clicks"),
@@ -458,106 +478,103 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
     genero = "MASCULINO"
     edad = "PRIMI"
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
-    
+
     if "primi_m" in changed_id:
         genero = "MASCULINO"
-        edad = "PRIMI"              
-        
+        edad = "PRIMI"
+
     if "primi_f" in changed_id:
         genero = "FEMENINO"
         edad = "PRIMI"
         primi_f = 0
-        
+
     if "bebe_m" in changed_id:
-         genero = "MASCULINO"
-         edad = "BEBES"
-         bebe_m = 0
-         
+        genero = "MASCULINO"
+        edad = "BEBES"
+        bebe_m = 0
+
     if "bebe_f" in changed_id:
-         genero = "FEMENINO"
-         edad = "BEBES"
-         bebe_f = 0
+        genero = "FEMENINO"
+        edad = "BEBES"
+        bebe_f = 0
 
     if "niño_m" in changed_id:
-         genero = "MASCULINO"
-         edad = "NIÑOS"
-         niño_m = 0
+        genero = "MASCULINO"
+        edad = "NIÑOS"
+        niño_m = 0
 
     if "niño_f" in changed_id:
-         genero = "FEMENINO"
-         edad = "NIÑOS"
-         niño_f = 0
+        genero = "FEMENINO"
+        edad = "NIÑOS"
+        niño_f = 0
+
+    tabla_grupo_art = df_grupo_art[(df_grupo_art["genero"] == genero) &
+                                   (df_grupo_art["edad"] == edad) &
+                                   (df_grupo_art["clu_name"] == cluster)][["grupo_articulo", "cantidad", "freq_relativa"]]\
+        .reset_index(drop=True).sort_values(by="cantidad", ascending=False)
+
+    tabla_tipo_art = df_tipo_art[(df_tipo_art["genero"] == genero) &
+                                 (df_tipo_art["edad"] == edad) &
+                                 (df_tipo_art["clu_name"] == cluster) &
+                                 (df_tipo_art["grupo_articulo"] == grupo_art)][["tipo_articulo", "cantidad", "freq_relativa", "tipo_tejido"]]\
+        .reset_index(drop=True).sort_values(by="cantidad", ascending=False)
 
 
-
-    tabla_grupo_art = df_grupo_art[(df_grupo_art["genero"] == genero) &\
-                               (df_grupo_art["edad"] == edad) &\
-                               (df_grupo_art["clu_name"] == cluster)]\
-                                [["grupo_articulo", "cantidad", "freq_relativa"]]\
-                                .reset_index(drop=True).sort_values(by="cantidad", ascending = False)
-
-    tabla_tipo_art = df_tipo_art[(df_tipo_art["genero"] == genero) &\
-                                   (df_tipo_art["edad"] == edad) &\
-                                   (df_tipo_art["clu_name"] == cluster)&\
-                                   (df_tipo_art["grupo_articulo"] == grupo_art)]\
-                                    [["tipo_articulo", "cantidad", "freq_relativa", "tipo_tejido"]]\
-                                    .reset_index(drop=True).sort_values(by="cantidad", ascending = False)
-
-
-#--------------Gráfica de barras 1: Grupo artículo
+# --------------Gráfica de barras 1: Grupo artículo
 
     if top == "tail":
-        rg1 = px.bar(tabla_grupo_art.tail(5).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
-                   title = "Bottom 5 productos clúster " + cluster +" "+ genero + " " + edad,
-                   hover_data = ["freq_relativa"],
-                   color_discrete_map={
-                            "": "lightsalmon"
-                }      
+        rg1 = px.bar(tabla_grupo_art.tail(5).sort_values(by="cantidad"), x="cantidad", y="grupo_articulo",
+                     title="Bottom 5 productos clúster " + cluster + " " + genero + " " + edad,
+                     hover_data=["freq_relativa"],
+                     color_discrete_map={
+            "": "lightsalmon"
+        }
         )
 
-    
     elif top == "head":
-        rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x= "cantidad", y = "grupo_articulo",
-                   title = "Top 10 productos clúster " + cluster +" "+ genero + " " + edad,
-                   hover_data = ["freq_relativa"],
-                   color_discrete_map={
-                            "": "gold"
-                }      
+        rg1 = px.bar(tabla_grupo_art.head(10).sort_values(by="cantidad"), x="cantidad", y="grupo_articulo",
+                     title="Top 10 productos clúster " + cluster + " " + genero + " " + edad,
+                     hover_data=["freq_relativa"],
+                     color_discrete_map={
+            "": "gold"
+        }
         )
-       
-        
 
-#--------------Gráfica de barras 2: Tipo artículo
-    rg2 = go.Figure(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["cantidad"], 
-                           y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["tipo_articulo"], 
+
+# --------------Gráfica de barras 2: Tipo artículo
+    rg2 = go.Figure(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PLANO']["cantidad"],
+                           y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"]
+                                            == 'TEJIDO PLANO']["tipo_articulo"],
                            name='TEJIDO PLANO',
-                          orientation='h',
-                          marker_color='silver'))
-    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PUNTO']["cantidad"], 
-                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PUNTO']["tipo_articulo"], 
+                           orientation='h',
+                           marker_color='silver'))
+    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'TEJIDO PUNTO']["cantidad"],
+                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"]
+                                          == 'TEJIDO PUNTO']["tipo_articulo"],
                          name='TEJIDO PUNTO',
                          orientation='h',
                          marker_color='gold'))
-    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'NO TEJIDO']["cantidad"], 
-                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'NO TEJIDO']["tipo_articulo"], 
+    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'NO TEJIDO']["cantidad"],
+                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"]
+                                          == 'NO TEJIDO']["tipo_articulo"],
                          name='NO TEJIDO',
                          orientation='h',
                          marker_color='black'))
-    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'INDISTINTO']["cantidad"], 
-                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'INDISTINTO']["tipo_articulo"], 
+    rg2.add_trace(go.Bar(x=tabla_tipo_art[tabla_tipo_art["tipo_tejido"] == 'INDISTINTO']["cantidad"],
+                         y=tabla_tipo_art[tabla_tipo_art["tipo_tejido"]
+                                          == 'INDISTINTO']["tipo_articulo"],
                          name='INDISTINTO',
                          orientation='h',
                          marker_color='lightsalmon'))
 
+    rg2.update_layout(barmode='stack', yaxis={
+                      'categoryorder': 'total ascending'})
+    rg2.update_layout(title_text='Top 10 tipos de ' + grupo_art)
 
-    rg2.update_layout(barmode='stack', yaxis={'categoryorder':'total ascending'})
-    rg2.update_layout(title_text='Top 10 tipos de ' +  grupo_art)
-
-
-    return rg1,rg2
+    return rg1, rg2
 
 
 # ______________________________________________________________________________________________________
 if __name__ == "__main__":
     app.run_server(debug=True)
-    #app.run_server(debug=False,dev_tools_ui=False,dev_tools_props_check=False)
+    # app.run_server(debug=False,dev_tools_ui=False,dev_tools_props_check=False)
