@@ -7,28 +7,44 @@ import os
 import random
 import dash_core_components as dcc
 from model import*
+from sqlalchemy import create_engine, text
 
-# CARGA DE BASES DE DATOS(local):
-bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv", sep=";")
+# CONEXION BASE DE DATOS OFFCORSS POSTGRES:
+
+host = 'offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com'
+port = 5432
+database = 'postgres'
+DB_USERNAME = 'postgres'
+DB_PASSWORD = 'Team842020*'
+
+# CARGA DE CSV's:
+#bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv", sep=";")
 
 bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv", sep=";")
 
 bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",sep=";")
 
-bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv", sep=";")
+#bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv", sep=";")
 
-bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",sep=";")
+#bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",sep=";")
 
-bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",sep = ";")
+#bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",sep = ";")
 
+# CARGA DE BBDD:
+
+bd_agr_month = pd.read_sql('select * from offcorss_transac_tienda_agr', engine)
+
+bd_frec = pd.read_sql('select * from frecuencia_acumulada2', engine)
+
+bd_frec_canal = pd.read_sql('select * from frecuencia_acumulada_tipo_tienda', engine)
+
+bd_frec_tienda = pd.read_sql('select * from frecuencia_acumulada_tienda', engine)
 
 
 # CARGA DE BASES DE DATOS(RDS):
 ##engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 ##
 ##bd = pd.read_sql_query('select * from "centro_region_agr_2019"',con=engine) 
-
-
 
 # TRANSFORMACION DE BASES DE DATOS
 
@@ -429,8 +445,8 @@ graf9 = px.strip(bd_frec_tienda2, x ="mes", y = "freq_acum", color = "tipo_tiend
 
 #------------------------------------------------------------------------------------------------------------------ MAPAS
 # Data real del mapa:
-centro_region_agr_2019 = pd.read_csv(
-    "data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
+#centro_region_agr_2019 = pd.read_csv("data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
+centro_region_agr_2019 = pd.read_sql('select * from vw_centro_region_agr_2019', engine)
 # ------------------ info geo de: http://blog.jorgeivanmeza.com/wp-content/uploads/2008/09/municipioscolombiacsv.txt
 
 
