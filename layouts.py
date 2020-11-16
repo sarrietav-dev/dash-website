@@ -502,7 +502,7 @@ def team_faces(app):
         dbc.Card([
             dbc.CardImg(src=app.get_asset_url("john.jpeg"), top=True),
             dbc.CardBody([
-                html.H4("John Davinson", className="card-title"),
+                html.H4("John Davison", className="card-title"),
                 html.P("Administrador de Empresas", className="card-text"),
                 dbc.Button("LinkedIn", color="primary",
                            href="https://www.linkedin.com/in/john-davison-a0212022", target="_blank")
@@ -561,5 +561,16 @@ documentation = html.Div([
             html.H2("Rango edad  (Ran age)"),
             html.P("Basado en el indicador \"avg age\", es el rango entre la máxima edad y la mínima edad para las compras de un cliente. Un rango amplio indica que el cliente compró productos para diversos rangos de edad.")
         ]),
-    ])
+    ]),
+    dbc.Row([  
+        dbc.Col([
+            html.H2("Instructivo"),
+            html.P('Instructivo del aplicativo:'),
+            html.Div([dbc.Button("Instructivo", color="primary",
+                           href="https://offcorssbucket.s3.us-east-2.amazonaws.com/Offcorss/Documentacion/Descripci%C3%B3n%20Aplicativo_Equipo%2084_DS4A.pdf?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQCxkaA8LIW7u5%2Fj7QAADD96Dskqwh15Q7X7tnkopi9W5QIgPxSBMBNW2E3yZhyNWHurYclDPktKai5B2hii4fc3uRoqzQII%2Ff%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2NTg0OTQ0NzgzODciDBl%2FLT%2FnVy4BVBZQbCqhAnZG4%2BEXB7GCy096xKfiQbwBPwKRE9rGDyEtZxjswZHrzDEFxPokeCO0BDrdcb%2Bzv%2FXa21HLt%2B%2F1yScJMWiB%2FUGy59S64JT%2BCy3%2BXyrC6l6x9BWx0Jz8o6077v6ZEOlS6i%2Fz7lnF5dgMqRgLUXOgA%2BBBbfabF%2FeHc%2F5MZr3Nqm1PTSjzPLGeRYfS%2FkSXyUBT3bg1nI%2BYFnpqtKz1iqXfApaWTLwWiPXRdFRIBG%2BLnK7AeRMg%2Bob94xsulJcUMTBMpUmQ%2Fd0IMu%2FczanD7BVpJiEwMGOLy7JJ4zVb3qQRtiH5KUKX97B8kXFyV%2BCpVXm7dMbC9gwFOWQXRwtHmPiJxIbmxqeq4fbXNUZE4jNMdZhU2Tn9vmGRcAp2%2FklW2GAArRkw1orG%2FQU6sAJ9Y24zwm%2BBdPGmQ8yg%2BwXQJJfKqa0df1lzMB%2FHGC8z8NMwI%2BG0AlO9jPT2ZNIR6Ld9t%2F%2BP4SpZDo3yi2Gf1qgtmiz54GSIEyZQnQ8J78SCyj58LS39BOxc0AlX5k5RXvBfvrTz7lGxVCbC5au2gTpPMf4GZ53lSrwylHHfL0oC13%2B0iEk%2FKFvWvLdsqQ0aCwsixxv4DIE8X%2F1CiqYu9jI0N5f62S53AX5DBLIJj6szDPTl%2BOesOng8RXH7y64J4%2BuOjuk6TN8BBh4YeGTXgVsgG0RNoqEvOWLSuIEQgndX25tvRJRNmgYrc5mlW0VsizS0OJ9LDcVXCbdkDFpRISVszXI1xUFEnoc6N2KFX9UXiHcKuXkIuef8HMDiof4iu9ecpZFy3vSRwy0SUQjIIAI9&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20201116T045355Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAZSUKULAZRX6UULXL%2F20201116%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=195983b95ee4f71862039624dfbaeb1d442d6a562f880167bc9d7613ee2cc9f6",
+                                 target="_blank")],style = {"margin-left":"10rem"})
+        ]),
+    ]),
+    
 ], style={"margin-left": "10rem"})
+
