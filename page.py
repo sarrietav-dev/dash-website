@@ -374,25 +374,16 @@ def selector_tienda(canal1):
 
 @app.callback(
     Output("graf8", "figure"),
-    [Input("dropdown61_tienda", "value"), Input(
-        "dropdown41_año", "value"), Input("boton_borrar", "n_clicks")]
+    [Input("dropdown61_tienda", "value"),
+     Input("dropdown41_año", "value"), Input("boton_borrar", "n_clicks")]
 )
 def pinta_tienda1(tienda_1, año_1, n_clicks):
-    graf8 = go.Figure(layout=layout)
-    print(type(n_clicks))
-    past_state = n_clicks
-    if n_clicks:
-        graf8.add_trace(go.Scatter(x=[],
-                                   y=[],
-                                   mode='lines+markers',
-                                   line=dict(color="yellow")
-                                
-                                  ))
-        graf8.update_traces()
-        n_clicks = past_state
-        return graf8
+    changed_ids = [p['prop_id'].split('.')[0]
+                   for p in dash.callback_context.triggered]
+    button_pressed = 'boton_borrar' in changed_ids
 
-    else:
+    if not button_pressed:
+
         trace1_df = bd_frec_tienda2[(bd_frec_tienda2["yeard"] == año_1) &
                                     (bd_frec_tienda2["d_centro"] != "TIENDA SAN ANDRES 2") &
                                     (bd_frec_tienda2["d_centro"] == tienda_1)]
@@ -402,7 +393,14 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
                                     mode='lines+markers',
                                     name=str(año_1) + " " + str(tienda_1),
                                     ),)
-        graf8.update_traces()
+        return graf8
+    else:
+        graf8.update_traces(go.Scatter(x=[],
+                                       y=[],
+                                       mode='lines+markers',
+                                       name="",
+                                       line=dict(color="black")),
+                            )
 
         return graf8
 
