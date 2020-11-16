@@ -392,7 +392,7 @@ content2 = html.Div([
     html.H1(["Segmentación"], style=CONTENT_STYLE),
     html.P("Aca se muestra una clasificación para 25 mil clientes por restricciones de velocidad,\
             la base completa se uso para la hoja 'recomendaciones'."),
-            
+
     html.Div(
         [dbc.Row(dbc.Col(html.H5("Seleccione un clúster para ver sus estadísticas:"))),
          perfilamiento_header,
