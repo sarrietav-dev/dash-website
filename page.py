@@ -578,5 +578,5 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
 
 # ______________________________________________________________________________________________________
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=False)
     # app.run_server(debug=False,dev_tools_ui=False,dev_tools_props_check=False)
