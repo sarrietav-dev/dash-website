@@ -24,7 +24,7 @@ CONTENT_STYLE_SIDEBAR = {
     "margin-left": "10rem",
     "margin-right": "2rem",
     "padding": "2rem 1rem",
-    
+
 }
 
 CONTENT_STYLE_SUBTITLE = {

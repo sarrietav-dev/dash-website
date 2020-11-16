@@ -7,28 +7,46 @@ import os
 import random
 import dash_core_components as dcc
 from model import*
+from sqlalchemy import create_engine, text
 
-# CARGA DE BASES DE DATOS(local):
-bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv", sep=";")
+# CONEXION BASE DE DATOS OFFCORSS POSTGRES:
+
+host = 'offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com'
+port = 5432
+database = 'postgres'
+DB_USERNAME = 'postgres'
+DB_PASSWORD = 'Team842020*'
+
+# CARGA DE CSV's:
+#bd_agr_month = pd.read_csv("data/offcorss_agr_tienda_año_mes.csv", sep=";")
 
 bd_agr_year = pd.read_csv("data/offcorss_agregada_año.csv", sep=";")
 
-bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv",sep=";")
+bd_unicos = pd.read_csv("data/offcorss_totales_unicos.csv", sep=";")
 
-bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv", sep=";")
+#bd_frec = pd.read_csv("data/offcorss_frecuencia_acum.csv", sep=";")
 
-bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",sep=";")
+#bd_frec_canal = pd.read_csv("data/frecuencia_acumulada_canal.csv",sep=";")
 
-bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",sep = ";")
+#bd_frec_tienda = pd.read_csv("data/frecuencia_acumulada_tienda.csv",sep = ";")
 
+# CARGA DE BBDD:
+
+bd_agr_month = pd.read_sql('select * from offcorss_transac_tienda_agr', engine)
+
+bd_frec = pd.read_sql('select * from frecuencia_acumulada2', engine)
+
+bd_frec_canal = pd.read_sql(
+    'select * from frecuencia_acumulada_tipo_tienda', engine)
+
+bd_frec_tienda = pd.read_sql(
+    'select * from frecuencia_acumulada_tienda', engine)
 
 
 # CARGA DE BASES DE DATOS(RDS):
 ##engine = create_engine('postgresql://postgres:Team842020*@offcorssdb.cfinmnv8hcp0.us-east-2.rds.amazonaws.com/postgres')
 ##
-##bd = pd.read_sql_query('select * from "centro_region_agr_2019"',con=engine) 
-
-
+##bd = pd.read_sql_query('select * from "centro_region_agr_2019"',con=engine)
 
 # TRANSFORMACION DE BASES DE DATOS
 
@@ -40,14 +58,16 @@ bd_agr_month["trim_año"] = bd_agr_month["year"].astype(
 
 # Para grafica 5_1
 bd_agr_month2 = bd_agr_month[["trim_año", "tipo_tienda", "vlr_neto", "qt_facturas_unq"]]\
-                        .groupby(["trim_año", "tipo_tienda"]).sum().reset_index()
-bd_agr_month2["ticket_prom"] = bd_agr_month2["vlr_neto"] / bd_agr_month2["qt_facturas_unq"]
+    .groupby(["trim_año", "tipo_tienda"]).sum().reset_index()
+bd_agr_month2["ticket_prom"] = bd_agr_month2["vlr_neto"] / \
+    bd_agr_month2["qt_facturas_unq"]
 
 
 # Para gráfica 5_2
 bd_agr_month3 = bd_agr_month[["year", "tipo_tienda", "vlr_neto", "qt_facturas_unq"]]\
-                        .groupby(["year", "tipo_tienda"]).sum().reset_index()
-bd_agr_month3["ticket_prom"] = bd_agr_month3["vlr_neto"] / bd_agr_month3["qt_facturas_unq"]
+    .groupby(["year", "tipo_tienda"]).sum().reset_index()
+bd_agr_month3["ticket_prom"] = bd_agr_month3["vlr_neto"] / \
+    bd_agr_month3["qt_facturas_unq"]
 
 # -------------------------------------------------------------- TRANSFORMACION PARA TABLE1
 bd_unicos["year_factura"] = "TOTAL"
@@ -98,7 +118,7 @@ deltas_todo = deltas_todo.iloc[12:, ]
 deltas_todo.columns = ["fecha", "TP", "TV", "FR"]
 
 
-#--------------------------------------------------------------------------------------- GRAFICA 0: variaciones MoM por canal
+# --------------------------------------------------------------------------------------- GRAFICA 0: variaciones MoM por canal
 
 layout = go.Layout(
     autosize=False,
@@ -139,7 +159,7 @@ graf0.add_trace(go.Scatter(x=deltas_todo["fecha"], y=deltas_todo["FR"],
                            ))
 
 
-#------------------------------------------------------------------------------------- GRAFICA 1: BAR Ingresos por canal
+# ------------------------------------------------------------------------------------- GRAFICA 1: BAR Ingresos por canal
 
 graf1 = px.bar(bd_agr_month, x="year_factura", y="vlr_neto", color="tipo_tienda", width=800, height=400,
                color_discrete_map={
@@ -152,7 +172,7 @@ graf1 = px.bar(bd_agr_month, x="year_factura", y="vlr_neto", color="tipo_tienda"
                title="Ingresos por canal (Millones COP)")
 graf1.update_layout(xaxis_tickangle=90)
 
-#-------------------------------------------------------------------------------- GRAFICA 2: BAR Número de ventas por canal
+# -------------------------------------------------------------------------------- GRAFICA 2: BAR Número de ventas por canal
 
 graf2 = px.bar(bd_agr_month, x="year_factura", y="qt_facturas_unq",
                color="tipo_tienda", width=600, height=400,
@@ -167,7 +187,7 @@ graf2 = px.bar(bd_agr_month, x="year_factura", y="qt_facturas_unq",
 graf2.update_layout(xaxis_tickangle=90)
 
 
-#-------------------------------------------------------------------------------------GRAFICA 3: PIE Share de ingresos
+# -------------------------------------------------------------------------------------GRAFICA 3: PIE Share de ingresos
 
 graf3 = px.pie(bd_agr_month, values='vlr_neto', names='tipo_tienda', color="tipo_tienda",  width=400, height=400,
                color_discrete_map={
@@ -177,7 +197,7 @@ graf3 = px.pie(bd_agr_month, values='vlr_neto', names='tipo_tienda', color="tipo
                },
                title='%Ingresos por canal')
 
-#-----------------------------------------------------------------------------------GRAFICA 4:PIE Share de número de ventas
+# -----------------------------------------------------------------------------------GRAFICA 4:PIE Share de número de ventas
 
 graf4 = px.pie(bd_agr_month, values='qt_facturas_unq', names='tipo_tienda', color="tipo_tienda",  width=400, height=400,
                color_discrete_map={
@@ -187,7 +207,7 @@ graf4 = px.pie(bd_agr_month, values='qt_facturas_unq', names='tipo_tienda', colo
                },
                title='%Número de ventas por canal')
 
-#---------------------------------------------------------------------------------GRAFICA 5: LINE Evolución ticket promedio
+# ---------------------------------------------------------------------------------GRAFICA 5: LINE Evolución ticket promedio
 
 graf5 = px.line(bd_agr_month, x="year_factura", y="ticket_prom",
                 color="tipo_tienda", width=700, height=400,
@@ -202,36 +222,38 @@ graf5 = px.line(bd_agr_month, x="year_factura", y="ticket_prom",
                 )
 graf5.update_layout(xaxis_tickangle=90)
 
-#-----------------------------------------------------------------------GRAFICA 5.1: LINE Evolución ticket promedio por trimestre
+# -----------------------------------------------------------------------GRAFICA 5.1: LINE Evolución ticket promedio por trimestre
 
-graf5_1 = px.line(bd_agr_month2, x = "trim_año", y = "ticket_prom", 
-            color = "tipo_tienda", width=600, height=400,
-             color_discrete_map={
-                "TIENDA PROPIA": "gold",
-                "TIENDA VIRTUAL": "black",
-                "FRANQUICIAS": "silver"
-             },
-             category_orders={"tipo_tienda": ["TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},             
-            title = "Evolución ticket promedio",
-            template = "simple_white")
+graf5_1 = px.line(bd_agr_month2, x="trim_año", y="ticket_prom",
+                  color="tipo_tienda", width=600, height=400,
+                  color_discrete_map={
+                      "TIENDA PROPIA": "gold",
+                      "TIENDA VIRTUAL": "black",
+                      "FRANQUICIAS": "silver"
+                  },
+                  category_orders={"tipo_tienda": [
+                      "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                  title="Evolución ticket promedio",
+                  template="simple_white")
 graf5_1.update_layout(xaxis_tickangle=90)
 
-#----------------------------------------------------------------------------GRAFICA 5.2: LINE Evolución ticket promedio por año
+# ----------------------------------------------------------------------------GRAFICA 5.2: LINE Evolución ticket promedio por año
 
-graf5_2 = px.line(bd_agr_month3, x = "year", y = "ticket_prom", 
-            color = "tipo_tienda", width=600, height=400,
-             color_discrete_map={
-                "TIENDA PROPIA": "gold",
-                "TIENDA VIRTUAL": "black",
-                "FRANQUICIAS": "silver"
-             },
-             category_orders={"tipo_tienda": ["TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},             
-            title = "Evolución ticket promedio",
-            template = "simple_white")
+graf5_2 = px.line(bd_agr_month3, x="year", y="ticket_prom",
+                  color="tipo_tienda", width=600, height=400,
+                  color_discrete_map={
+                      "TIENDA PROPIA": "gold",
+                      "TIENDA VIRTUAL": "black",
+                      "FRANQUICIAS": "silver"
+                  },
+                  category_orders={"tipo_tienda": [
+                      "TIENDA PROPIA", "TIENDA VIRTUAL", "FRANQUICIAS"]},
+                  title="Evolución ticket promedio",
+                  template="simple_white")
 graf5_2.update_layout(xaxis_tickangle=90)
 
 
-#--------------------------------------------------------------------------- GRAFICA 6: LINEPLOT Frecuencia acumulada por año
+# --------------------------------------------------------------------------- GRAFICA 6: LINEPLOT Frecuencia acumulada por año
 año1 = bd_frec["yeard"].unique()[0]
 año2 = bd_frec["yeard"].unique()[1]
 año3 = bd_frec["yeard"].unique()[2]
@@ -273,7 +295,7 @@ graf6.add_trace(go.Scatter(x=bd_frec[bd_frec["yeard"] == año3]["mes"], y=bd_fre
                            line=dict(color="tomato")
                            ))
 
-#-------------------------------------------------------------------- GRAFICA 7: LINEPLOT Frecuencia acumulada por año por CANAL
+# -------------------------------------------------------------------- GRAFICA 7: LINEPLOT Frecuencia acumulada por año por CANAL
 año1 = bd_frec_canal["yeard"].unique()[0]
 año2 = bd_frec_canal["yeard"].unique()[1]
 año3 = bd_frec_canal["yeard"].unique()[2]
@@ -289,12 +311,12 @@ layout = go.Layout(
     title='Frecuencia acumulada por mes - CANAL',
     title_x=0.5,
     title_y=0.8,
-    xaxis_title = "mes",
-    yaxis_title = "frecuencia acumulada",
+    xaxis_title="mes",
+    yaxis_title="frecuencia acumulada",
     xaxis=dict(
         showline=True,
         showgrid=True
-            ),
+    ),
     yaxis=dict(
         showline=True,
         showgrid=False
@@ -302,83 +324,94 @@ layout = go.Layout(
     plot_bgcolor="whitesmoke"
 )
 
-#________________________________________________________________Año 1
-graf7 = go.Figure(layout = layout)
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año1)&(bd_frec_canal["tipo_tienda"] == tp)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año1)&(bd_frec_canal["tipo_tienda"] == tp)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año1) + " " +str(tp),
-                    line = dict(color = "black")
-                          ))
+# ________________________________________________________________Año 1
+graf7 = go.Figure(layout=layout)
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año1) & (bd_frec_canal["tipo_tienda"] == tp)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año1) & (
+                               bd_frec_canal["tipo_tienda"] == tp)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año1) + " " + str(tp),
+                           line=dict(color="black")
+                           ))
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año1)&(bd_frec_canal["tipo_tienda"] == tv)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año1)&(bd_frec_canal["tipo_tienda"] == tv)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año1) + " " +str(tv),
-                    line = dict(color = "grey")
-                          ))
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año1) & (bd_frec_canal["tipo_tienda"] == tv)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año1) & (
+                               bd_frec_canal["tipo_tienda"] == tv)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año1) + " " + str(tv),
+                           line=dict(color="grey")
+                           ))
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año1)&(bd_frec_canal["tipo_tienda"] == fr)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año1)&(bd_frec_canal["tipo_tienda"] == fr)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año1) + " " +str(fr),
-                    line = dict(color = "silver")
-                          ))
-#__________________________________________________________________Año 2
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año1) & (bd_frec_canal["tipo_tienda"] == fr)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año1) & (
+                               bd_frec_canal["tipo_tienda"] == fr)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año1) + " " + str(fr),
+                           line=dict(color="silver")
+                           ))
+# __________________________________________________________________Año 2
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año2)&(bd_frec_canal["tipo_tienda"] == tp)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año2)&(bd_frec_canal["tipo_tienda"] == tp)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año2) + " " +str(tp),
-                    line = dict(color = "orange")
-                          ))
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año2) & (bd_frec_canal["tipo_tienda"] == tp)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año2) & (
+                               bd_frec_canal["tipo_tienda"] == tp)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año2) + " " + str(tp),
+                           line=dict(color="orange")
+                           ))
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año2)&(bd_frec_canal["tipo_tienda"] == tv)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año2)&(bd_frec_canal["tipo_tienda"] == tv)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año2) + " " +str(tv),
-                    line = dict(color = "gold")
-                          ))
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año2) & (bd_frec_canal["tipo_tienda"] == tv)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año2) & (
+                               bd_frec_canal["tipo_tienda"] == tv)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año2) + " " + str(tv),
+                           line=dict(color="gold")
+                           ))
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año2)&(bd_frec_canal["tipo_tienda"] == fr)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año2)&(bd_frec_canal["tipo_tienda"] == fr)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año2) + " " +str(fr),
-                    line = dict(color = "yellow")
-                          ))
-#________________________________________________________________ Año 3
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año2) & (bd_frec_canal["tipo_tienda"] == fr)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año2) & (
+                               bd_frec_canal["tipo_tienda"] == fr)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año2) + " " + str(fr),
+                           line=dict(color="yellow")
+                           ))
+# ________________________________________________________________ Año 3
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(bd_frec_canal["tipo_tienda"] == tp)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(bd_frec_canal["tipo_tienda"] == tp)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año3) + " " +str(tp),
-                    line = dict(color = "red")
-                          ))
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año3) & (bd_frec_canal["tipo_tienda"] == tp)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año3) & (
+                               bd_frec_canal["tipo_tienda"] == tp)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año3) + " " + str(tp),
+                           line=dict(color="red")
+                           ))
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(bd_frec_canal["tipo_tienda"] == tv)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(bd_frec_canal["tipo_tienda"] == tv)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año3) + " " +str(tv),
-                    line = dict(color = "tomato")
-                          ))
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año3) & (bd_frec_canal["tipo_tienda"] == tv)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año3) & (
+                               bd_frec_canal["tipo_tienda"] == tv)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año3) + " " + str(tv),
+                           line=dict(color="tomato")
+                           ))
 
-graf7.add_trace(go.Scatter(x= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(bd_frec_canal["tipo_tienda"] == fr)]["mes"], 
-                           y= bd_frec_canal[(bd_frec_canal["yeard"] == año3)&(bd_frec_canal["tipo_tienda"] == fr)]["frec_acum"],                           
-                    mode='lines+markers',
-                    name=str(año3) + " " +str(fr),
-                    line = dict(color = "pink")
-                          ))
+graf7.add_trace(go.Scatter(x=bd_frec_canal[(bd_frec_canal["yeard"] == año3) & (bd_frec_canal["tipo_tienda"] == fr)]["mes"],
+                           y=bd_frec_canal[(bd_frec_canal["yeard"] == año3) & (
+                               bd_frec_canal["tipo_tienda"] == fr)]["frec_acum"],
+                           mode='lines+markers',
+                           name=str(año3) + " " + str(fr),
+                           line=dict(color="pink")
+                           ))
 
 
+# ------------------------------------------------------------- GRAFICA 8: LINEPLOT Frecuencia acumulada por año por CANAL - TIENDA
 
-#------------------------------------------------------------- GRAFICA 8: LINEPLOT Frecuencia acumulada por año por CANAL - TIENDA
+# --------------------------------------------------- Transformación de la base
 
-#--------------------------------------------------- Transformación de la base
-
-bd_frec_tienda2 = bd_frec_tienda[bd_frec_tienda.duplicated()== False]
-bd_frec_tienda2["freq_acum"] = bd_frec_tienda2["compras_unicas"] / bd_frec_tienda2["clientes_unicos"]
-bd_frec_tienda2 = bd_frec_tienda2[bd_frec_tienda2["d_centro"] != 'TIENDA  SAN ANDRES  2']
-bd_frec_tienda2["d_centro"].fillna(bd_frec_tienda2["tipo_tienda"], inplace = True)
+bd_frec_tienda2 = bd_frec_tienda[bd_frec_tienda.duplicated() == False]
+bd_frec_tienda2["freq_acum"] = bd_frec_tienda2["compras_unicas"] / \
+    bd_frec_tienda2["clientes_unicos"]
+bd_frec_tienda2 = bd_frec_tienda2[bd_frec_tienda2["d_centro"]
+                                  != 'TIENDA  SAN ANDRES  2']
+bd_frec_tienda2["d_centro"].fillna(
+    bd_frec_tienda2["tipo_tienda"], inplace=True)
 
 
 #------------------------------------------------------------------ Plot
@@ -389,12 +422,12 @@ layout = go.Layout(
     title='Frecuencia acumulada por mes',
     title_x=0.5,
     title_y=0.8,
-    xaxis_title = "mes",
-    yaxis_title = "frecuencia acumulada",
+    xaxis_title="mes",
+    yaxis_title="frecuencia acumulada",
     xaxis=dict(
         showline=True,
         showgrid=True
-            ),
+    ),
     yaxis=dict(
         showline=True,
         showgrid=False
@@ -403,13 +436,12 @@ layout = go.Layout(
 )
 
 
-
-graf8 = go.Figure(layout = layout)
-graf8.add_trace(go.Scatter(x= [], 
-                           y= [],                           
-                    mode='lines+markers',
-                    line = dict(color = "yellow")
-                          ))
+graf8 = go.Figure(layout=layout)
+graf8.add_trace(go.Scatter(x=[],
+                           y=[],
+                           mode='lines+markers',
+                           line=dict(color="yellow")
+                           ))
 
 graf8.update_layout(legend=dict(
     yanchor="bottom",
@@ -419,18 +451,19 @@ graf8.update_layout(legend=dict(
 ))
 
 
-#---------------------------------------------------------------------- GRAFICA 9: STRIPPLOT OJO: Pendiente poder filtrar región.
+# ---------------------------------------------------------------------- GRAFICA 9: STRIPPLOT OJO: Pendiente poder filtrar región.
 
-graf9 = px.strip(bd_frec_tienda2, x ="mes", y = "freq_acum", color = "tipo_tienda",
-        hover_name = "d_centro", hover_data = ["clientes_unicos"],        
-        animation_frame = "yeard", range_x = [0.5,12.5],
-        title = "Frecuencia por tienda en el tiempo",
-        width = 800, height = 600)
+graf9 = px.strip(bd_frec_tienda2, x="mes", y="freq_acum", color="tipo_tienda",
+                 hover_name="d_centro", hover_data=["clientes_unicos"],
+                 animation_frame="yeard", range_x=[0.5, 12.5],
+                 title="Frecuencia por tienda en el tiempo",
+                 width=800, height=600)
 
 #------------------------------------------------------------------------------------------------------------------ MAPAS
 # Data real del mapa:
-centro_region_agr_2019 = pd.read_csv(
-    "data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
+#centro_region_agr_2019 = pd.read_csv("data/centro_region_agr_2019.csv", sep=";", encoding="Latin-1")
+centro_region_agr_2019 = pd.read_sql(
+    'select * from vw_centro_region_agr_2019', engine)
 # ------------------ info geo de: http://blog.jorgeivanmeza.com/wp-content/uploads/2008/09/municipioscolombiacsv.txt
 
 
@@ -471,7 +504,7 @@ tabla1 = dash_table.DataTable(
     data=bd_unicos_merged.to_dict('records')
 )
 
-#--------------------------------------------------------------------- TABLAS DE RESUMEN DE CLUSTERES HOJA 2
+# --------------------------------------------------------------------- TABLAS DE RESUMEN DE CLUSTERES HOJA 2
 tabla_A = dash_table.DataTable(
     id='tablaA',
     columns=[{"name": i, "id": i} for i in tablaA.columns],

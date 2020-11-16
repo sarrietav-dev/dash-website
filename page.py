@@ -129,7 +129,6 @@ content3 = html.Div([
     html.H1(["RECOMENDACIONES"], style=CONTENT_STYLE),
     html.P("Vet el top 10 de productos y su detalle. \
             Elegir primero una categoria de edad masculina o femenina, y luego el clúster deseado."),
-
     html.Div([
         html.H4(["Productos más populares"], style=CONTENT_STYLE_SUBTITLE)
     ]),
@@ -383,10 +382,10 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
     button_pressed = 'boton_borrar' in changed_ids
 
     if not button_pressed:
-     
         trace1_df = bd_frec_tienda2[(bd_frec_tienda2["yeard"] == año_1) &
                                 (bd_frec_tienda2["d_centro"] != "TIENDA SAN ANDRES 2") &
                                 (bd_frec_tienda2["d_centro"] == tienda_1)]
+
 
     
         graf8.add_traces(go.Scatter(x=trace1_df["mes"],
@@ -402,7 +401,6 @@ def pinta_tienda1(tienda_1, año_1, n_clicks):
             name="",
             line = dict(color = "black")),
                   )
-        
         return graf8
 
 # __________________________________________ CALLBACKS HOJA 2 ____________________________________________________________________
@@ -479,7 +477,6 @@ def change_paragraph(btn1, btn2, btn3, btn4):
 )
 def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
     changed_id = [p["prop_id"] for p in dash.callback_context.triggered][0]
-
     
     if "primi_m" in changed_id:
         genero = "MASCULINO"
@@ -495,7 +492,7 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
                                      (df_tipo_art["grupo_articulo"] == grupo_art)][["tipo_articulo", "cantidad", "freq_relativa", "tipo_tejido"]]\
             .reset_index(drop=True).sort_values(by="cantidad", ascending=False)
         
-        
+  
     if "primi_f" in changed_id:
         genero = "FEMENINO"
         edad = "PRIMI"
@@ -510,6 +507,7 @@ def clu_sel(cluster, grupo_art, n1, n2, n3, n4, n5, n6, top):
                                      (df_tipo_art["clu_name"] == cluster) &
                                      (df_tipo_art["grupo_articulo"] == grupo_art)][["tipo_articulo", "cantidad", "freq_relativa", "tipo_tejido"]]\
             .reset_index(drop=True).sort_values(by="cantidad", ascending=False)
+
 
     if "bebe_m" in changed_id:
         genero = "MASCULINO"
